@@ -1,0 +1,23 @@
+[general]
+
+host = "::"
+port = 8080
+root = "/public"
+log-level = "error"
+cache-control-headers = true
+compression = true
+page404 = "./index.html"
+page50x = "./50x.html"
+directory-listing = true
+directory-listing-order = 1
+directory-listing-format = "html"
+threads-multiplier = 1
+grace-period = 0
+log-remote-address = false
+redirect-trailing-slash = true
+compression-static = true
+health = false
+index-files = "index.html, index.htm"
+maintenance-mode = false
+maintenance-mode-status = 503
+maintenance-mode-file = "https://survival-race.wasmer.app/maintenance.html"

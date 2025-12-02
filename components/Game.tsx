@@ -13,10 +13,10 @@ interface GameProps {
   newUntil?: number; // YYMMDDHH format
   pcOnly?: boolean,
   fixed?: boolean ,
-  broken?: boolean ,
+  bugged?: boolean ,
 }
 
-export function Game({ name, imageSource, onPress, decor, newUntil, pcOnly, fixed, broken }: GameProps) {
+export function Game({ name, imageSource, onPress, decor, newUntil, pcOnly, fixed, bugged }: GameProps) {
   const icon: ImageSourcePropType = gameIcons[imageSource];
   let decorIcon: ImageSourcePropType | null = null;
 
@@ -54,8 +54,8 @@ export function Game({ name, imageSource, onPress, decor, newUntil, pcOnly, fixe
           {showBadge && <Text style={styles.newBadge}>New!</Text>}
           {showPcBadge && <Text style={styles.pcBadge}>💻 PC</Text>}
         </View>
-        {fixed && <Text style={styles.pcBadge}>✅ FIXED</Text>}
-        {broken && <Text style={styles.pcBadge}>❎ BROKEN</Text>}
+        {fixed && <Text style={styles.pcBadge}>Fixed</Text>}
+        {bugged && <Text style={[styles.pcBadge, { marginBottom: 40 }]}>&#x1f41c; Bugged</Text>}
         <Text style={styles.text}>{name}</Text>
       </TouchableOpacity>
     </View>

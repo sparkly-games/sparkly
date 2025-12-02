@@ -24,12 +24,9 @@ export default function Index() {
       <Image source={require(`@/assets/images/decal/${decal}-atmosphere.png`)} style={styles[decal]} />
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={styles.noticeBox}>
-          <Text style={styles.noticeTitle}>✨️ Sparkly Testers ✨️</Text>
+          <Text style={styles.noticeTitle}>Welcome!</Text>
           <Text style={{ color: 'white', textAlign: 'center', marginTop: 6 }}>
-            Test games early and give critical feedback to speed up getting out games.
-          </Text>
-          <Text style={{ color: 'white', textAlign: 'center', marginTop: 6 }}>
-            Pay £1 one time (subject to change) and get access to a treasure trove of new games, all before they launch here! Coming Soon.
+            Welcome to OG12, where games are added daily, with new surprises just around the corner. You can use the bug button in the header to report a bug in a game and use the other buttons as "safety escapes".
           </Text>
           {/*
             <TouchableOpacity style={styles.ctaButton} onPress={() => Linking.openURL('https://sparkly.sparxlearning.cloud-ip.cc')}>
@@ -39,6 +36,10 @@ export default function Index() {
         </View>
         <View style={styles.gameList}>
           <Game name="BitLife" imageSource="6" onPress={() => gameGo('bitlife')} decor={decal} />
+          {
+            // <Game name="Blob Man" imageSource="y" onPress={() => gameGo('blobman')} decor={decal} newUntil={25121015} />
+          }
+          <Game name="Block Blast" imageSource="aa" onPress={() => gameGo('blockblast')} decor={decal} newUntil={25121015} />
           <Game name="BTD 5" imageSource="m" onPress={() => gameGo('btd')} decor={decal} />
           <Game name="CCL" imageSource="n" onPress={() => gameGo('ccl')} decor={decal} />
           <Game name="Crashy Road" imageSource="j" onPress={() => gameGo('crashy road')} decor={decal} newUntil={25120115} />
@@ -51,7 +52,9 @@ export default function Index() {
           <Game name="Flappy Bird" imageSource="h" onPress={() => gameGo('flappy bird')} decor={decal} newUntil={25110615} />
           <Game name="G-Dash 3D" imageSource="o" onPress={() => gameGo('gd3d')} decor={decal} newUntil={25110615} />
           <Game name="G-Dash Wave" imageSource="x" onPress={() => gameGo('gdwv')} decor={decal} newUntil={25121015} />
-          <Game name="Gobble" imageSource="r" onPress={() => gameGo('gobble')} decor={decal} newUntil={25111015} />
+            // <Game name="GG Cricket" imageSource="z" onPress={() => gameGo('gg-cricket')} decor={decal} newUntil={25121015} bugged/>{
+            // <Game name="GG Baseball" imageSource="x" onPress={() => gameGo('gg-baseball')} decor={decal} newUntil={25121015} />
+          }<Game name="Gobble" imageSource="r" onPress={() => gameGo('gobble')} decor={decal} newUntil={25111015} />
           <Game name="GunSpin" imageSource="8" onPress={() => gameGo('gunspin')} decor={decal} />
           <Game name="Idle Football" imageSource="k" onPress={() => gameGo('idle foot')} decor={decal} />
           <Game name="OvO" imageSource="7" onPress={() => gameGo('ovo')} decor={decal} />
@@ -88,7 +91,7 @@ export default function Index() {
       </ScrollView>
 
       <View>
-        <code style={{ margin: 10, color: 'white' }}>v6.1.5 [ 01/12/25 ]</code>
+        <code style={{ margin: 10, color: 'white' }}>v6.3.112 [ 02/12/25 ]</code>
         <View style={{ position: 'absolute', right: 10, flexDirection: 'row' }}>
           <Ionicons name="information-circle" size={28} color="white" onPress={() => Linking.openURL('https://raw.githubusercontent.com/onlinegames19/main-site/refs/heads/main/CREDITS')} />
           <Ionicons name="book" size={26} color="white" onPress={() => Linking.openURL('/behindcloseddoors.pdf')} />

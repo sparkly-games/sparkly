@@ -43,12 +43,13 @@ const games: Record<string, [string, string]> = {
   'stack': [`${prefix}/stack/`, 'Stack'],
   'crashy-road': [`${prefix}/crashyroad`, 'Crashy Road'],
   'gdwv': [`${prefix}/gd-wave`, 'GD Wave'],
-  'blobman': [`https://script.google.com/macros/s/AKfycbxzSGHk_3h5kMq-nWnMw-klXqPCvXAWtnetko4sja__qk43JO5f5bBJXkyhkt3gFDsG/exec`, 'Blob Man'],
   'gg-cricket': [`${prefix}/cricket17/`, 'GG Cricket'],
-  // 'gg-baseball': [`${prefix}/ggb.htm`, 'GG Baseball'],
+  'gg-baseball': [`${prefix}/baseball/`, 'GG Baseball'],
   'blockblast': [`${prefix}/block-blast/`, 'Block Blast'],
   'bo-random': [`${prefix}/randoms/boxing/`, 'Boxing Random'],
   'ba-random': [`${prefix}/randoms/basket/`, 'Basket Random'],
+  'adofai': [`${prefix}/adofai/`, "A Dance of Fire and Ice"],
+  'there-is-no-game': [`${prefix}/there-is-no-game.html`, 'There is No Game.']
 };
 
 export default function GameScreen() {
@@ -62,7 +63,7 @@ export default function GameScreen() {
     const uuid = (slugMap as Record<string, string>)[slug];
     if (uuid) {
       // use replace to avoid polluting history/back navigation
-      router.replace(`/package/${uuid}/item/${rand}`);
+      router.replace(`/student/package/${uuid}/item/${rand}`);
     }
   }, [slug, router, rand]);
 

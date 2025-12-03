@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
   },
   text: {
     marginTop: 10,
-    fontSize: 16,
+    fontSize: 14,
     color: 'white',
     fontWeight: 'bold',
     textTransform: 'capitalize',

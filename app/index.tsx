@@ -35,12 +35,10 @@ export default function Index() {
           */}
         </View>
         <View style={styles.gameList}>
+          <Game name="ADOFI" imageSource="ad" onPress={() => gameGo('adofai')} decor={decal} newUntil={25121015} />
           <Game name="Basket Random" imageSource="ac" onPress={() => gameGo('ba-random')} decor={decal} newUntil={25121015} />
           <Game name="Boxing Random" imageSource="ab" onPress={() => gameGo('bo-random')} decor={decal} newUntil={25121015} />
           <Game name="BitLife" imageSource="6" onPress={() => gameGo('bitlife')} decor={decal} />
-          {
-            // <Game name="Blob Man" imageSource="y" onPress={() => gameGo('blobman')} decor={decal} newUntil={25121015} />
-          }
           <Game name="Block Blast" imageSource="aa" onPress={() => gameGo('blockblast')} decor={decal} newUntil={25121015} />
           <Game name="BTD 5" imageSource="m" onPress={() => gameGo('btd')} decor={decal} />
           <Game name="CCL" imageSource="n" onPress={() => gameGo('ccl')} decor={decal} />
@@ -54,9 +52,9 @@ export default function Index() {
           <Game name="Flappy Bird" imageSource="h" onPress={() => gameGo('flappy bird')} decor={decal} newUntil={25110615} />
           <Game name="G-Dash 3D" imageSource="o" onPress={() => gameGo('gd3d')} decor={decal} newUntil={25110615} />
           <Game name="G-Dash Wave" imageSource="x" onPress={() => gameGo('gdwv')} decor={decal} newUntil={25121015} />
-            // <Game name="GG Cricket" imageSource="z" onPress={() => gameGo('gg-cricket')} decor={decal} newUntil={25121015} bugged/>{
-            // <Game name="GG Baseball" imageSource="x" onPress={() => gameGo('gg-baseball')} decor={decal} newUntil={25121015} />
-          }<Game name="Gobble" imageSource="r" onPress={() => gameGo('gobble')} decor={decal} newUntil={25111015} />
+          <Game name="GG Cricket" imageSource="z" onPress={() => gameGo('gg-cricket')} decor={decal} newUntil={25121015} bugged/>
+          <Game name="GG Baseball" imageSource="y" onPress={() => gameGo('gg-baseball')} decor={decal} newUntil={25121015} />
+          <Game name="Gobble" imageSource="r" onPress={() => gameGo('gobble')} decor={decal} newUntil={25111015} />
           <Game name="GunSpin" imageSource="8" onPress={() => gameGo('gunspin')} decor={decal} />
           <Game name="Idle Football" imageSource="k" onPress={() => gameGo('idle foot')} decor={decal} />
           <Game name="OvO" imageSource="7" onPress={() => gameGo('ovo')} decor={decal} />
@@ -73,6 +71,7 @@ export default function Index() {
           <Game name="Survival Race" imageSource="d" onPress={() => gameGo('survival race')} decor={decal} />
           <Game name="Tap Goal" imageSource="s" onPress={() => gameGo('tap goal')} decor={decal} newUntil={25110615} />
           <Game name="TABS" imageSource="5" onPress={() => gameGo('tabs')} decor={decal} />
+          <Game name="There is No Game" imageSource="" onPress={() => gameGo('there-is-no-game')} decor={decal} newUntil={25121015} />
           <Game name="Tiny Fishing" imageSource="1" onPress={() => gameGo('tiny fishing')} decor={decal} />
           <Game name="Wheelie Bike" imageSource="l" onPress={() => gameGo('wheelie bike')} decor={decal} newUntil={25112515} />
           <Game name="X3M Winter" imageSource="0" onPress={() => gameGo('x3m winter')} decor={decal} newUntil={25112015} bugged/>

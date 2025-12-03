@@ -43,19 +43,17 @@ const slugMap: { [key: string]: string } = {
     "helix": "03d4e5f6-7a8b-9c0d-1e2f-3a4b5c6d7e8f",
     "snowball-io": "67a89b0c-def1-2345-6789-0abcdef12345",
     "gdwv": "35a6a1c0-f034-45b3-b0cd-afc4d5590d1c",
-    "blobman": "a3fbb2dd-6c97-4156-9444-694c8ce2972d",
+    "adofai": "a3fbb2dd-6c97-4156-9444-694c8ce2972d",
     "gg-cricket": "21d6bcc7-d3f5-48a3-ac02-4977823b4d60",
     "gg-baseball": "eceee636-407d-4f35-acde-448c462cf273",
     "blockblast": "e357d4a5-0ef2-45ad-8068-bc33d70e0c20",
     "bo-random": "2f0f5f7f-285a-44a7-bbf4-3164b7cc2631",
-    "ba-random": "902a1c5b-39cc-47c8-9ba5-196054435c22"
+    "ba-random": "902a1c5b-39cc-47c8-9ba5-196054435c22",
+    "there-is-no-game": "7a1eb3b8-f09e-4445-9fee-914ce065c33a"
 
 }
 
 /*
-e0f0a508-c6ee-48dd-b5ff-46d7f1598b56
-fd820030-cdf2-47dd-b238-629f861264c9
-7a1eb3b8-f09e-4445-9fee-914ce065c33a
 c4d37509-c41f-48c2-ba90-88c6df670df7
 56ec0b98-97f3-42c5-b71b-3b2ffde7043d
 9c0e135d-40ae-453a-bbda-7c9fd4555151

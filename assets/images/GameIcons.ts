@@ -1,8 +1,5 @@
-// This file statically imports all game icon images so they can be bundled correctly.
-// A static object is used to map a game's name to its image path.
-
-// NOTE: You will need to replace this placeholder with your actual assets.
 export const gameIcons = {
+  '': require('./decal/-atmosphere.png'),
   '0': require('./game-icons/0.webp'),
   '1': require('./game-icons/1.webp'),
   '2': require('./game-icons/2.webp'),
@@ -42,4 +39,5 @@ export const gameIcons = {
   'aa': require('./game-icons/aa.webp'),
   'ab': require('./game-icons/ab.jpg'),
   'ac': require('./game-icons/ac.jpeg'),
+  'ad': require('./game-icons/ad.png'),
 };

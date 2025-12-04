@@ -97,7 +97,7 @@ export default function Index() {
         <code style={{ margin: 10, color: 'white' }}>v6.4.002 [ 03/12/25 ]</code>
         <View style={{ position: 'absolute', right: 10, flexDirection: 'row' }}>
           <Ionicons name="information-circle" size={28} color="white" onPress={() => Linking.openURL('https://raw.githubusercontent.com/onlinegames19/main-site/refs/heads/main/CREDITS')} />
-          <Ionicons name="book" size={26} color="white" onPress={() => Linking.openURL('/behindcloseddoors.pdf')} />
+          <Ionicons name="book" size={26} color="white" onPress={() => Linking.openURL('/404.html')} />
           <Ionicons name="logo-github" size={28} color="white" onPress={() => Linking.openURL('https://github.com/onlinegames19')} />
           
         </View>

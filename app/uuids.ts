@@ -51,12 +51,13 @@ const slugMap: { [key: string]: string } = {
     "ba-random": "902a1c5b-39cc-47c8-9ba5-196054435c22",
     "there-is-no-game": "7a1eb3b8-f09e-4445-9fee-914ce065c33a",
     "new-tiny-fishing": "c4d37509-c41f-48c2-ba90-88c6df670df7",
-    "adventure-drivers": "56ec0b98-97f3-42c5-b71b-3b2ffde7043d"
-
+    "adventure-drivers": "56ec0b98-97f3-42c5-b71b-3b2ffde7043d",
+    "a-small-world-cup": "9c0e135d-40ae-453a-bbda-7c9fd4555151"
 }
 
+
+
 /*
-9c0e135d-40ae-453a-bbda-7c9fd4555151
 1b261b31-6256-48d4-afc4-b33f7011b743
 046ed38f-0374-4775-b6da-88b0d326d395
 70a01330-946a-4f24-b3a2-82612f2412ac

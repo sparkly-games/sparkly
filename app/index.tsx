@@ -24,48 +24,49 @@ export default function Index() {
       <Image source={require(`@/assets/images/decal/${decal}-atmosphere.png`)} style={styles[decal]} />
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={styles.gameList}>
-          <Game name="A Dance of Fire and Ice" imageSource="ad" onPress={() => gameGo('adofai')} decor={decal} newUntil={25121015} />
-          <Game name="Adventure Drivers" imageSource="ae" onPress={() => gameGo('adventure-drivers')} decor={decal} newUntil={25121015} />
-          <Game name="Basket Random" imageSource="ac" onPress={() => gameGo('ba-random')} decor={decal} newUntil={25121015} />
-          <Game name="Boxing Random" imageSource="ab" onPress={() => gameGo('bo-random')} decor={decal} newUntil={25121015} />
-          <Game name="BitLife" imageSource="6" onPress={() => gameGo('bitlife')} decor={decal} />
-          <Game name="Block Blast" imageSource="aa" onPress={() => gameGo('blockblast')} decor={decal} newUntil={25121015} />
-          <Game name="Bloons Tower Defense" imageSource="m" onPress={() => gameGo('btd')} decor={decal} />
-          <Game name="Crazy Crash Landing" imageSource="n" onPress={() => gameGo('ccl')} decor={decal} />
-          <Game name="Crashy Road" imageSource="j" onPress={() => gameGo('crashy road')} decor={decal} newUntil={25120115} bugged/>
-          <Game name="Darts Pro" imageSource="f" onPress={() => gameGo('darts')} decor={decal} />
-          <Game name="Draw Climber" imageSource="g" onPress={() => gameGo('draw climb')} decor={decal} newUntil={25110615} />
-          <Game name="Drift Boss" imageSource="u" onPress={() => gameGo('drift boss')} decor={decal} newUntil={25110615} />
-          <Game name="Drive Mad" imageSource="9" onPress={() => gameGo('drive mad')} decor={decal} />
-          <Game name="Duck Duck Clicker" imageSource="4" onPress={() => gameGo('duck clicker')} decor={decal} />
-          <Game name="Fast Runner" imageSource="t" onPress={() => gameGo('fast runner')} decor={decal} newUntil={25110615} />
-          <Game name="Flappy Bird" imageSource="h" onPress={() => gameGo('flappy bird')} decor={decal} newUntil={25110615} />
-          <Game name="G-Dash 3D" imageSource="o" onPress={() => gameGo('gd3d')} decor={decal} newUntil={25110615} />
-          <Game name="G-Dash Wave" imageSource="x" onPress={() => gameGo('gdwv')} decor={decal} newUntil={25121015} />
-          <Game name="GG Cricket" imageSource="z" onPress={() => gameGo('gg-cricket')} decor={decal} newUntil={25121015} bugged/>
-          <Game name="GG Baseball" imageSource="y" onPress={() => gameGo('gg-baseball')} decor={decal} newUntil={25121015} bugged/>
-          <Game name="Gobble" imageSource="r" onPress={() => gameGo('gobble')} decor={decal} newUntil={25111015} />
-          <Game name="GunSpin" imageSource="8" onPress={() => gameGo('gunspin')} decor={decal} />
-          <Game name="Idle Football" imageSource="k" onPress={() => gameGo('idle foot')} decor={decal} />
-          <Game name="OvO" imageSource="7" onPress={() => gameGo('ovo')} decor={decal} />
-          <Game name="Penalty Kick" imageSource="e" onPress={() => gameGo('pens')} decor={decal} />
-          <Game name="Plants vs Zombies" imageSource="p" onPress={() => gameGo('pvz')} decor={decal} newUntil={25110615} />
-          <Game name="Ragdoll Archer" imageSource="2" onPress={() => gameGo('ragdoll archers')} decor={decal} />
-          <Game name="Ragdoll Hit" imageSource="c" onPress={() => gameGo('ragdoll hit')} decor={decal} newUntil={25110615} />
-          <Game name="Roll" imageSource="w" onPress={() => gameGo('roll')} decor={decal} newUntil={25110615} />
-          <Game name="Roper (⚠︎)" imageSource="b" onPress={() => gameGo('roper')} decor={decal} />
-          <Game name="Slice Master" imageSource="q" onPress={() => gameGo('slice master')} decor={decal} newUntil={25112015} />
-          <Game name="Spiral Roll" imageSource="i" onPress={() => gameGo('spiral roll')} decor={decal} newUntil={25110615} />
-          <Game name="Stack" imageSource="v" onPress={() => gameGo('stack')} decor={decal} newUntil={25120615} />
-          <Game name="Subway Surfers" imageSource="3" onPress={() => gameGo('subway surfers')} decor={decal} />
-          <Game name="Survival Race" imageSource="d" onPress={() => gameGo('survival race')} decor={decal} />
-          <Game name="Tap Goal" imageSource="s" onPress={() => gameGo('tap goal')} decor={decal} newUntil={25110615} />
-          <Game name="Thorns and Balloons" imageSource="5" onPress={() => gameGo('tabs')} decor={decal} />
-          <Game name="There is No Game" imageSource="af" onPress={() => gameGo('there-is-no-game')} decor={decal} newUntil={25121015} />
-          <Game name="NEW Tiny Fishing" imageSource="1" onPress={() => gameGo('new-tiny-fishing')} decor={decal} newUntil={25123015}/>
-          <Game name="Tiny Fishing" imageSource="1" onPress={() => gameGo('tiny fishing')} decor={decal} />
-          <Game name="Wheelie Bike" imageSource="l" onPress={() => gameGo('wheelie bike')} decor={decal} newUntil={25112515} />
-          <Game name="X3M Winter" imageSource="0" onPress={() => gameGo('x3m winter')} decor={decal} newUntil={25112015} bugged/>
+          <Game name="" imageSource="ad" onPress={() => gameGo('adofai')} decor={decal} newUntil={25121015} />
+          <Game name="" imageSource="ag" onPress={() => gameGo('a small world cup')} decor={decal} newUntil={25122015} />
+          <Game name="" imageSource="ae" onPress={() => gameGo('adventure drivers')} decor={decal} newUntil={25121015} />
+          <Game name="" imageSource="ac" onPress={() => gameGo('ba random')} decor={decal} newUntil={25121015} />
+          <Game name="" imageSource="ab" onPress={() => gameGo('bo random')} decor={decal} newUntil={25121015} />
+          <Game name="" imageSource="6" onPress={() => gameGo('bitlife')} decor={decal} customBadge={"⭐️ FAN FAVOURITE ⭐️"}/>
+          <Game name="" imageSource="aa" onPress={() => gameGo('blockblast')} decor={decal} newUntil={25121015} />
+          <Game name="" imageSource="m" onPress={() => gameGo('btd')} decor={decal} />
+          <Game name="" imageSource="n" onPress={() => gameGo('ccl')} decor={decal} customBadge={"⭐️ FAN FAVOURITE ⭐️"}/>
+          <Game name="" imageSource="j" onPress={() => gameGo('crashy road')} decor={decal} newUntil={25120115} bugged/>
+          <Game name="" imageSource="f" onPress={() => gameGo('darts')} decor={decal} />
+          <Game name="" imageSource="g" onPress={() => gameGo('draw climb')} decor={decal} newUntil={25110615} />
+          <Game name="" imageSource="u" onPress={() => gameGo('drift boss')} decor={decal} newUntil={25110615} />
+          <Game name="" imageSource="9" onPress={() => gameGo('drive mad')} decor={decal} />
+          <Game name="" imageSource="4" onPress={() => gameGo('duck clicker')} decor={decal} />
+          <Game name="" imageSource="t" onPress={() => gameGo('fast runner')} decor={decal} newUntil={25110615} />
+          <Game name="" imageSource="h" onPress={() => gameGo('flappy bird')} decor={decal} newUntil={25110615} />
+          <Game name="" imageSource="o" onPress={() => gameGo('gd3d')} decor={decal} newUntil={25110615} />
+          <Game name="" imageSource="x" onPress={() => gameGo('gdwv')} decor={decal} newUntil={25121015} />
+          <Game name="" imageSource="z" onPress={() => gameGo('gg cricket')} decor={decal} newUntil={25121015} bugged/>
+          <Game name="" imageSource="y" onPress={() => gameGo('gg baseball')} decor={decal} newUntil={25121015} bugged/>
+          <Game name="" imageSource="r" onPress={() => gameGo('gobble')} decor={decal} newUntil={25111015} />
+          <Game name="" imageSource="8" onPress={() => gameGo('gunspin')} decor={decal} />
+          <Game name="" imageSource="k" onPress={() => gameGo('idle foot')} decor={decal} />
+          <Game name="" imageSource="7" onPress={() => gameGo('ovo')} decor={decal} />
+          <Game name="" imageSource="e" onPress={() => gameGo('pens')} decor={decal} />
+          <Game name="" imageSource="p" onPress={() => gameGo('pvz')} decor={decal} newUntil={25110615} />
+          <Game name="" imageSource="2" onPress={() => gameGo('ragdoll archers')} decor={decal} />
+          <Game name="" imageSource="c" onPress={() => gameGo('ragdoll hit')} decor={decal} newUntil={25110615} />
+          <Game name="" imageSource="w" onPress={() => gameGo('roll')} decor={decal} newUntil={25110615} />
+          <Game name="" imageSource="b" onPress={() => gameGo('roper')} decor={decal} />
+          <Game name="" imageSource="q" onPress={() => gameGo('slice master')} decor={decal} newUntil={25112015} customBadge={"⭐️ FAN FAVOURITE ⭐️"}/>
+          <Game name="" imageSource="i" onPress={() => gameGo('spiral roll')} decor={decal} newUntil={25110615} />
+          <Game name="" imageSource="v" onPress={() => gameGo('stack')} decor={decal} newUntil={25120615} />
+          <Game name="" imageSource="3" onPress={() => gameGo('subway surfers')} decor={decal} />
+          <Game name="" imageSource="d" onPress={() => gameGo('survival race')} decor={decal} />
+          <Game name="" imageSource="s" onPress={() => gameGo('tap goal')} decor={decal} newUntil={25110615} />
+          <Game name="" imageSource="5" onPress={() => gameGo('tabs')} decor={decal} customBadge={"⭐️ FAN FAVOURITE ⭐️"}/>
+          <Game name="" imageSource="af" onPress={() => gameGo('there is no game')} decor={decal} newUntil={25121015}/>
+          <Game name="" imageSource="1" onPress={() => gameGo('new tiny fishing')} decor={decal} newUntil={25123015} fixed/>
+          <Game name="" imageSource="1" onPress={() => gameGo('tiny fishing')} decor={decal} customBadge={"⭐️ FAN FAVOURITE ⭐️"}/>
+          <Game name="" imageSource="l" onPress={() => gameGo('wheelie bike')} decor={decal} newUntil={25112515} />
+          <Game name="" imageSource="0" onPress={() => gameGo('x3m winter')} decor={decal} newUntil={25112015} bugged/>
         </View>
 
         <TouchableOpacity style={styles.button} onPress={() => setShowHorror(!showHorror)}>
@@ -76,14 +77,14 @@ export default function Index() {
           <>
             <Text style={styles.noticeTitle}>🎃 Horror Games 🎃</Text>
             <View style={styles.gameList}>
-              <Game name="Five Nights at Freddy's" imageSource="a" onPress={() => gameGo('f1')} decor={decal} newUntil={25120615} />
+              <Game name="" imageSource="a" onPress={() => gameGo('f1')} decor={decal} newUntil={25120615} />
             </View>
           </>
         )}
       </ScrollView>
 
       <View>
-        <code style={{ margin: 10, color: 'white' }}>v6.5.0 [ 04/12/25 ]</code>
+        <code style={{ margin: 10, color: 'white' }}>v6.7.105 [ 05/12/25 ]</code>
         <View style={{ position: 'absolute', right: 10, flexDirection: 'row' }}>
           <Ionicons name="information-circle" size={28} color="white" onPress={() => Linking.openURL('https://raw.githubusercontent.com/sparkly-games/main-site/refs/heads/main/CREDITS')} />
           <Ionicons name="book" size={26} color="white" onPress={() => {}} />

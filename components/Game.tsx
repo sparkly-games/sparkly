@@ -12,11 +12,12 @@ interface GameProps {
   decor?: DecorEvent;
   newUntil?: number; // YYMMDDHH format
   pcOnly?: boolean,
+  customBadge?: string,
   fixed?: boolean ,
   bugged?: boolean ,
 }
 
-export function Game({ name, imageSource, onPress, decor, newUntil, pcOnly, fixed, bugged }: GameProps) {
+export function Game({ name, imageSource, onPress, decor, newUntil, pcOnly, fixed, bugged, customBadge }: GameProps) {
   const icon: ImageSourcePropType = gameIcons[imageSource];
   let decorIcon: ImageSourcePropType | null = null;
 
@@ -51,11 +52,11 @@ export function Game({ name, imageSource, onPress, decor, newUntil, pcOnly, fixe
       <TouchableOpacity onPress={onPress} style={styles.card}>
         <View style={styles.imageWrapper}>
           <Image source={icon} style={styles.image} />
-          {showBadge && <Text style={styles.newBadge}>New!</Text>}
-          {showPcBadge && <Text style={styles.pcBadge}>💻 PC</Text>}
         </View>
         {fixed && <Text style={styles.pcBadge}>Updated!</Text>}
-        {bugged && <Text style={[styles.pcBadge, { marginBottom: 40 }]}>&#x1f41c; Bugged</Text>}
+        {showBadge && <Text style={styles.newBadge}>New!</Text>}
+        {bugged && <Text style={[styles.pcBadge]}>&#x1f41c; Bugged</Text>}
+        {customBadge && <Text style={[styles.pcBadge]}>{customBadge}</Text>}
         <Text style={styles.text}>{name}</Text>
       </TouchableOpacity>
     </View>
@@ -72,7 +73,7 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     elevation: 8,
     alignItems: 'center',
-    padding: 15,
+    padding: 10,
   },
   imageWrapper: {
     position: 'relative',
@@ -99,8 +100,8 @@ const styles = StyleSheet.create({
   },
   newBadge: {
     position: 'absolute',
-    top: 5,
-    right: 5,
+    bottom: 7.5,
+    right: 10,
     backgroundColor: 'rgba(135,189,229,1)',
     color: 'white',
     fontWeight: '600',
@@ -113,7 +114,7 @@ const styles = StyleSheet.create({
   },
   pcBadge: {
     position: 'absolute',
-    bottom: 5,
+    bottom: 7.5,
     left: 10,
     backgroundColor: 'rgba(135,189,229,1)',
     color: 'white',

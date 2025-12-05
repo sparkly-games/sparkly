@@ -53,6 +53,7 @@ const games: Record<string, [string, string]> = {
   'there-is-no-game': [`${prefix}/there-is-no-game.html`, 'There is No Game.'],
   'new-tiny-fishing': [`https://game-hub.nyc3.cdn.digitaloceanspaces.com/tiny-fishing/index.html`, "NEW TINY FISHING"],
   'adventure-drivers': [`${prefix}/adventuredrivers/`, 'Adventure Drivers'],
+  'a-small-world-cup': [`${prefix}/small-world-cup.html`, 'A Small World Cup'],
 };
 
 export default function GameScreen() {

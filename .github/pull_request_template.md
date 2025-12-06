@@ -1,9 +1,5 @@
 # Contributions
 
-Please fill out the sections below and ensure your update follows all of the standards outlined in the `contributions.md` file.
-
----
-
 ## Security Checklist
 
 Check these FIRST. If this fails, the Contribution won't be accepted.
@@ -20,6 +16,7 @@ Check these FIRST. If this fails, the Contribution won't be accepted.
   - Implement anti-CSRF tokens for forms and state-changing requests.
 - [ ] **Never expose API keys in frontend**
   - API credentials should always remain server-side.
+  - If already in use, do NOT modify otherwise the site will break.
 
 ### Practical Security Habits
 
@@ -31,11 +28,3 @@ Check these FIRST. If this fails, the Contribution won't be accepted.
   - Set `HttpOnly`, `Secure` and `SameSite` attributes.
 
 ---
-
-## Changelog Update
-
-Please update the `CHANGELOG.md` file at the VERY top with the version name `CONTRIBUTION.[4-digits]` and your username in square brackets, following this format:
-
-### CONTRIBUTION.[4-digits] [ Contribution - @your-username ]
-- [ ] Describe the changes you made here.
-- [ ] ...

@@ -134,7 +134,7 @@ export default function Index() {
             <View style={styles.gameList}>
               <Game name="Five Nights at Freddy's 1" imageSource="a" onPress={() => gameGo('f1')} decor={decal} newUntil={25120615} />
               <Game name="Five Nights at Freddy's 2" imageSource="ah" onPress={() => gameGo('f2')} decor={decal} newUntil={26010615} />
-              <Game name="Five Nights at Freddy's 3" imageSource="ai" onPress={() => gameGo('f3')} decor={decal} newUntil={26011015} />
+              <Game name="Five Nights at Freddy's 3" imageSource="ai" onPress={() => gameGo('f3')} decor={decal} newUntil={26011015} bugged/>
             </View>
           </>
         )}

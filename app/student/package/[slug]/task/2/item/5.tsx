@@ -59,6 +59,7 @@ const games: Record<string, [string, string]> = {
   'f3': [`${prefix}/fnaf/FNAF3/`, 'Five Nights at Freddy\'s 3'],
   'soccer-random': [`${prefix}/randoms/soccer/`, 'Soccer Random'],
   'volley-random': [`${prefix}/randoms/volley/`, 'Volley Random'],
+  'paper-io-2': [`${prefix}/paperio2/`, 'Paper.io 2'],
 };
 
 export default function GameScreen() {

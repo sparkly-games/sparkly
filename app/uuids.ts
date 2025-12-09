@@ -54,13 +54,13 @@ const slugMap: { [key: string]: string } = {
     "adventure-drivers": "56ec0b98-97f3-42c5-b71b-3b2ffde7043d",
     "a-small-world-cup": "9c0e135d-40ae-453a-bbda-7c9fd4555151",
     "soccer-random": "1b261b31-6256-48d4-afc4-b33f7011b743",
-    "volley-random": "046ed38f-0374-4775-b6da-88b0d326d395"
+    "volley-random": "046ed38f-0374-4775-b6da-88b0d326d395",
+    "paper-io-2": "70a01330-946a-4f24-b3a2-82612f2412ac",
 }
 
 
 
 /*
-70a01330-946a-4f24-b3a2-82612f2412ac
 8c699815-d9fc-4648-9d68-bcd1693bb97a
 dbbfbe52-4172-4940-806d-a8f30fe7e8d7
 64862829-b2a7-42e6-88ab-4e6182299881

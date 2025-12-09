@@ -112,6 +112,7 @@ export default function Index() {
           <Game name="Thorns and Balloons" imageSource="5" onPress={() => gameGo('tabs')} decor={decal} customBadge={"⭐️ FAN FAVOURITE ⭐️"}/>
           <Game name="Bloons Tower Defence 5" imageSource="m" onPress={() => gameGo('btd')} decor={decal} showText />
           <Game name="Plants vs Zombies" imageSource="p" onPress={() => gameGo('pvz')} decor={decal} newUntil={25110615} />
+          <Game name="Paper.io 2" imageSource="am" onPress={() => gameGo('paper io 2')} decor={decal} newUntil={26010615} />
         </View>
 
         {/* Rhythm Games Category */}

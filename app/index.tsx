@@ -109,6 +109,7 @@ export default function Index() {
         {/* Strategy & Tower Defense Category */}
         <Text style={styles.categoryTitle}>🛡️ Strategy & Tower Defense ♟️</Text>
         <View style={styles.gameList}>
+          <Game name="Thorns and Balloons" imageSource="5" onPress={() => gameGo('tabs')} decor={decal} customBadge={"⭐️ FAN FAVOURITE ⭐️"}/>
           <Game name="Bloons Tower Defence 5" imageSource="m" onPress={() => gameGo('btd')} decor={decal} showText />
           <Game name="Plants vs Zombies" imageSource="p" onPress={() => gameGo('pvz')} decor={decal} newUntil={25110615} />
         </View>
@@ -119,13 +120,6 @@ export default function Index() {
           <Game name="A Dance of Fire and Ice" imageSource="ad" onPress={() => gameGo('adofai')} decor={decal} newUntil={25121015} showText />
         </View>
         
-        {/* Miscellaneous Games Category */}
-        <Text style={styles.categoryTitle}>⭐ Other Great Games ⭐</Text>
-        <View style={styles.gameList}>
-          <Game name="Thorns and Balloons" imageSource="5" onPress={() => gameGo('tabs')} decor={decal} customBadge={"⭐️ FAN FAVOURITE ⭐️"}/>
-        </View>
-
-
         <TouchableOpacity style={styles.button} onPress={() => setShowHorror(!showHorror)}>
           <Text style={styles.buttonText}>{showHorror ? 'Hide Horror' : 'Show Horror'}</Text>
         </TouchableOpacity>

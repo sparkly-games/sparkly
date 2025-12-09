@@ -138,7 +138,7 @@ export default function Index() {
       </ScrollView>
 
       <View>
-        <code style={{ margin: 10, color: 'white' }}>v6.7.6 [ 08/12/25 ]</code>
+        <code style={{ margin: 10, color: 'white' }}>v6.7.9 [ 09/12/25 ]</code>
         <View style={{ position: 'absolute', right: 10, flexDirection: 'row' }}>
           <Ionicons name="information-circle" size={28} color="white" onPress={() => Linking.openURL('https://raw.githubusercontent.com/sparkly-games/main-site/refs/heads/main/CREDITS')} />
           <Ionicons name="logo-github" size={28} color="white" onPress={() => Linking.openURL('https://github.com/sparkly-games')} />

@@ -6,7 +6,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import slugMap from './uuids';
 
 
-const decal = "";
+const decal = "christmas";
 
 export default function Index() {
   const router = useRouter();

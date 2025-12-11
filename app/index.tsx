@@ -43,7 +43,7 @@ export default function Index() {
           <Game name="Geometry Dash Wave" imageSource="x" onPress={() => gameGo('gdwv')} decor={decal} newUntil={25121015} showText />
           <Game name="OvO" imageSource="7" onPress={() => gameGo('ovo')} decor={decal} />
           <Game name="Subway Surfers" imageSource="3" onPress={() => gameGo('subway surfers')} decor={decal} />
-          <Game name="Survival Race" imageSource="d" onPress={() => gameGo('survival race')} decor={decal} />
+          <Game name="Survival Race" imageSource="d" onPress={() => gameGo('survival race')} decor={decal} bugged/>
         </View>
 
         {/* Sports Games Category */}

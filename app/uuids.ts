@@ -57,7 +57,7 @@ const slugMap: { [key: string]: string } = {
     "volley-random": "046ed38f-0374-4775-b6da-88b0d326d395",
     "paper-io-2": "70a01330-946a-4f24-b3a2-82612f2412ac",
     "x3m-2": "d5f4e6c7-b8a9-0b1c-2d3e-4f5a6b7c8d9e",
-    "cbc": "dbbfbe52-4172-4940-806d-a8f30fe7e8d7",
+    "cookie-clicker": "dbbfbe52-4172-4940-806d-a8f30fe7e8d7",
 }
 
 

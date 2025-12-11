@@ -102,9 +102,9 @@ export default function Index() {
         {/* Clicker & Idle Games Category */}
         <Text style={styles.categoryTitle}>🎣 Clicker & Idle Games 💰</Text>
         <View style={styles.gameList}>
-          <Game name="Capybara Clicker" imageSource="ao" onPress={() => gameGo('cbc')} decor={decal} newUntil={26011215} showText bugged />  
           <Game name="Duck Duck Clicker" imageSource="4" onPress={() => gameGo('duck clicker')} decor={decal} showText />
           <Game name="NEW Tiny Fishing" imageSource="1" onPress={() => gameGo('new tiny fishing')} decor={decal} newUntil={25123015} fixed/>
+          <Game name="Cookie Clicker" imageSource="ao" onPress={() => gameGo('cookie clicker')} decor={decal} newUntil={25123015} bugged/>
           <Game name="Tiny Fishing" imageSource="1" onPress={() => gameGo('tiny fishing')} decor={decal} customBadge={"⭐️ FAN FAVOURITE ⭐️"}/>
         </View>
 
@@ -140,9 +140,8 @@ export default function Index() {
       </ScrollView>
 
       <View>
-        <code style={{ margin: 10, color: 'white' }}>v6.7.9 [ 09/12/25 ]</code>
+        <code style={{ margin: 10, color: 'white' }}>v6.7.10 [ 11/12/25 ]</code>
         <View style={{ position: 'absolute', right: 10, flexDirection: 'row' }}>
-          <Ionicons name="information-circle" size={28} color="white" onPress={() => Linking.openURL('https://raw.githubusercontent.com/sparkly-games/main-site/refs/heads/main/CREDITS')} />
           <Ionicons name="logo-github" size={28} color="white" onPress={() => Linking.openURL('https://github.com/sparkly-games')} />
           
         </View>

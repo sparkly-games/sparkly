@@ -61,7 +61,7 @@ const games: Record<string, [string, string]> = {
   'volley-random': [`${prefix}/randoms/volley/`, 'Volley Random'],
   'paper-io-2': [`${prefix}/paperio2/`, 'Paper.io 2'],
   'x3m-2': [`${prefix}/motox3m2/`, 'Moto X3M 2'],
-  'cbc': [`${prefix}/cb-clicker.htm`, 'Capybara Clicker'],
+  'cookie-clicker': [`${prefix}/cookieclicker/`, 'Cookie Clicker'],
 };
 
 export default function GameScreen() {

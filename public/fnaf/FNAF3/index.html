@@ -1,49 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<style type="text/css">
-    /* Custom styles for the FNaF 3 launcher based on the FNaF 1 template */
-    h1 {
-        font-family: Arial, Helvetica, sans-serif;
-        color: #F00;
-        font-size: x-large;
-    }
-    p {
-        font-family: Arial, Helvetica, sans-serif;
-        color: #000;
-        font-size: small;
-    }
-    body {
-        /* Set background image to preloader.png */
-        background-image: url("preloader.png");
-        background-color: #000; /* Use black as a fallback */
-        background-repeat: no-repeat;
-        background-position: center;
-        background-size: cover; /* Ensures the image covers the screen */
-        
-        text-align: center;
-        margin: 0;
-        padding: 0;
-        height: 100vh; /* Ensure body takes full screen height */
-        overflow: hidden; /* Hide scrollbars */
-    }
-    #bloctxt {
-        border-left-width: 5px;
-        border-left-style: solid;
-        border-left-color: #F00;
-        padding-left: 10px;
-        position: absolute;
-        left: 50%;
-        width: 600px;
-        margin-left: -260px;
-        /* Note: Use 50% for left, not 50%% */
-    }
-
-    /* Hide the canvas until the runtime starts to prevent a white flash */
-    #MMFCanvas {
-        display: none;
-    }
-</style>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
@@ -54,9 +11,91 @@
 
     <title>Five Nights at Freddy's 3</title>
 
+    <style type="text/css">
+        /* Custom styles for the FNaF 3 launcher based on the FNaF 1 template */
+        h1 {
+            font-family: Arial, Helvetica, sans-serif;
+            color: #F00;
+            font-size: x-large;
+        }
+        p {
+            font-family: Arial, Helvetica, sans-serif;
+            color: #000;
+            font-size: small;
+        }
+        body {
+            /* Set background image to preloader.png */
+            background-image: url("preloader.png");
+            background-color: #000; /* Use black as a fallback */
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover; /* Ensures the image covers the screen */
+
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            height: 100vh; /* Ensure body takes full screen height */
+            overflow: hidden; /* Hide scrollbars */
+
+            /* Use Flexbox on the body to handle content centering */
+            display: flex;
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+        }
+
+        /* --- RESPONSIVE LOADER TEXT CONTAINER --- */
+        #bloctxt {
+            border-left-width: 5px;
+            border-left-style: solid;
+            border-left-color: #F00;
+            padding-left: 10px;
+
+            /* **FIX 1: Centering and Sizing** */
+            /* We can use the position property to stack this element correctly, 
+               even though the body now centers content using Flexbox */
+            position: absolute; 
+            top: 50%;
+            left: 50%;
+            /* The modern centering method: shifts the box back by half its size */
+            transform: translate(-50%, -50%); 
+            
+            /* Use relative width and max-width for responsiveness */
+            width: 90%; 
+            max-width: 600px;
+            margin-left: 0; /* Clear the old fixed margin */
+            /* Z-index ensures the error message is above the canvas */
+            z-index: 100; 
+        }
+
+        /* Hide the canvas until the runtime starts to prevent a white flash */
+        #MMFCanvas {
+            display: none;
+        }
+
+        /* --- RESPONSIVE CANVAS SCALING CONTAINER --- */
+        .canvas-container {
+            /* Full viewport size for the container */
+            height: 100vh; 
+            width: 100vw;
+            /* Use Flexbox to center the content inside the container */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* The actual canvas element scaling rules */
+        .canvas-container canvas {
+            /* Key to scaling: object-fit: contain ensures the 4:3 canvas scales up or down 
+               to fit the screen while maintaining its aspect ratio. */
+            object-fit: contain;
+            /* Allow the canvas to use up to 100% of the container space */
+            width: 100%; 
+            height: 100%;
+        }
+    </style>
+
     <script>
         // Detection of old browsers that do not support the canvas element
-        // Falls back to a default page
         if (!document.createElement("canvas").getContext)
         {
             window.open("http://www.clickteam.com/html5-fallback", "_self");
@@ -66,9 +105,10 @@
     <script src="Runtime.js"></script>
 
     <script>
-        // Detection of when the html file is ran locally. (Kept from FNaF 1 template)
+        // Detection of when the html file is ran locally. 
         if (window.location.protocol == "file:")
         {
+            // The #bloctxt element will now be properly centered by the CSS above
             document.write('<div id="bloctxt">');
             document.write('<h1>The application cannot be run...</h1>');
             document.write('<p>HTML browsers do not allow you to launch data files directly from the file system.<br>');
@@ -83,7 +123,7 @@
 
 <body>
 
-<div style="display: inline-block; -webkit-user-select: none; text-align: left;">
+<div class="canvas-container">
     <canvas id="MMFCanvas" width="1024" height="768">
         Your browser does not support Canvas.
     </canvas>
@@ -97,7 +137,7 @@
         {
             // After the window loads, make the canvas visible
             document.getElementById('MMFCanvas').style.display = 'block';
-            
+
             // Calls the runtime
             // 1. Canvas ID: "MMFCanvas"
             // 2. Path to the main game file.

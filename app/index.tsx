@@ -54,7 +54,7 @@ export default function Index() {
           <Game name="Basket Random" imageSource="ac" onPress={() => gameGo('ba random')} decor={decal} newUntil={25121015} showText />
           <Game name="Darts Pro" imageSource="f" onPress={() => gameGo('darts')} decor={decal} showText />
           <Game name="Google Games Baseball" imageSource="y" onPress={() => gameGo('gg baseball')} decor={decal} newUntil={25121015} bugged/>
-          <Game name="Google Games Cricket" imageSource="z" onPress={() => gameGo('gg cricket')} decor={decal} newUntil={25121015} bugged/>
+          <Game name="Google Games Cricket" imageSource="z" onPress={() => gameGo('gg cricket')} decor={decal} newUntil={25121015} fixed/>
           <Game name="Idle Football Manager" imageSource="k" onPress={() => gameGo('idle foot')} decor={decal} />
           <Game name="Penalty Kick Online" imageSource="e" onPress={() => gameGo('pens')} decor={decal} />
           <Game name="Soccer Random" imageSource="ak" onPress={() => gameGo('soccer random')} decor={decal} newUntil={25122015} showText />
@@ -141,7 +141,7 @@ export default function Index() {
       </ScrollView>
 
       <View>
-        <code style={{ margin: 10, color: 'white' }}>v6.7.23 [ 14/12/25 ]</code>
+        <code style={{ margin: 10, color: 'white' }}>v6.7.24 [ 15/12/25 ]</code>
         <View style={{ position: 'absolute', right: 10, flexDirection: 'row' }}>
           <Ionicons name="logo-github" size={28} color="white" onPress={() => Linking.openURL('https://github.com/sparkly-games')} />
           

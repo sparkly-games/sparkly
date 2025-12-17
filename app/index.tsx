@@ -143,8 +143,8 @@ export default function Index() {
       <View>
         <code style={{ margin: 10, color: 'white' }}>v6.7.30 [ 16/12/25 ]</code>
         <View style={{ position: 'absolute', right: 10, flexDirection: 'row' }}>
-          <Ionicons name="logo-github" size={28} color="white" onPress={() => Linking.openURL('https://github.com/sparkly-games')} />          <Ionicons name="videocam-outline" size={28} color="white" onPress={() => alert("Rollercoaster videos coming soon.")/>
-          
+          <Ionicons name="logo-github" size={28} color="white" onPress={() => Linking.openURL('https://github.com/sparkly-games')} />         
+          <Ionicons name="videocam-outline" size={28} color="white" onPress={() => alert("Rollercoaster videos coming soon.")} />
         </View>
       </View>
     </View>

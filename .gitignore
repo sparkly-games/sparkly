@@ -1,47 +1,24 @@
-# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
-
-# dependencies
 node_modules/
-
-# Expo
 .expo/
 dist/
 web-build/
 app-example
 expo-env.d.ts
-
 public/*/.git
-
-# Metro
 .metro-health-check*
-
-# debug
 npm-debug.*
 yarn-debug.*
 yarn-error.*
 firebase-debug.log
-
-# macOS
 .DS_Store
 *.pem
-
-# local env files
 .env*.local
-
-# typescript
 *.tsbuildinfo
-
-# firebase
 .firebaserc
 firebase.json
 .firebase
-
-# vercel
 .vercel
-
-# local preview games
 maybe-add
 export
-
 !site
 !docs

@@ -24,7 +24,7 @@ export const gameIcons = {
   "l": require("../icons/l.webp"),
   "m": require("../icons/m.webp"),
   "n": require("../icons/n.jpg"),
-  "o": require("../icons/o.png"),
+  "o": require("../icons/o.jpg"),
   "p": require("../icons/p.webp"),
   "q": require("../icons/q.webp"),
   "r": require("../icons/r.jpg"),

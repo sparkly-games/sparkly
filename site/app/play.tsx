@@ -19,6 +19,7 @@ import { gamesData } from '../assets/data/games';
 import { analytics } from '@/assets/data/firebaseConfig.js';
 import { ChaosImage } from '@/assets/components/ChaosImage';
 import { logEvent } from 'firebase/analytics';
+import AdSenseBanner from '@/assets/components/adsense';
 
 const decal = 'new-year';
 const LS_FAVS = 'sparkly:favs';
@@ -219,7 +220,7 @@ export default function HomeScreen() {
     return g.sort((a, b) => a.title.en.localeCompare(b.title.en));
   }, [query, showHorror, showPC, view, favs, recent]);
 
-  const columns = width < 420 ? 2 : width < 900 ? 3 : 4;
+  const columns = width < 420 ? 3 : width < 900 ? 4 : 6;
   const itemWidth = Math.floor((width - 24) / columns);
   let count = 0;
 
@@ -251,7 +252,7 @@ export default function HomeScreen() {
           <Text style={[styles.noticeText, { fontWeight: 'bold' }]}>
             {bazingaMode ? 'UBGU chut' : 'Officially joining the UBGU!'}
           </Text>
-          <Text style={styles.noticeText}>v7.3.8 · 26/01/26</Text>
+          <Text style={styles.noticeText}>v7.4.2 · 29/01/26</Text>
           <View style={{ height: 24, flexDirection: 'row', gap: 12, alignSelf: 'center', flex: 1, marginTop: 20 }} >
             <TouchableOpacity onPress={() => Linking.openURL('https://github.com/sparkly-games')}>
               <Ionicons name="logo-octocat" size={24} color="white" />
@@ -376,6 +377,7 @@ export default function HomeScreen() {
           </View>
         </View>
       </Modal>
+      <AdSenseBanner />
     </View>
   );
 }

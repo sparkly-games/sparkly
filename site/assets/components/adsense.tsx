@@ -18,7 +18,7 @@ const AdSenseBanner = () => {
 
     // 2. Create the script element
     const script = document.createElement('script');
-    script.src = "https://www.highperformanceformat.com/9ef294a575410f41d555c0fb56041a3d/invoke.js";
+    script.src = "/invoke.js";
     script.async = true;
 
     // 3. Append it to the container

@@ -140,7 +140,14 @@ export default function HomeScreen() {
   };
 
   const toggleFav = (name: string) => saveFavs(favs.includes(name) ? favs.filter(f => f !== name) : [...favs, name]);
-
+  const speak = () => {
+      setModalGame({
+      title: { en: 'TTS', tlh: 'TTS' },
+      url: '/tts.htm',
+      soundboard: true,
+    });
+    setIframeKey(k => k + 1);
+  }
   const openGame = (game: any) => {
     saveRecent([game.title.en, ...recent.filter(r => r !== game.name)].slice(0, 12));
     logEvent(analytics, 'play_game', { game_name: game.title.en });
@@ -265,6 +272,9 @@ export default function HomeScreen() {
             </TouchableOpacity>
             <TouchableOpacity onPress={soundboard}>
               <Ionicons name="volume-high-outline" size={24} color="white" />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={speak}>
+              <Ionicons name="mic" size={24} color="white" />
             </TouchableOpacity>
           </View>
         </Animated.View>

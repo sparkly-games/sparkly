@@ -71,4 +71,6 @@ export const gameIcons = {
   "be": require("../icons/be.jpg"),
   "bf": require("../icons/bf.jpg"),
   "bh": require("../icons/bh.jpg"),
+  'bi': require("../icons/bi.jpg"),
+  'bj': require("../icons/bj.jpg"),
 };

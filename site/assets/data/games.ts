@@ -82,7 +82,10 @@ export const gamesData = [
   { title: { en: "GD World", tlh: "GD ?" }, img: "av", url: "/gdworld.htm"},
   { title: { en: "Going Balls", tlh: "Going Balls" }, img: "?", url: "/going-balls.htm", leaving: "4th Feb" },
   { title: { en: "Driven Wild", tlh: "Driven Wild" }, img: "ao", url: "/drivenwild/index.html" },
-  { title: { en: "Knife Hit", tlh: "?" }, img: "?", url: "/404.html" },
+  { title: { en: "Knife Hit", tlh: "?" }, img: "?", url: "/knifehit/", leaving: "4th Feb" },
   { title: { en: "Car Drawing Game", tlh: "?" }, img: "ad", url: "/car-drawing-game/" },
   { title: { en: "Monster Tracks", tlh: "?" }, img: "o", url: "/monster-tracks.html" },
+
+  { title: { en: "Doge Miner" , tlh: "Doge ghoS" }, img: "bi", url: "/DogeMiner/" },
+  { title: { en: "Impossible Quiz" , tlh: "QumwI' Qav" }, img: "bj", url: "/impossiblequiz/" },
 ];

@@ -3,6 +3,7 @@ import TeamsHeaderButton from '@/assets/components/TeamsButton';
 import SparxHeaderButton from '@/assets/components/SparxButton';
 import { Text, Image, StyleSheet } from 'react-native';
 import React from 'react';
+import Head from 'expo-router/head';
 // @ts-ignore
 import LogoImageSource from '@/assets/images/sparkly_logo_banner.png';
 import { BazingaProvider } from '@/assets/context/BazingaContext';
@@ -19,6 +20,8 @@ const HeaderLogo = () => (
 export default function RootLayout() {
   return (
     <BazingaProvider>
+      <Head>
+      </Head>
       <Stack
         screenOptions={({ route }) => ({
           headerShown: route.name == 'vids' || route.name.substring(0, 10) == 'vidplayer/' ? true : false,

@@ -21,6 +21,7 @@ export default function RootLayout() {
   return (
     <BazingaProvider>
       <Head>
+        <script src="https://sparkly.statuspage.io/embed/script.js" defer></script>
         <meta property="og:type" content="website" />
         <meta property="og:title" content="Sparkly Games" />
         <meta property="og:description" content="With Sparkly, get ready to game into the future like never before!" />

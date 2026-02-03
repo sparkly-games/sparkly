@@ -276,6 +276,9 @@ export default function HomeScreen() {
             <TouchableOpacity onPress={speak}>
               <Ionicons name="mic" size={24} color="white" />
             </TouchableOpacity>
+            <TouchableOpacity onPress={() => Linking.openURL('https://sparkly.statuspage.io/')}>
+              <Ionicons name="bar-chart" size={24} color="white" />
+            </TouchableOpacity>
           </View>
         </Animated.View>
 

@@ -27,11 +27,11 @@ export default function RootLayout() {
         <meta property="twitter:card" content="summary_large_image" />
         <meta property='twitter:title' content='Sparkly Games' />
         <meta property='twitter:description' content='With Sparkly, get ready to game into the future like never before!' />
-        <meta property='twitter:image' content='/favicon.ico' />
+        <meta property='twitter:image' content={require('@/assets/images/open_graph_share_preview.png')} />
         <meta property="og:url" content="https://sparkly.creepers.sbs/" />
         <meta property='og:site_name' content='Sparkly Games' />
         <meta property='description' content='With Sparkly, get ready to game into the future like never before!' />
-        <meta property="og:image" content="/favicon.ico" />
+        <meta property="og:image" content={require('@/assets/images/open_graph_share_preview.png')} />
         <link rel="canonical" href="https://sparkly.creepers.sbs/" />
       </Head>
       <Stack

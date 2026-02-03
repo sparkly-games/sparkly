@@ -21,6 +21,14 @@ export default function RootLayout() {
   return (
     <BazingaProvider>
       <Head>
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Sparkly Games" />
+        <meta
+          property="og:description"
+          content="With Sparkly, get ready to game into the future like never before!"
+        />
+        <meta property="og:image" content="/favicon.ico" />
+        <link rel="canonical" href="https://sparkly.creepers.sbs/" />
       </Head>
       <Stack
         screenOptions={({ route }) => ({

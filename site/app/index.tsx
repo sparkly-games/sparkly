@@ -36,7 +36,6 @@ export default function Home() {
     <View style={styles.root}>
       <Head>
           <title>Sparkly Games</title>
-          <meta name="description" content="With Sparkly, get ready to game into the future. With a huge catalog of games to choose from, and even more to come, we hope you never get bored. With no ads and more games every other day, you'll never be bored!" />
       </Head>
       {/* Header */}
       <View style={styles.header}>

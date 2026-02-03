@@ -33,6 +33,7 @@ export default function RootLayout() {
         <meta property='description' content='With Sparkly, get ready to game into the future like never before!' />
         <meta property="og:image" content={require('@/assets/images/open_graph_share_preview.png')} />
         <link rel="canonical" href="https://sparkly.creepers.sbs/" />
+        <meta name="google-site-verification" content="WtKSIKOGxz7QiYaXQyBKvFKAkOfFQ_NjfYGeZrEt6mI" />
       </Head>
       <Stack
         screenOptions={({ route }) => ({

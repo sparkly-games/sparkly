@@ -53,7 +53,7 @@ export const gamesData = [
   { title: { en: "Tiny Fishing", tlh: "mach gheD" }, img: "1", url: "/tiny-fishing/" },
   { title: { en: "Volley Random", tlh: "volley QumwI'" }, img: "al", url: "/randoms/volley/" },
   { title: { en: "Wheelie Bike", tlh: "Heghbogh loQ" }, img: "l", url: "/wheelie-bike/" },
-  { title: { en: "X3M Winter", tlh: "X3M chal bIr" }, img: "0", url: "/x3m/" },
+  { title: { en: "Moto X3M Winter", tlh: "X3M chal bIr" }, img: "0", url: "/x3m/" },
 
   { title: { en: "Drift Boss", tlh: "meQ ra'wI'" }, img: "u", url: "/drift-boss/" },
 
@@ -89,4 +89,7 @@ export const gamesData = [
   { title: { en: "Doge Miner" , tlh: "Doge ghoS" }, img: "bi", url: "/DogeMiner/" },
   { title: { en: "Impossible Quiz" , tlh: "QumwI' Qav" }, img: "bj", url: "/impossiblequiz/" },
   { title: { en: "Sky Race 3D" , tlh: "chal He 3D" }, img: "bk", url: "/skyrace3d.html" },
+
+  { title: { en: "Moto X3M", tlh: "Moto X3M" }, img: "bl", url: "/moto-x3m.html" },
+  { title: { en: "GD Lite", tlh: "GD Lite" }, img: "bn", url: "/gdlite/" },
 ];

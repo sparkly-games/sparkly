@@ -17,7 +17,7 @@ const HeaderLogo = () => (
   />
 );
 
-export default async function RootLayout() {
+export default function RootLayout() {
   return (
     <BazingaProvider>
       <Head>

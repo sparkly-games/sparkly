@@ -80,7 +80,6 @@ export const gamesData = [
   { title: { en: "Fruit Ninja", tlh: "Nah ninja" }, img: "v", url: "/fruitninja.htm" },
   { title: { en: "GD SubZero", tlh: "GD SubZero" }, img: "j", url: "/gd-sub0.htm"},
   { title: { en: "GD World", tlh: "GD ?" }, img: "av", url: "/gdworld.htm"},
-  { title: { en: "Going Balls", tlh: "Going Balls" }, img: "?", url: "/going-balls.htm", leaving: "4th Feb" },
   { title: { en: "Driven Wild", tlh: "Driven Wild" }, img: "ao", url: "/drivenwild/index.html" },
   { title: { en: "Knife Hit", tlh: "?" }, img: "bg", url: "/knifehit/" },
   { title: { en: "Car Drawing Game", tlh: "?" }, img: "ad", url: "/car-drawing-game/" },
@@ -92,4 +91,5 @@ export const gamesData = [
 
   { title: { en: "Moto X3M", tlh: "Moto X3M" }, img: "bl", url: "/moto-x3m.html" },
   { title: { en: "GD Lite", tlh: "GD Lite" }, img: "bn", url: "/gdlite/" },
+  { title: { en: "Cookie Clicker", tlh: "QumwI' boQ" }, img: "bo", url: "/cookieclicker/" },
 ];

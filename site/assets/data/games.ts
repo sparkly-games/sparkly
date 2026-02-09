@@ -1,6 +1,6 @@
 export const gamesData = [
   { title: { en: "A Small World Cup", tlh: "qo' mach quj" }, img: "ag", url: "/small-world-cup.html" },
-  { title: { en: "Adventure Drivers", tlh: "Heghlu'meH Qaw'be' Hoch" }, img: "ae", url: "/adventuredrivers/" },
+  { title: { en: "Adventure Drivers", tlh: "Heghlu'meH Qaw'be' Hoch" }, img: "ae", url: "/adventuredrivers/", leaving: "13th Feb" },
   { title: { en: "Basket Random", tlh: "Sap QumwI' Dotlh" }, img: "ac", url: "/randoms/basket/" },
   { title: { en: "BitLife", tlh: "bit yIn" }, img: "6", url: "/bitlife/" },
   { title: { en: "Block Blast", tlh: "ngem SuS" }, img: "aa", url: "/block-blast/" },
@@ -27,7 +27,7 @@ export const gamesData = [
 
   { title: { en: "Idle Football Manager", tlh: "mIllogh football ra'wI'" }, img: "k", url: "/idle-football/" },
   { title: { en: "Happy Glass", tlh: "'" }, img: "an", url: "/happyglass/" },
-  { title: { en: "NEW Tiny Fishing", tlh: "mach gheD chu'" }, img: "aq", url: "https://game-hub.nyc3.cdn.digitaloceanspaces.com/tiny-fishing/index.html", broken: true },
+  { title: { en: "NEW Tiny Fishing", tlh: "mach gheD chu'" }, img: "aq", url: "/tiny-fishing/update", broken: true },
   { title: { en: "Nut Sort", tlh: "nI' Hom ghItlh" }, img: "aj", url: "/nutsort/" },
   { title: { en: "OvO", tlh: "OvO" }, img: "7", url: "/ovo/" },
   { title: { en: "Paper.io 2", tlh: "pab Dot IO cha'" }, img: "am", url: "/paperio2/" },
@@ -72,7 +72,7 @@ export const gamesData = [
   { title: { en: "Monkey Mart", tlh: "mangHom malja'" }, img: "bb", url: "/monkey-mart.html" },
   { title: { en: "Draw the Hill", tlh: "HuD ghItlh" }, img: "bc", url: "/draw-the-hill/" },
 
-  { title: { en: "Stickman Archer", tlh: "qInHom SuvwI'" }, img: "bd", url: "/stickman-archer.htm" },
+  { title: { en: "Stickman Archer", tlh: "qInHom SuvwI'" }, img: "bd", url: "/stickman-archer.htm", leaving: "13th Feb" },
   { title: { en: "OvO Dimensions", tlh: "OvO Hoch logh" }, img: "be", url: "/ovo-dimensions.html" },
   { title: { en: "Recoil", tlh: "pumHa'" }, img: "bf", url: "/recoil.html" },
   { title: { en: "OvO 2", tlh: "OvO cha'" }, img: "bh", url: "/ovo2.html", pc: true },
@@ -92,4 +92,5 @@ export const gamesData = [
   { title: { en: "Moto X3M", tlh: "Moto X3M" }, img: "bl", url: "/moto-x3m.html" },
   { title: { en: "GD Lite", tlh: "GD Lite" }, img: "bn", url: "/gdlite/" },
   { title: { en: "Cookie Clicker", tlh: "QumwI' boQ" }, img: "bo", url: "/cookieclicker/" },
+  { title: { en: "Bridge Race", tlh: "Qaw'be' He" }, img: "bp", url: "/bridge-race/" },
 ];

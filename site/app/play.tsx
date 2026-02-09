@@ -242,6 +242,8 @@ export default function HomeScreen() {
       <Animated.View style={[styles.sparkleGlow, { opacity: glowAnim }]} />
 
       {/* Atmosphere Decal */}
+      <View style={{height: 20}} />
+      {/*
       <TouchableOpacity
         onPress={() => { count+=1; if (count===250) {cheese();count=0;} }}
       >
@@ -251,6 +253,7 @@ export default function HomeScreen() {
           bazinga={bazingaMode}
         />
       </TouchableOpacity>
+      */}
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {/* Notice Box */}
@@ -259,7 +262,7 @@ export default function HomeScreen() {
           <Text style={[styles.noticeText, { fontWeight: 'bold' }]}>
             {bazingaMode ? 'UBGU chut' : 'Officially joining the UBGU!'}
           </Text>
-          <Text style={styles.noticeText}>v7.6.1 · 08/02/26</Text>
+          <Text style={styles.noticeText}>v7.6.3 · 09/02/26</Text>
           <View style={{ height: 24, flexDirection: 'row', gap: 12, alignSelf: 'center', flex: 1, marginTop: 20 }} >
             <TouchableOpacity onPress={() => Linking.openURL('https://github.com/sparkly-games')}>
               <Ionicons name="logo-octocat" size={24} color="white" />
@@ -267,9 +270,11 @@ export default function HomeScreen() {
             <TouchableOpacity onPress={() => router.push('/vids')}>
               <Ionicons name="logo-youtube" size={24} color="white" />
             </TouchableOpacity>
+            {/*
             <TouchableOpacity onPress={bazinga}>
               <Ionicons name="logo-electron" size={24} color="white" />
             </TouchableOpacity>
+            */}
             <TouchableOpacity onPress={soundboard}>
               <Ionicons name="volume-high-outline" size={24} color="white" />
             </TouchableOpacity>
@@ -332,7 +337,7 @@ export default function HomeScreen() {
                 pcOnly={game.pc}
               />
               <TouchableOpacity onPress={() => toggleFav(game.title.en)} style={styles.star}>
-                <Ionicons name={favs.includes(game.title.en) ? 'star' : 'star-outline'} size={22} color="#facc15" />
+                <Ionicons name={favs.includes(game.title.en) ? 'star' : 'star-outline'} size={22} color="#60a5fa" />
               </TouchableOpacity>
             </View>
           ))}
@@ -351,7 +356,7 @@ export default function HomeScreen() {
                 bazinga={bazingaMode}
               />
               <TouchableOpacity onPress={() => toggleFav(game.title.en)} style={styles.star}>
-                <Ionicons name={favs.includes(game.title.en) ? 'star' : 'star-outline'} size={22} color="#facc15" />
+                <Ionicons name={favs.includes(game.title.en) ? 'star' : 'star-outline'} size={22} color="#60a5fa" />
               </TouchableOpacity>
             </View>
           ))}
@@ -367,17 +372,17 @@ export default function HomeScreen() {
                 <Text style={styles.modalX}>✕</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={handleFullscreen}>
-                <Ionicons name="scan" size={28} color="white" />
+                <Ionicons name="scan" size={28} color="#60a5fa" />
               </TouchableOpacity>
 
               {modalGame?.title.en && !modalGame?.soundboard && (
                 <TouchableOpacity onPress={() => toggleFav(modalGame.title.en)}>
-                  <Ionicons name={favs.includes(modalGame.title.en) ? 'star' : 'star-outline'} size={28} color="#facc15" />
+                  <Ionicons name={favs.includes(modalGame.title.en) ? 'star' : 'star-outline'} size={28} color="#60a5fa" />
                 </TouchableOpacity>
               )}
 
               <TouchableOpacity onPress={() => setIframeKey(k => k + 1)}>
-                <Ionicons name="refresh" size={28} color="white" />
+                <Ionicons name="refresh" size={28} color="#60a5fa" />
               </TouchableOpacity>
             </View>
 
@@ -390,23 +395,26 @@ export default function HomeScreen() {
           </View>
         </View>
       </Modal>
-      <AdSenseBanner />
     </View>
   );
 }
 
 /* ---------------- Styles ---------------- */
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#030712' },
+  container: { 
+    flex: 1, 
+    backgroundColor: '#020617' // Deep midnight blue/black
+  },
   scrollContent: { paddingBottom: 40 },
   sparkleGlow: {
     position: 'absolute',
     width: 420,
     height: 420,
     borderRadius: 420,
-    backgroundColor: '#ec4899',
+    backgroundColor: '#3b82f6', // Electric Blue
     top: -140,
     alignSelf: 'center',
+    filter: 'blur(80px)', // Adds that soft atmospheric glow
   },
   'new-year': { height: 175, width: 400, top: 10, alignSelf: 'center' },
 
@@ -414,32 +422,78 @@ const styles = StyleSheet.create({
     margin: 16,
     padding: 22,
     borderRadius: 20,
-    backgroundColor: 'rgba(255,255,255,0.06)',
+    backgroundColor: 'rgba(30, 58, 138, 0.2)', // Deep blue tint
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.12)',
+    borderColor: 'rgba(59, 130, 246, 0.3)', // Cyan-blue border
   },
-  noticeTitle: { color: '#f6ec5c', fontSize: 22, fontWeight: '900', textAlign: 'center' },
-  noticeText: { color: '#e5e7eb', textAlign: 'center', marginTop: 6 },
+  noticeTitle: { 
+    color: '#60a5fa', // Light sky blue
+    fontSize: 22, 
+    fontWeight: '900', 
+    textAlign: 'center',
+    textShadowColor: 'rgba(59, 130, 246, 0.5)',
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 10
+  },
+  noticeText: { color: '#bfdbfe', textAlign: 'center', marginTop: 6 },
 
   search: {
     marginHorizontal: 16,
     marginBottom: 12,
     padding: 14,
     borderRadius: 14,
-    backgroundColor: '#111827',
+    backgroundColor: '#0f172a', // Slate blue
     color: 'white',
+    borderWidth: 1,
+    borderColor: '#1e293b',
   },
   toggles: { flexDirection: 'row', justifyContent: 'center', gap: 8, marginBottom: 10 },
-  toggle: { paddingVertical: 8, paddingHorizontal: 14, borderRadius: 14, backgroundColor: '#1f2937' },
-  toggleActive: { backgroundColor: '#ec4899' },
+  toggle: { 
+    paddingVertical: 8, 
+    paddingHorizontal: 14, 
+    borderRadius: 14, 
+    backgroundColor: '#1e293b' 
+  },
+  toggleActive: { 
+    backgroundColor: '#2563eb', // Vibrant Primary Blue
+    shadowColor: '#2563eb',
+    shadowOpacity: 0.5,
+    shadowRadius: 10,
+  },
   toggleText: { color: 'white', fontWeight: '700' },
-  horrorTxt: { textAlign: 'center', marginBottom: 12, color: '#f87171', fontWeight: '800' },
-  sectionTitle: { color: '#ffffff', textAlign: 'center', marginBottom: 12, fontSize: 20, fontWeight: '800' },
+  horrorTxt: { 
+    textAlign: 'center', 
+    marginBottom: 12, 
+    color: '#93c5fd', // Soft blue instead of red for "horror" to stay in theme
+    fontWeight: '800' 
+  },
+  sectionTitle: { 
+    color: '#ffffff', 
+    textAlign: 'center', 
+    marginBottom: 12, 
+    fontSize: 20, 
+    fontWeight: '800',
+    letterSpacing: 1
+  },
   grid: { flexDirection: 'row', flexWrap: 'wrap', paddingHorizontal: 8 },
   star: { position: 'absolute', right: 10, top: 10 },
 
-  modalBg: { flex: 1, backgroundColor: 'rgba(0,0,0,0.85)', justifyContent: 'center', alignItems: 'center' },
-  modalContent: { width: '95%', height: '90%', backgroundColor: '#111827', borderRadius: 20, overflow: 'hidden' },
-  modalHeader: { flexDirection: 'row', justifyContent: 'flex-end', padding: 8, gap: 12 },
-  modalX: { color: 'white', fontSize: 28, fontWeight: '900' },
+  modalBg: { flex: 1, backgroundColor: 'rgba(2, 6, 23, 0.9)', justifyContent: 'center', alignItems: 'center' },
+  modalContent: { 
+    width: '95%', 
+    height: '90%', 
+    backgroundColor: '#0f172a', 
+    borderRadius: 20, 
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: '#334155'
+  },
+  modalHeader: { 
+    flexDirection: 'row', 
+    justifyContent: 'flex-end', 
+    padding: 8, 
+    gap: 12, 
+    backgroundColor: '#1e293b' 
+  },
+  modalX: { color: '#60a5fa', fontSize: 28, fontWeight: '900' },
 });

@@ -1,51 +1,52 @@
 import React, { useEffect, useRef } from 'react';
-import { Platform, View } from 'react-native';
+import { Platform } from 'react-native';
 
 const AdSenseBanner = () => {
-  const adContainerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (Platform.OS !== 'web') return;
 
-    // 1. Set the global configuration object that the script looks for
-    (window as any).atOptions = {
-      'key' : '9ef294a575410f41d555c0fb56041a3d',
-      'format' : 'iframe',
-      'height' : 90,
-      'width' : 728,
-      'params' : {}
-    };
-
-    // 2. Create the script element
-    const script = document.createElement('script');
-    script.src = "/invoke.js";
-    script.async = true;
-
-    // 3. Append it to the container
-    if (adContainerRef.current) {
-      adContainerRef.current.appendChild(script);
-    }
-
-    return () => {
-      // Cleanup to prevent memory leaks or duplicate ads on re-renders
-      if (adContainerRef.current) {
-        adContainerRef.current.innerHTML = '';
+    const loadAd = () => {
+      // Only push if the container actually has a width now
+      if (containerRef.current && containerRef.current.offsetWidth > 0) {
+        try {
+          ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({});
+        } catch (e) {
+          console.error("AdSense error:", e);
+        }
+      } else {
+        // If width is still 0, wait 100ms and try one more time
+        setTimeout(loadAd, 100);
       }
     };
+
+    loadAd();
   }, []);
 
   if (Platform.OS !== 'web') return null;
 
   return (
+    /* 1. We wrap it in a div with a minWidth or specific width */
     <div 
-      ref={adContainerRef} 
+      ref={containerRef}
       style={{ 
-        width: '728px', 
-        height: '90px', 
-        margin: '20px auto', 
+        width: '100%', 
+        minHeight: '90px', // Prevents layout shift
+        margin: '20px 0', 
         textAlign: 'center' 
-      }} 
-    />
+      }}
+    >
+      <ins
+        className="adsbygoogle"
+        style={{ display: 'block', minWidth: '250px' }} // 2. Set a minWidth here
+        data-ad-client="ca-pub-5114925324085905"
+        data-ad-slot="1228236313"
+        data-ad-format="auto"
+        data-adtest="on"
+        data-full-width-responsive="true"
+      />
+    </div>
   );
 };
 

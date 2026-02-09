@@ -63,7 +63,6 @@ export function Game({
 
   const awards: Record<string, string> = {
     '6': '🥇 2025',
-    a: '🥈 2025',
     '1': '🥉 2025',
     x: '🎖️ 2025',
     c: '🎖️ 2025',
@@ -188,11 +187,13 @@ export function Game({
 const styles = StyleSheet.create({
   card: {
     position: 'relative',
-    backgroundColor: '#383b3a',
+    backgroundColor: '#1e293b', // Deep Slate Blue
     borderRadius: 24,
     alignItems: 'center',
     padding: 10,
-    overflow: 'visible', // important for web
+    overflow: 'visible',
+    borderWidth: 1,
+    borderColor: 'rgba(59, 130, 246, 0.2)', // Subtle blue border
   },
   imageWrapper: {
     position: 'relative',
@@ -213,16 +214,16 @@ const styles = StyleSheet.create({
   text: {
     marginTop: 8,
     fontSize: 10,
-    color: 'white',
+    color: '#f8fafc', // Off-white/Ice blue
     fontWeight: 'bold',
     textAlign: 'center',
-    width: 120,
+    width: "100%",
   },
   newBadge: {
     position: 'absolute',
     top: 5,
     right: 5,
-    backgroundColor: '#00d084',
+    backgroundColor: '#10b981', // Emerald/Seafoam
     color: 'white',
     fontWeight: '800',
     fontSize: 10,
@@ -235,7 +236,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 5,
     left: 5,
-    backgroundColor: '#4b9eff',
+    backgroundColor: '#3b82f6', // Bright Blue
     color: 'white',
     fontWeight: '800',
     fontSize: 10,
@@ -243,12 +244,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6,
     borderRadius: 6,
     zIndex: 40,
+    shadowColor: '#3b82f6',
+    shadowOpacity: 0.4,
+    shadowRadius: 4,
   },
   brokenBadge: {
     position: 'absolute',
     top: 28,
     left: 5,
-    backgroundColor: '#ff4d4d',
+    backgroundColor: '#ef4444', // Kept red for urgency/bug visibility
     color: 'white',
     fontWeight: '900',
     fontSize: 10,
@@ -261,19 +265,19 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 10,
     right: 10,
-    backgroundColor: '#cbcbcb',
+    backgroundColor: '#bfdbfe', // Light Sky Blue
     paddingVertical: 3,
     paddingHorizontal: 6,
     borderRadius: 8,
     zIndex: 30,
     borderWidth: 1,
-    borderColor: 'rgba(0,0,0,0.1)',
+    borderColor: '#60a5fa',
   },
   leavingBadge: {
     position: 'absolute',
     bottom: 10,
     left: 10,
-    backgroundColor: '#ffd966',
+    backgroundColor: '#60a5fa', // Steel Blue (changed from yellow)
     paddingVertical: 3,
     paddingHorizontal: 6,
     borderRadius: 8,
@@ -282,6 +286,6 @@ const styles = StyleSheet.create({
   awardText: {
     fontSize: 9,
     fontWeight: '900',
-    color: '#2a2a2a',
+    color: '#1e3a8a', // Dark Navy text for readability
   },
 });

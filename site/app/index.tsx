@@ -7,19 +7,29 @@ import {
   Image,
   Pressable,
   Animated,
+  useWindowDimensions,
+  Platform,
 } from 'react-native';
 import React, { useRef, useEffect } from 'react';
 import { router } from 'expo-router';
 import Head from 'expo-router/head';
 
+// Pulling data from the external source
+import { SELLING_POINTS } from '@/assets/data/selling';
+
 export default function Home() {
+  const { width } = useWindowDimensions();
   const floatAnim = useRef(new Animated.Value(0)).current;
+
+  // Responsive Breakpoints
+  const isMobile = width < 768;
+  const isTablet = width >= 768 && width < 1024;
 
   useEffect(() => {
     Animated.loop(
       Animated.sequence([
         Animated.timing(floatAnim, {
-          toValue: -8,
+          toValue: -10,
           duration: 2500,
           useNativeDriver: true,
         }),
@@ -32,31 +42,45 @@ export default function Home() {
     ).start();
   }, []);
 
+  // Calculate card width based on screen size
+  const getCardWidth = () => {
+    if (isMobile) return '100%';
+    if (isTablet) return '47%'; // 2 columns with gap
+    return '31%'; // 3 columns with gap
+  };
+
   return (
     <View style={styles.root}>
       <Head>
-          <title>Sparkly Games</title>
+        <title>Sparkly Games</title>
       </Head>
-      {/* Header */}
+      <StatusBar style="light" />
+
+      {/* Sticky Header */}
       <View style={styles.header}>
         <View style={styles.headerInner}>
           <View style={styles.brand}>
             <Image source={{ uri: '/favicon.ico' }} style={styles.logo} />
-            <Text style={[styles.brandText, styles.gradientText]}>
-              Sparkly Games
-            </Text>
+            <Text style={[styles.brandText, styles.gradientText]}>Sparkly</Text>
           </View>
 
-            <View style={{width: 15}} />
-
-          <View style={styles.nav}>
-            <Text style={[styles.navItem, styles.navMuted]} onPress={() => { if(window.location.hostname !== "localhost") window.location.href = '/docs'; else {window.location.href = 'http://localhost:3000/docs'} }}>Docs</Text>
-          </View>
+          {!isMobile && (
+            <View style={styles.nav}>
+              <Text style={styles.navItemMuted}>Docs</Text>
+              <Text style={styles.navItemMuted}>Developers</Text>
+              <Pressable style={styles.navButton}>
+                <Text style={styles.navButtonText}>SIGN IN</Text>
+              </Pressable>
+            </View>
+          )}
         </View>
       </View>
 
-      <ScrollView contentContainerStyle={styles.scroll}>
-        {/* Hero */}
+      <ScrollView 
+        contentContainerStyle={styles.scroll}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Hero Section */}
         <View style={styles.hero}>
           <Animated.View
             style={[
@@ -68,65 +92,60 @@ export default function Home() {
             <Text style={styles.badgeText}>Version 7 out now!</Text>
           </Animated.View>
 
-          <Text style={styles.title}>
-            EMBRACE THE{'\n'}
-            <Text style={styles.gradientText}>GAMER WITHIN</Text>
+          <Text style={[styles.title, isMobile && styles.titleMobile]}>
+            ENDLESS BOREDOM{'\n'}
+            <Text style={styles.gradientText}>STOPS HERE</Text>
           </Text>
 
           <Text style={styles.subtitle}>
-            Experience the next generation of social gaming. Built for creators,
-            players, and dreamers alike. Dive into a universe where every game
-            is a new adventure.
+            Experience the best, hand-picked web games, all in one place. 
+            With no in-game ads, just pure, uninterrupted fun.
           </Text>
 
-          <View style={styles.buttons}>
+          <View style={[styles.heroButtons, isMobile && styles.heroButtonsMobile]}>
             <Pressable
-              style={styles.primaryButton}
+              style={[styles.primaryButton, isMobile && styles.fullWidth]}
               onPress={() => router.push('/play')}
             >
-              <Text style={styles.primaryText}>START PLAYING →</Text>
+              <Text style={styles.primaryText}>KILL THE BOREDOM →</Text>
             </Pressable>
 
             <Pressable
-              style={styles.secondaryButton}
-              onPress={() => window.location.href = '/sparkly-dev'}
+              style={[styles.secondaryButton, isMobile && styles.fullWidth]}
             >
               <Text style={styles.secondaryText}>sparkly.dev</Text>
             </Pressable>
           </View>
         </View>
 
-        {/* Features */}
+        {/* Features Grid */}
         <View style={styles.features}>
-          <View style={styles.card}>
-            <Text style={styles.emoji}>✨</Text>
-            <Text style={styles.cardTitle}>Pure Polish</Text>
-            <Text style={styles.cardText}>
-              Every frame and interaction is tuned for maximum satisfaction.
-            </Text>
-          </View>
-
-          <View style={styles.card}>
-            <Text style={styles.emoji}>🚀</Text>
-            <Text style={styles.cardTitle}>Fast Access</Text>
-            <Text style={styles.cardText}>
-              No downloads, no lag. Jump straight into Sparkly from your browser.
-            </Text>
-          </View>
+          {SELLING_POINTS.map((point, index) => (
+            <View 
+              key={index} 
+              style={[
+                styles.card, 
+                { width: getCardWidth() }
+              ]}
+            >
+              <View style={styles.cardGlow} />
+              <View style={styles.iconCircle}>
+                <Text style={styles.emoji}>{point.emoji}</Text>
+              </View>
+              <Text style={styles.cardTitle}>{point.title}</Text>
+              <Text style={styles.cardText}>{point.text}</Text>
+            </View>
+          ))}
         </View>
 
         {/* Footer */}
         <View style={styles.footer}>
           <View style={styles.footerBrand}>
-            <Image
-              source={{ uri: '/favicon.ico' }}
-              style={styles.footerLogo}
-            />
+            <Image source={{ uri: '/favicon.ico' }} style={styles.footerLogo} />
             <Text style={styles.footerLabel}>SPARKLY ECOSYSTEM</Text>
           </View>
-
           <Text style={styles.footerText}>
-            © 2025 Sparkly Games. Keep shining.
+            Open Source © 2026 Sparkly Games. Keep shining.
           </Text>
         </View>
       </ScrollView>
@@ -134,234 +153,256 @@ export default function Home() {
   );
 }
 
-/* Styles — WEB ONLY */
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: '#030712',
+    backgroundColor: '#020617',
   },
-
   scroll: {
-    paddingTop: 120,
-    paddingBottom: 80,
+    paddingTop: 100,
+    paddingBottom: 60,
   },
-
-  /* Header */
   header: {
-    position: 'fixed' as any,
+    position: Platform.OS === 'web' ? ('fixed' as any) : 'absolute',
     top: 0,
     width: '100%',
-    borderBottomWidth: 1,
-    borderColor: 'rgba(255,255,255,0.05)',
-    backgroundColor: 'rgba(3,7,18,0.6)',
-    backdropFilter: 'blur(16px)',
     zIndex: 100,
+    backgroundColor: 'rgba(2, 6, 23, 0.8)',
+    borderBottomWidth: 1,
+    borderColor: 'rgba(59, 130, 246, 0.1)',
+    ...Platform.select({
+      web: { backdropFilter: 'blur(20px)' } as any,
+    }),
   },
-
   headerInner: {
-    maxWidth: 1280,
-    marginHorizontal: 'auto' as any,
-    paddingHorizontal: 24,
-    paddingVertical: 16,
+    maxWidth: 1200,
+    alignSelf: 'center',
+    width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    paddingHorizontal: 24,
+    paddingVertical: 16,
   },
-
   brand: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
   },
-
   logo: {
     width: 32,
     height: 32,
   },
-
   brandText: {
     fontSize: 24,
-    fontWeight: '800',
+    fontWeight: '900',
     letterSpacing: -1,
   },
-
+  gradientText: {
+    color: '#60a5fa',
+    ...Platform.select({
+      web: {
+        backgroundImage: 'linear-gradient(90deg, #60a5fa, #3b82f6)',
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+      } as any,
+    }),
+  },
   nav: {
     flexDirection: 'row',
+    alignItems: 'center',
     gap: 32,
   },
-
-  navItem: {
-    color: '#e5e7eb',
-    fontWeight: '700',
-    letterSpacing: 1,
-    textTransform: 'uppercase',
+  navItemMuted: {
+    color: '#475569',
     fontSize: 12,
+    fontWeight: '700',
+    textTransform: 'uppercase',
+    letterSpacing: 1,
   },
-
-  navMuted: {
-    color: '#9ca3af',
+  navButton: {
+    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 99,
+    borderWidth: 1,
+    borderColor: 'rgba(59, 130, 246, 0.2)',
   },
-
-  /* Gradient text (web only) */
-  gradientText: {
-    backgroundImage:
-      'linear-gradient(90deg, #f6ec5c, #ecb848, #f6733b, #ec4899, #f65c5c)',
-    backgroundClip: 'text',
-    WebkitBackgroundClip: 'text',
-    color: 'transparent',
-  } as any,
-
-  /* Hero */
+  navButtonText: {
+    color: '#60a5fa',
+    fontSize: 11,
+    fontWeight: '800',
+  },
   hero: {
-    alignItems: 'center',
     paddingHorizontal: 24,
+    alignItems: 'center',
+    marginTop: 60,
   },
-
   versionBadge: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    paddingHorizontal: 14,
-    paddingVertical: 6,
-    borderRadius: 999,
-    backgroundColor: 'rgba(255,255,255,0.05)',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 99,
+    backgroundColor: 'rgba(59, 130, 246, 0.1)',
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
+    borderColor: 'rgba(59, 130, 246, 0.2)',
     marginBottom: 32,
   },
-
   pingDot: {
     width: 8,
     height: 8,
-    borderRadius: 999,
-    backgroundColor: '#ec4899',
+    borderRadius: 4,
+    backgroundColor: '#3b82f6',
   },
-
   badgeText: {
+    color: '#93c5fd',
     fontSize: 12,
-    color: '#cbd5f5',
-    fontWeight: '700',
+    fontWeight: '800',
     textTransform: 'uppercase',
   },
-
   title: {
     fontSize: 72,
     fontWeight: '900',
+    color: '#fff',
     textAlign: 'center',
-    color: '#ffffff',
     lineHeight: 78,
+    letterSpacing: -2,
     marginBottom: 24,
   },
-
+  titleMobile: {
+    fontSize: 42,
+    lineHeight: 48,
+  },
   subtitle: {
-    maxWidth: 640,
-    textAlign: 'center',
     fontSize: 18,
-    color: '#9ca3af',
+    color: '#94a3b8',
+    textAlign: 'center',
+    maxWidth: 600,
+    lineHeight: 28,
     marginBottom: 48,
   },
-
-  buttons: {
+  heroButtons: {
     flexDirection: 'row',
-    gap: 24,
+    gap: 16,
   },
-
+  heroButtonsMobile: {
+    flexDirection: 'column',
+    width: '100%',
+  },
+  fullWidth: {
+    width: '100%',
+    alignItems: 'center',
+  },
   primaryButton: {
-    backgroundColor: '#ffffff',
-    paddingHorizontal: 40,
+    backgroundColor: '#2563eb',
+    paddingHorizontal: 32,
     paddingVertical: 18,
-    borderRadius: 16,
+    borderRadius: 20,
+    shadowColor: '#2563eb',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.3,
+    shadowRadius: 20,
   },
-
   primaryText: {
-    color: '#030712',
-    fontSize: 18,
+    color: '#fff',
+    fontSize: 16,
     fontWeight: '900',
   },
-
   secondaryButton: {
-    paddingHorizontal: 40,
+    backgroundColor: 'rgba(30, 41, 59, 0.5)',
+    paddingHorizontal: 32,
     paddingVertical: 18,
-    borderRadius: 16,
-    backgroundColor: 'rgba(255,255,255,0.05)',
+    borderRadius: 20,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
+    borderColor: 'rgba(59, 130, 246, 0.2)',
   },
-
   secondaryText: {
-    fontSize: 18,
+    color: '#93c5fd',
+    fontSize: 16,
     fontWeight: '700',
-    color: '#e5e7eb',
   },
-
-  /* Features */
   features: {
-    maxWidth: 1280,
-    marginHorizontal: 'auto' as any,
-    marginTop: 120,
-    paddingHorizontal: 24,
+    maxWidth: 1200,
+    alignSelf: 'center',
+    width: '100%',
     flexDirection: 'row',
-    gap: 32,
+    flexWrap: 'wrap',
+    gap: 20,
+    paddingHorizontal: 24,
+    marginTop: 100,
+    justifyContent: 'center',
   },
-
   card: {
-    flex: 1,
+    backgroundColor: 'rgba(30, 41, 59, 0.4)',
+    borderRadius: 32,
     padding: 32,
-    borderRadius: 24,
-    backgroundColor: 'rgba(255,255,255,0.05)',
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
+    borderColor: 'rgba(59, 130, 246, 0.1)',
+    position: 'relative',
+    overflow: 'hidden',
   },
-
+  cardGlow: {
+    position: 'absolute',
+    top: -50,
+    right: -50,
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: 'rgba(37, 99, 235, 0.1)',
+    ...Platform.select({
+      web: { filter: 'blur(40px)' } as any,
+    }),
+  },
+  iconCircle: {
+    width: 56,
+    height: 56,
+    borderRadius: 16,
+    backgroundColor: 'rgba(37, 99, 235, 0.1)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
   emoji: {
-    fontSize: 32,
-    marginBottom: 16,
+    fontSize: 24,
   },
-
   cardTitle: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: '800',
-    marginBottom: 8,
-    color: '#ffffff',
+    color: '#fff',
+    marginBottom: 12,
   },
-
   cardText: {
-    color: '#9ca3af',
     fontSize: 15,
+    color: '#94a3b8',
+    lineHeight: 22,
   },
-
-  /* Footer */
   footer: {
     marginTop: 120,
     alignItems: 'center',
+    paddingHorizontal: 24,
   },
-
   footerBrand: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    marginBottom: 12,
+    gap: 12,
+    marginBottom: 16,
+    opacity: 0.5,
   },
-
   footerLogo: {
     width: 20,
     height: 20,
-    opacity: 0.5,
+    tintColor: '#3b82f6',
   },
-
   footerLabel: {
+    color: '#94a3b8',
     fontSize: 10,
-    fontWeight: '700',
+    fontWeight: '800',
     letterSpacing: 2,
-    color: '#6b7280',
   },
-
   footerText: {
+    color: '#475569',
     fontSize: 12,
-    color: '#6b7280',
   },
 });
-
-export const screenOptions = {
-  headerShown: false,
-};

@@ -15,45 +15,25 @@ This lets us keep a single codebase that works on web and native, while still de
 To run the project locally:
 
 ```bash
-git clone https://github.com/sparkly-games/main-site.git
-cd main-site
+git clone https://github.com/sparkly-games/sparkly.git
+cd sparkly
 npm install
-npm run start
+npm start
 ```
 
-This starts the Expo development server, letting you preview the site in the browser or any Expo-friendly environment.
-
----
-
-## 📦 Deployment Options
-
-Instant one-click deploys:
-
-[![Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fsparkly-games%2Fmain-site%2F&project-name=onlinegames19&repository-name=games-site)  
-[![Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/sparkly-games/main-site)
+This starts the Expo development server and docs server, letting you preview the site in the browser or any Expo-friendly environment.
 
 ---
 
 ## 🧰 Tech Stack
 
-- **Framework:** React Native (via Expo)
-- **Rendering:** Expo Web Static Export (`expo export`)
+- **Framework:** React Native (via Expo) and Docusaurus
+- **Rendering:** Expo Web Static Export (`expo export`) and Docusaurus Prod Builds
 - **Languages:** TypeScript
 - **Package Manager:** npm
 
 ---
 
-## 🧪 Testing
-
-If you're contributing tests:
-
-- Prefer **Jest** for unit testing
-- Keep test files next to the code they cover: `MyComponent.test.tsx`
-- Mock Expo modules when needed
-
-(If you want, I can help you actually set up a testing environment.)
-
----
 
 ## 🤝 Contributing
 
@@ -104,13 +84,13 @@ Feature requests are welcome too!
 
 ## 🌐 Live Deployments
 
-### **Current / Up-to-Date**
-- https://sparkly.creepers.sbs  
-- https://sparxapi19.vercel.app
-
-### **Portal Mirrors**
 - https://sparxapi19.firebaseapp.com
 - https://sparxapi19.web.app
+
+<details>
+<summary>More Deployments</summary>
+
+### **Portal Mirrors**
 - https://sparkly.mygamesonline.org
 
 ### **Archived / Outdated Builds**
@@ -118,13 +98,17 @@ Feature requests are welcome too!
 - https://onlinegames12.onrender.com  
 - https://sparxapi20.wasmer.app  
 - https://sparx-learning.cloud-ip.cc  
-- https://onlinegames12.web.app  
+- https://onlinegames12.web.app
+- https://onlinegames12.firebaseapp.com
+- https://sparkly.creepers.sbs  
+- https://sparxapi19.vercel.app
+</details>
 
 ---
 
 ## 📜 License
 
-This project is released under the **MIT License**, allowing personal and commercial use with proper attribution.
+This project is released under the **MPL2.0 License**.
 
 ---
 

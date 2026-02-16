@@ -1,0 +1,15 @@
+name: Sync Template
+on:
+  schedule:
+    - cron: "0 0 * * *" # Runs daily at midnight
+  workflow_dispatch: # Allows manual triggering
+
+jobs:
+  repo-sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: actions-template-sync
+        uses: AndreasAugustin/actions-template-sync@v2.5.2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          source_repo: "owner/template-repo" # The repo you're pulling from

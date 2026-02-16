@@ -21,6 +21,6 @@ jobs:
         uses: AndreasAugustin/actions-template-sync@v2.5.2
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          source_repo: "sparkly-games/sparkly"
+          source_repo_path: "sparkly-games/sparkly"
           # Optional: define a specific branch if not using the default
           # source_branch: main

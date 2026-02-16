@@ -12,4 +12,4 @@ jobs:
         uses: AndreasAugustin/actions-template-sync@v2.5.2
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          source_repo: "owner/template-repo" # The repo you're pulling from
+          source_repo: "sparkly-games/sparkly" # The repo you're pulling from

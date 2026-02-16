@@ -1,92 +1,67 @@
 ---
+
 sidebar_position: 1
+
 ---
 
 # Quick Start
 
+Get your first project up and running on the Sparkly ecosystem in under 5 minutes.
+
 ## Prerequisites
 
-- A Sparkly.Dev account
-- [Node.js](https://nodejs.org) and [npm](https://npmjs.org)
-- ~15 GB of free disk space
-- A game idea
-- A [GitHub](https://github.com) account
+* A **[Sparkly.Dev Account](https://www.google.com/search?q=/docs/docs/Getting%2520Started/creating-an-account)** (Linked via GitHub)
+* **[Node.js](https://nodejs.org)** (v18 or higher recommended)
+* **~15 GB** of free disk space
+* A [GitHub](https://github.com) account
 
 ---
 
-## Getting Started
+## 🛠️ Getting Started
 
-1. Install Visual Studio Code (or another code editor).
-2. Open a terminal and run:
+1. **Prepare your workspace**: Install [Visual Studio Code](https://www.google.com/search?q=https://code.visualstudio.com/) or your preferred editor.
+2. **Initialize your project**: Open a terminal and run the global creator:
 
 ```bash title="root@my-pc.local ~"
-npm create sparkly-pkg -- "my-game"
+npm create sparkly
+
 ```
 
-3. You may be prompted to sign in via your browser.  
-   Make sure you **authorise `@sparkly.dev/cli`**, otherwise the CLI will not function.
+3. **Log in**: Follow the on-screen instructions to link your GitHub account. This allows you to publish and manage your projects.
+4. **Project Setup**:
+* Choose a template (`tsx-app` or `html5-game`).
+* Place your game assets or web files in the `public` folder.
+* Edit `App.tsx` (for apps) or the main script file (for games) to customize your project.
+
+
 
 ---
 
-:::warning Security notice
+## 🧪 Testing Your Project
 
-If an **official Sparkly package** is ever found to be compromised, we may temporarily disable authentication for that package and revoke associated tokens as a precaution. When access is restored, you’ll simply need to log in again to re-issue tokens.
+1. **Enter your directory**:
 
-This is done to protect both developers and players.
-:::
+```bash title="root@my-pc.local ~"
+cd your-project-name
 
-:::danger Third-party packages
+```
 
-Only authorise packages marked with the **“Official Sparkly Product”** tag.
+2. **Launch Preview**: Start the local development server:
 
-Authorising unverified packages may expose your account. If you believe your account has been compromised:
-- Revoke any unfamiliar authorisations
-- Contact SparklyDev support immediately
+```bash title="root@my-pc.local your-project-name"
+npm start
 
-As a safety measure, affected accounts may temporarily enter **Safe Mode**, disabling new uploads until the issue is resolved.
-:::
+```
+
+---
+
+🎉 **That’s it!** You’ve successfully initialized your project. When you are ready to share it with the world, simply run:
+
+```bash
+npx spark-registry publish
+
+```
 
 :::info Need help?
-Contact us and we'll be in touch!
+Join our community or contact support—we're here to help you spark your ideas!
 :::
-
----
-
-4. After setup, you’ll receive a project preset with mock API endpoints such as:
-   - `/api/isMonetised`
-   - `/api/isAdSupported`
-
-5. Place your game files in the `public` folder and add new API endpoints in `api.js`.
-
----
-
-## Testing Your Game
-
-1. Navigate to your project directory:
-
-```bash title="root@my-pc.local ~"
-cd my-game
-```
-
-2. Install dependencies (if needed):
-
-```bash title="root@my-pc.local my-game"
-npm install
-```
-
-3. Verify the project structure:
-
-```bash title="root@my-pc.local my-game"
-npm run struct-chck
-```
-
-4. Start the development server:
-
-```bash title="root@my-pc.local my-game"
-npm start
-```
-
----
-
-🎉 **That’s it!**  
-You’ve successfully created your first game using the Sparkly Games API.

@@ -67,7 +67,7 @@ export const gameIcons = {
   "ba": require("../icons/ba.jpg"),
   "bb": require("../icons/bb.webp"),
   "bc": require("../icons/bc.jpg"),
-  "bd": require("../icons/bd.avif"),
+  "bd": require("../icons/bd.jpg"),
   "be": require("../icons/be.jpg"),
   "bf": require("../icons/bf.jpg"),
   "bg": require("../icons/bg.png"),

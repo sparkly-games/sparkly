@@ -66,11 +66,7 @@ export default function Home() {
 
           {!isMobile && (
             <View style={styles.nav}>
-              <Text style={styles.navItemMuted}>Docs</Text>
-              <Text style={styles.navItemMuted}>Developers</Text>
-              <Pressable style={styles.navButton}>
-                <Text style={styles.navButtonText}>SIGN IN</Text>
-              </Pressable>
+              <Text style={styles.navItemMuted} onPress={() => {window.location.href = '/docs'}}>Docs</Text>
             </View>
           )}
         </View>
@@ -108,12 +104,6 @@ export default function Home() {
               onPress={() => router.push('/play')}
             >
               <Text style={styles.primaryText}>KILL THE BOREDOM →</Text>
-            </Pressable>
-
-            <Pressable
-              style={[styles.secondaryButton, isMobile && styles.fullWidth]}
-            >
-              <Text style={styles.secondaryText}>sparkly.dev</Text>
             </Pressable>
           </View>
         </View>

@@ -1,6 +1,5 @@
 export const gamesData = [
   { title: { en: "A Small World Cup", tlh: "qo' mach quj" }, img: "ag", url: "/small-world-cup.html" },
-  { title: { en: "Adventure Drivers", tlh: "Heghlu'meH Qaw'be' Hoch" }, img: "ae", url: "/adventuredrivers/", leaving: "13th Feb" },
   { title: { en: "Basket Random", tlh: "Sap QumwI' Dotlh" }, img: "ac", url: "/randoms/basket/" },
   { title: { en: "BitLife", tlh: "bit yIn" }, img: "6", url: "/bitlife/" },
   { title: { en: "Block Blast", tlh: "ngem SuS" }, img: "aa", url: "/block-blast/" },
@@ -72,7 +71,6 @@ export const gamesData = [
   { title: { en: "Monkey Mart", tlh: "mangHom malja'" }, img: "bb", url: "/monkey-mart.html" },
   { title: { en: "Draw the Hill", tlh: "HuD ghItlh" }, img: "bc", url: "/draw-the-hill/" },
 
-  { title: { en: "Stickman Archer", tlh: "qInHom SuvwI'" }, img: "bd", url: "/stickman-archer.htm", leaving: "13th Feb" },
   { title: { en: "OvO Dimensions", tlh: "OvO Hoch logh" }, img: "be", url: "/ovo-dimensions.html" },
   { title: { en: "Recoil", tlh: "pumHa'" }, img: "bf", url: "/recoil.html" },
   { title: { en: "OvO 2", tlh: "OvO cha'" }, img: "bh", url: "/ovo2.html", pc: true },
@@ -93,4 +91,5 @@ export const gamesData = [
   { title: { en: "GD Lite", tlh: "GD Lite" }, img: "bn", url: "/gdlite/" },
   { title: { en: "Cookie Clicker", tlh: "QumwI' boQ" }, img: "bo", url: "/cookieclicker/" },
   { title: { en: "Bridge Race", tlh: "Qaw'be' He" }, img: "bp", url: "/bridge-race/" },
+  { title: { en: "Doge Miner 2", tlh: "Doge ghoS cha'" }, img: "bd", url: "/doge-miner-2/" },
 ];

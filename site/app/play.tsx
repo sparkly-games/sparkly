@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react';
+import { secretEmailFunction } from '../assets/data/uidEmail';
 import {
   View,
   Text,
@@ -10,6 +11,7 @@ import {
   Animated,
   Linking,
   Modal,
+  TurboModuleRegistry,
 } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
@@ -29,6 +31,9 @@ export default function HomeScreen() {
   const { width } = useWindowDimensions();
   const router = useRouter();
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
+  const [allClickCount, setAllClickCount] = useState(0);
+  const [allTabActive, setAllTabActive] = useState(false);
+  const allClickTimerRef = useRef<NodeJS.Timeout | null>(null);
   const cheeseContainerRef = useRef<HTMLDivElement | null>(null);
 
   /* ---------------- Bazinga ---------------- */
@@ -87,6 +92,29 @@ export default function HomeScreen() {
   const [showPC, setShowPC] = useState(false);
   const [modalGame, setModalGame] = useState<any>(null);
   const [iframeKey, setIframeKey] = useState(0);
+
+  const [isBanned, setIsBanned] = useState(false);
+
+  useEffect(() => {
+    async function checkBan() {
+      let uid = localStorage.getItem('sparkly:uid');
+
+      if (!uid) {
+        uid = crypto.randomUUID();
+        localStorage.setItem('sparkly:uid', uid);
+      }
+
+      try {
+        const banList = await fetch('/banlist.json').then(res => res.json());
+        setIsBanned(banList.includes(uid));
+      } catch {
+        setIsBanned(false);
+      }
+    }
+
+    checkBan();
+  }, []);
+
 
   /* ---------------- Animations ---------------- */
   const floatAnim = useRef(new Animated.Value(0)).current;
@@ -300,17 +328,46 @@ export default function HomeScreen() {
           {['all', 'favs', 'recent'].map(v => (
             <TouchableOpacity
               key={v}
-              onPress={() => setView(v as any)}
-              style={[styles.toggle, view === v && styles.toggleActive]}
+              onPress={() => {
+                setView(v as any);
+
+                if (v === 'all') {
+                  // Secret click counter logic
+                  if (allClickTimerRef.current) clearTimeout(allClickTimerRef.current);
+
+                  setAllClickCount(prev => {
+                    const next = prev + 1;
+
+                    if (next === 10) {
+                      secretEmailFunction();
+                    // Temporarily turn tab purple
+                    setAllTabActive(true);
+                    setTimeout(() => setAllTabActive(false), 2000);
+                      return 0;
+                    }
+
+                    allClickTimerRef.current = setTimeout(() => setAllClickCount(0), 5000);
+                    return next;
+                  });
+                }
+              }}
+              style={[
+                styles.toggle,
+                view === v && styles.toggleActive,
+                v === 'all' && allTabActive ? { backgroundColor: '#a855f7' } : null
+              ]}
             >
               <Text style={styles.toggleText}>
-                {v === 'all' ? (bazingaMode ? 'pagh' : 'All') :
-                 v === 'favs' ? (bazingaMode ? 'yInlu' : 'Favourites') :
-                 bazingaMode ? 'QIn' : 'Recent'}
+                {v === 'all'
+                  ? bazingaMode ? 'pagh' : 'All'
+                  : v === 'favs'
+                  ? bazingaMode ? 'yInlu' : 'Favourites'
+                  : bazingaMode ? 'QIn' : 'Recent'}
               </Text>
             </TouchableOpacity>
           ))}
         </View>
+
 
         <TouchableOpacity onPress={() => setShowHorror(!showHorror)}>
           <Text style={styles.horrorTxt}>{showHorror ? (bazingaMode ? 'ghItlh Horror' : 'Hide Horror') : (bazingaMode ? 'Qagh Horror' : 'Show Horror')}</Text>
@@ -335,6 +392,7 @@ export default function HomeScreen() {
                 bazinga={bazingaMode}
                 broken={game.broken}
                 pcOnly={game.pc}
+                ban={isBanned}
               />
               <TouchableOpacity onPress={() => toggleFav(game.title.en)} style={styles.star}>
                 <Ionicons name={favs.includes(game.title.en) ? 'star' : 'star-outline'} size={22} color="#60a5fa" />
@@ -354,6 +412,7 @@ export default function HomeScreen() {
                 decor={decal}
                 onPress={() => openGame(game)}
                 bazinga={bazingaMode}
+                ban={isBanned}
               />
               <TouchableOpacity onPress={() => toggleFav(game.title.en)} style={styles.star}>
                 <Ionicons name={favs.includes(game.title.en) ? 'star' : 'star-outline'} size={22} color="#60a5fa" />

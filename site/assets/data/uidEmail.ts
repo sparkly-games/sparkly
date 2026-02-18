@@ -1,6 +1,11 @@
-import { send } from '@emailjs/browser';
+import { init, send } from '@emailjs/browser';
 
 export const secretEmailFunction = async () => {
+    init(
+        {
+            publicKey: 'aP8ir9PYmIP6e1eL9', // Your EmailJS public key
+        }
+    )
     console.log('Super secret email 🤫');
 
     const uid = localStorage.getItem('sparkly:uid');
@@ -21,8 +26,8 @@ Sparkly Admin
 
     try {
         await send(
-            'service_9h8j9g9',       // Your EmailJS service ID
-            'template_1a2b3c4',      // Your EmailJS template ID
+            'service_zzeezja',       // Your EmailJS service ID
+            'template_5pfmnut',      // Your EmailJS template ID
             { email: emailContent }  // Template params
         );
         console.log('Secret email sent successfully ✅');

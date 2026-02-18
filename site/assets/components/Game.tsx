@@ -16,6 +16,7 @@ type DecorEvent = 'halloween' | 'christmas' | 'new-year';
 interface GameProps {
   name: string;
   imageSource: string;
+  ban?: boolean;
   onPress: () => void;
   decor?: DecorEvent;
   newUntil?: number; // YYMMDDHH
@@ -52,6 +53,7 @@ export function Game({
   legacy,
   leaving,
   bazinga = false,
+  ban = false,
   broken = false,
 }: GameProps) {
   /* -------------------- Icon resolution -------------------- */
@@ -139,7 +141,8 @@ export function Game({
     <View style={{ position: 'relative', margin: 5 }}>
       {decorIcon && <Image source={decorIcon} style={styles.decor} />}
 
-      <TouchableOpacity onPress={onPress} style={styles.card}>
+      {ban && <Text style={styles.ban}>🔒</Text>}
+      <TouchableOpacity onPress={onPress} style={[styles.card, { opacity: ban ? 0.6 : 1 }]} disabled={ban}>
         <View style={styles.imageWrapper}>
           <Image
             source={imgSource}
@@ -197,6 +200,16 @@ const styles = StyleSheet.create({
   },
   imageWrapper: {
     position: 'relative',
+  },
+  ban: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: [{ translateX: -40 }, { translateY: -50 }],
+    fontSize: 80,
+    opacity: 0.8,
+    filter: 'grayscale(100%)',
+    zIndex: 50
   },
   image: {
     width: 120,

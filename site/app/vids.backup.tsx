@@ -69,9 +69,40 @@ export default function VidsScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <Head>
+        <title>Sparkly Videos</title>
+      </Head>
+
       <Animated.View style={[styles.sparkleGlow, { opacity: glowAnim }]} />
-      <Text style={[styles.title, { margin: 30, fontSize: 120, opacity: glowAnim }]}>Coming Soon</Text>
-      <Text style={[styles.subtitle, { margin: 30, fontSize: 40, opacity: glowAnim, textDecorationLine: 'underline' }]} onPress={() => router.push('/vids.backup')}>View old page.</Text>
+
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <View style={styles.headerCard}>
+          <Text style={styles.title}>Sparkly Videos</Text>
+          <Text style={styles.subtitle}>
+            POVs, clips, updates, and archived chaos
+          </Text>
+        </View>
+
+        <View style={styles.grid}>
+          {videos.map(video => (
+            <TouchableOpacity
+              key={video.id}
+              style={[styles.card, { width: itemWidth }]}
+              onPress={() => openVideo(video)}
+              activeOpacity={0.85}
+            >
+              <Image
+                source={video.thumbnail}
+                style={styles.thumbnail}
+              />
+
+              <Text style={styles.videoTitle} numberOfLines={2}>
+                {video.title}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }

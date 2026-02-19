@@ -22,6 +22,7 @@ import { analytics } from '@/assets/data/firebaseConfig.js';
 import { ChaosImage } from '@/assets/components/ChaosImage';
 import { logEvent } from 'firebase/analytics';
 import AdSenseBanner from '@/assets/components/adsense';
+import { FlipClock } from '@/assets/components/FlipClock';
 
 const decal = 'new-year';
 const LS_FAVS = 'sparkly:favs';
@@ -284,13 +285,14 @@ export default function HomeScreen() {
       */}
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
+        <FlipClock targetDate="2026-03-20T11:44:00" caption={"the onlinegames12 anniversary"} />
         {/* Notice Box */}
         <Animated.View style={[styles.noticeBox, { transform: [{ translateY: floatAnim }] }]}>
           <Text style={styles.noticeTitle}>✨ Sparkly Games ✨</Text>
           <Text style={[styles.noticeText, { fontWeight: 'bold' }]}>
             {bazingaMode ? 'UBGU chut' : 'Officially joining the UBGU!'}
           </Text>
-          <Text style={styles.noticeText}>v7.7.6 · 18/02/26</Text>
+          <Text style={styles.noticeText}>v7.8.0 · 19/02/26</Text>
           <View style={{ height: 24, flexDirection: 'row', gap: 12, alignSelf: 'center', flex: 1, marginTop: 20 }} >
             <TouchableOpacity onPress={() => Linking.openURL('https://github.com/sparkly-games')}>
               <Ionicons name="logo-octocat" size={24} color="white" />

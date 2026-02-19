@@ -15,6 +15,6 @@ git add .
 git commit -m "Update - $(date)"
 git push origin development
 
-gh pr create --base main --head development --title "Merge development to main" --body "Merges branches." --web
+gh pr create --base main --head development --title "Merge development to main - $(date)" --body "Merges branches." --web
 
 echo "Export complete."

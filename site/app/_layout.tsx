@@ -39,7 +39,7 @@ export default function RootLayout() {
       </Head>
       <Stack
         screenOptions={({ route }) => ({
-          headerShown: route.name == 'vids' || route.name.substring(0, 10) == 'vidplayer/' ? true : false,
+          headerShown: route.name == 'vids' || route.name === 'vids.backup' || route.name.substring(0, 10) == 'vidplayer/' ? true : false,
         })}
       />
     </BazingaProvider>

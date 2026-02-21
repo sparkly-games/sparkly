@@ -22,3 +22,4 @@ maybe-add
 export
 !site
 !docs
+*.zip

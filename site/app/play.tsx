@@ -292,7 +292,7 @@ export default function HomeScreen() {
           <Text style={[styles.noticeText, { fontWeight: 'bold' }]}>
             {bazingaMode ? 'UBGU chut' : 'Officially joining the UBGU!'}
           </Text>
-          <Text style={styles.noticeText}>v7.8.0 · 19/02/26</Text>
+          <Text style={styles.noticeText}>v7.8.6 · 21/02/26</Text>
           <View style={{ height: 24, flexDirection: 'row', gap: 12, alignSelf: 'center', flex: 1, marginTop: 20 }} >
             <TouchableOpacity onPress={() => Linking.openURL('https://github.com/sparkly-games')}>
               <Ionicons name="logo-octocat" size={24} color="white" />

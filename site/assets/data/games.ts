@@ -92,4 +92,6 @@ export const gamesData = [
   { title: { en: "Cookie Clicker", tlh: "QumwI' boQ" }, img: "bo", url: "/cookieclicker/" },
   { title: { en: "Bridge Race", tlh: "Qaw'be' He" }, img: "bp", url: "/bridge-race/" },
   { title: { en: "Doge Miner 2", tlh: "Doge ghoS cha'" }, img: "bd", url: "/doge-miner-2/" },
+
+  { title: { en: "Tomb of the Mask", tlh: "TOTM" }, img: "ae", url: "/totm.html" },
 ];

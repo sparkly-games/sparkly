@@ -127,7 +127,7 @@ export default function Home() {
             </View>
           ))}
         </View>
-
+        
         {/* Footer */}
         <View style={styles.footer}>
           <View style={styles.footerBrand}>

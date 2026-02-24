@@ -86,6 +86,7 @@ Feature requests are welcome too!
 
 - https://sparxapi19.firebaseapp.com
 - https://sparxapi19.web.app
+- https://sparxapi20.vercel.app
 
 <details>
 <summary>More Deployments</summary>

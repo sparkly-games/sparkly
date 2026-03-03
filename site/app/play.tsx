@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react';
-import { secretEmailFunction } from '../assets/data/uidEmail';
 import {
   View,
   Text,
@@ -8,10 +7,8 @@ import {
   TextInput,
   StyleSheet,
   useWindowDimensions,
-  Animated,
   Linking,
   Modal,
-  TurboModuleRegistry,
 } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
@@ -19,10 +16,9 @@ import Head from 'expo-router/head';
 import { Game } from '../assets/components/Game';
 import { gamesData } from '../assets/data/games';
 import { analytics } from '@/assets/data/firebaseConfig.js';
-import { ChaosImage } from '@/assets/components/ChaosImage';
 import { logEvent } from 'firebase/analytics';
-import AdSenseBanner from '@/assets/components/adsense';
 import { FlipClock } from '@/assets/components/FlipClock';
+import banList from '@/public/banlist.json';
 
 const decal = 'new-year';
 const LS_FAVS = 'sparkly:favs';
@@ -31,219 +27,46 @@ const LS_RECENT = 'sparkly:recent';
 export default function HomeScreen() {
   const { width } = useWindowDimensions();
   const router = useRouter();
-  const iframeRef = useRef<HTMLIFrameElement | null>(null);
-  const [allClickCount, setAllClickCount] = useState(0);
-  const [allTabActive, setAllTabActive] = useState(false);
-  const allClickTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const cheeseContainerRef = useRef<HTMLDivElement | null>(null);
+  const iframeRef = useRef(null);
 
-  /* ---------------- Bazinga ---------------- */
-  const [bazingaMode, setBazingaMode] = useState(false);
-  const [lang, setLang] = useState<'en' | 'tlh'>('en');
-  const [cheeseMode, setCheeseMode] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const cheeseAudioRef = useRef<HTMLAudioElement | null>(null);
-  const cheeseIntervalRef = useRef<NodeJS.Timeout | null>(null);
-
-  const toggleBazinga = () => {
-    setBazingaMode(prev => {
-      const newMode = !prev;
-
-      if (newMode) {
-        // Turn ON Bazinga
-        if (!audioRef.current) {
-          audioRef.current = new Audio('/sounds/bazinga.mp3');
-          audioRef.current.loop = true;
-          audioRef.current.playbackRate = Math.random() + Math.random() * 1.25;
-        }
-        audioRef.current.play();
-      } else {
-        // Turn OFF Bazinga
-        if (audioRef.current) {
-          audioRef.current.pause();
-          audioRef.current.currentTime = 0;
-        }
-      }
-
-      setLang(l => (l === 'en' ? 'tlh' : 'en'));
-      return newMode;
-    });
-  };
-
-  // Simple wrapper
-  const bazinga = () => toggleBazinga();
-
-
-  /* ---------------- Soundboard ---------------- */
-  const soundboard = () => {
-    setModalGame({
-      title: { en: 'Soundboard', tlh: 'Soundboard' },
-      url: '/soundboard.htm',
-      soundboard: true,
-    });
-    setIframeKey(k => k + 1);
-  };
-
-  /* ---------------- State ---------------- */
   const [query, setQuery] = useState('');
-  const [view, setView] = useState<'all' | 'favs' | 'recent'>('all');
-  const [favs, setFavs] = useState<string[]>([]);
-  const [recent, setRecent] = useState<string[]>([]);
+  const [view, setView] = useState('all');
+  const [favs, setFavs] = useState([]);
+  const [recent, setRecent] = useState([]);
   const [showHorror, setShowHorror] = useState(false);
   const [showPC, setShowPC] = useState(false);
-  const [modalGame, setModalGame] = useState<any>(null);
+  const [modalGame, setModalGame] = useState(null);
   const [iframeKey, setIframeKey] = useState(0);
 
-  const [isBanned, setIsBanned] = useState(false);
-
+  /* ---------------- LocalStorage ---------------- */
   useEffect(() => {
-    async function checkBan() {
-      let uid = localStorage.getItem('sparkly:uid');
-
-      if (!uid) {
-        uid = crypto.randomUUID();
-        localStorage.setItem('sparkly:uid', uid);
-      }
-
-      try {
-        const banList = await fetch('/banlist.json').then(res => res.json());
-        setIsBanned(banList.includes(uid));
-      } catch {
-        setIsBanned(false);
-      }
-    }
-
-    checkBan();
-  }, []);
-
-
-  /* ---------------- Animations ---------------- */
-  const floatAnim = useRef(new Animated.Value(0)).current;
-  const glowAnim = useRef(new Animated.Value(0.4)).current;
-
-  useEffect(() => {
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(floatAnim, { toValue: -8, duration: 2200, useNativeDriver: true }),
-        Animated.timing(floatAnim, { toValue: 0, duration: 2200, useNativeDriver: true }),
-      ])
-    ).start();
-
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(glowAnim, { toValue: 0.75, duration: 3000, useNativeDriver: true }),
-        Animated.timing(glowAnim, { toValue: 0.4, duration: 3000, useNativeDriver: true }),
-      ])
-    ).start();
-  }, []);
-
-  /* ---------------- Local Storage ---------------- */
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const f = localStorage.getItem(LS_FAVS);
-    const r = localStorage.getItem(LS_RECENT);
-    if (f) setFavs(JSON.parse(f));
-    if (r) setRecent(JSON.parse(r));
-  }, []);
-  const handleFullscreen = () => {
-    if (iframeRef.current) {
-      if (iframeRef.current.requestFullscreen) {
-        iframeRef.current.requestFullscreen();
-      } else if ((iframeRef.current as any).webkitRequestFullscreen) {
-        /* Safari/iOS Support */
-        (iframeRef.current as any).webkitRequestFullscreen();
-      } else if ((iframeRef.current as any).msRequestFullscreen) {
-        /* IE11 Support */
-        (iframeRef.current as any).msRequestFullscreen();
-      }
-    }
-  };
-  const saveFavs = (next: string[]) => {
-    setFavs(next);
-    if (typeof window !== 'undefined') localStorage.setItem(LS_FAVS, JSON.stringify(next));
-  };
-
-  const saveRecent = (next: string[]) => {
-    setRecent(next);
-    if (typeof window !== 'undefined') localStorage.setItem(LS_RECENT, JSON.stringify(next));
-  };
-
-  const toggleFav = (name: string) => saveFavs(favs.includes(name) ? favs.filter(f => f !== name) : [...favs, name]);
-  const speak = () => {
-      setModalGame({
-      title: { en: 'TTS', tlh: 'TTS' },
-      url: '/tts.htm',
-      soundboard: true,
-    });
-    setIframeKey(k => k + 1);
-  }
-  const openGame = (game: any) => {
-    saveRecent([game.title.en, ...recent.filter(r => r !== game.name)].slice(0, 12));
-    logEvent(analytics, 'play_game', { game_name: game.title.en });
-    setModalGame(game);
-    setIframeKey(k => k + 1);
-  };
-  const cheese = () => {
-    setCheeseMode(true);
-    
-    if (cheeseAudioRef.current) {
-      cheeseAudioRef.current.currentTime = 0;
-      cheeseAudioRef.current.play().catch(() => {});
-    }
-
-    const container = document.createElement('div');
-    container.style.cssText = `
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 1000000000000;
-    `;
-    document.body.appendChild(container);
-
-    const createCheese = () => {
-      const cheese = document.createElement('div');
-      const leftPos = Math.random() * 100;
-      const duration = 3 + Math.random() * 2;
-      
-      cheese.textContent = '🧀';
-      cheese.style.cssText = `
-        position: absolute;
-        left: ${leftPos}%;
-        top: -50px;
-        font-size: 120px;
-        animation: fall ${duration}s linear forwards;
-        opacity: 1;
-      `;
-      
-      container.appendChild(cheese);
-      
-      setTimeout(() => cheese.remove(), duration * 1000);
+    const load = () => {
+      const f = JSON.parse(localStorage.getItem(LS_FAVS) || '[]');
+      const r = JSON.parse(localStorage.getItem(LS_RECENT) || '[]');
+      setFavs(f);
+      setRecent(r);
     };
+    load();
+  }, []);
 
-    // Add CSS animation
-    if (!document.getElementById('cheese-animation')) {
-      const style = document.createElement('style');
-      style.id = 'cheese-animation';
-      style.textContent = `
-        @keyframes fall {
-          to {
-            transform: translateY(100vh) rotate(360deg);
-            opacity: 0;
-          }
-        }
-      `;
-      document.head.appendChild(style);
+  const toggleFav = (name) => {
+    let updated;
+    if (favs.includes(name)) {
+      updated = favs.filter(f => f !== name);
+    } else {
+      updated = [...favs, name];
     }
-
-    // Create cheese pieces continuously
-    const interval = setInterval(createCheese, 100);
-    cheeseIntervalRef.current = interval;
+    setFavs(updated);
+    localStorage.setItem(LS_FAVS, JSON.stringify(updated));
   };
 
-  /* ---------------- Filter Games ---------------- */
+  const addRecent = (name) => {
+    const updated = [name, ...recent.filter(r => r !== name)].slice(0, 20);
+    setRecent(updated);
+    localStorage.setItem(LS_RECENT, JSON.stringify(updated));
+  };
+
+  /* ---------------- Filter Logic ---------------- */
   const games = useMemo(() => {
     let g = gamesData
       .filter(g => showHorror || !g.horror)
@@ -258,193 +81,101 @@ export default function HomeScreen() {
 
   const columns = width < 420 ? 2 : width < 900 ? 3 : 5;
   const itemWidth = Math.floor((width - 24) / columns);
-  let count = 0;
 
-  /* ---------------- Render ---------------- */
+  /* ---------------- Check if banned ---------------- */
+  const isBanned = () => {
+    return banList.includes(localStorage.getItem('sparkly:uid'));
+  };
+
   return (
     <View style={styles.container}>
       <Head>
         <title>Sparkly Games</title>
       </Head>
 
-      {/* Glow Effect */}
-      <Animated.View style={[styles.sparkleGlow, { opacity: glowAnim }]} />
-
-      {/* Atmosphere Decal */}
-      <View style={{height: 20}} />
-      {/*
-      <TouchableOpacity
-        onPress={() => { count+=1; if (count===250) {cheese();count=0;} }}
-      >
-        <ChaosImage
-          source={require(`../assets/images/cheese.png`)}
-          style={styles[decal]}
-          bazinga={bazingaMode}
-        />
-      </TouchableOpacity>
-      */}
-
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <FlipClock targetDate="2026-03-20T11:44:00" caption={"the onlinegames12 anniversary"} />
-        {/* Notice Box */}
-        <Animated.View style={[styles.noticeBox, { transform: [{ translateY: floatAnim }] }]}>
+        <FlipClock targetDate="2026-03-20T11:44:00" caption="the onlinegames12 anniversary" />
+
+        <View style={styles.noticeBox}>
           <Text style={styles.noticeTitle}>✨ Sparkly Games ✨</Text>
-          <Text style={[styles.noticeText, { fontWeight: 'bold' }]}>
-            {bazingaMode ? 'UBGU chut' : 'Officially joining the UBGU!'}
-          </Text>
+          <Text style={styles.noticeText}>Officially joining the UBGU!</Text>
           <Text style={styles.noticeText}>v7.8.6 · 21/02/26</Text>
-          <View style={{ height: 24, flexDirection: 'row', gap: 12, alignSelf: 'center', flex: 1, marginTop: 20 }} >
+
+          <View style={styles.iconRow}>
             <TouchableOpacity onPress={() => Linking.openURL('https://github.com/sparkly-games')}>
-              <Ionicons name="logo-octocat" size={24} color="white" />
+              <Ionicons name="logo-github" size={24} color="white" />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => {setModalGame({url:'https://redlib.canine.tools'}); setIframeKey(k=>k+1);}}>
+              <Ionicons name="logo-reddit" size={24} color="white" />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => {setModalGame({url:'https://wikiless.canine.tools'}); setIframeKey(k=>k+1);}}>
+              <Ionicons name="globe-outline" size={24} color="white" />
             </TouchableOpacity>
             <TouchableOpacity onPress={() => router.push('/vids')}>
               <Ionicons name="logo-youtube" size={24} color="white" />
             </TouchableOpacity>
-            {/*
-            <TouchableOpacity onPress={bazinga}>
-              <Ionicons name="logo-electron" size={24} color="white" />
-            </TouchableOpacity>
-            */}
-            <TouchableOpacity onPress={soundboard}>
+            <TouchableOpacity onPress={() => Linking.openURL('/soundboard.htm')}>
               <Ionicons name="volume-high-outline" size={24} color="white" />
             </TouchableOpacity>
-            <TouchableOpacity onPress={speak}>
-              <Ionicons name="mic" size={24} color="white" />
+            <TouchableOpacity onPress={() => Linking.openURL('/tts.htm')}>
+              <Ionicons name="mic-outline" size={24} color="white" />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => Linking.openURL('https://sparkly.statuspage.io/')}>
-              <Ionicons name="bar-chart" size={24} color="white" />
+
+            <Text style={styles.pipe}>|</Text>
+
+            <TouchableOpacity onPress={() => setShowPC(p => !p)}>
+              <Ionicons name="desktop-outline" size={24} color={showPC ? '#60a5fa' : '#475569'} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setShowHorror(p => !p)}>
+              <Ionicons name="skull-outline" size={24} color={showHorror ? '#60a5fa' : '#475569'} />
             </TouchableOpacity>
           </View>
-        </Animated.View>
+        </View>
 
-        {/* Search */}
         <TextInput
           value={query}
           onChangeText={setQuery}
-          placeholder={bazingaMode ? 'quj nej…' : 'Search games…'}
+          placeholder="Search games…"
           style={styles.search}
         />
 
-        {/* Toggles */}
-        <View style={styles.toggles}>
-          {['all', 'favs', 'recent'].map(v => (
-            <TouchableOpacity
-              key={v}
-              onPress={() => {
-                setView(v as any);
-
-                if (v === 'all') {
-                  // Secret click counter logic
-                  if (allClickTimerRef.current) clearTimeout(allClickTimerRef.current);
-
-                  setAllClickCount(prev => {
-                    const next = prev + 1;
-
-                    if (next === 10) {
-                      secretEmailFunction();
-                    // Temporarily turn tab purple
-                    setAllTabActive(true);
-                    setTimeout(() => setAllTabActive(false), 2000);
-                      return 0;
-                    }
-
-                    allClickTimerRef.current = setTimeout(() => setAllClickCount(0), 5000);
-                    return next;
-                  });
-                }
-              }}
-              style={[
-                styles.toggle,
-                view === v && styles.toggleActive,
-                v === 'all' && allTabActive ? { backgroundColor: '#a855f7' } : null
-              ]}
-            >
-              <Text style={styles.toggleText}>
-                {v === 'all'
-                  ? bazingaMode ? 'pagh' : 'All'
-                  : v === 'favs'
-                  ? bazingaMode ? 'yInlu' : 'Favourites'
-                  : bazingaMode ? 'QIn' : 'Recent'}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-
-
-        <TouchableOpacity onPress={() => setShowHorror(!showHorror)}>
-          <Text style={styles.horrorTxt}>{showHorror ? (bazingaMode ? 'ghItlh Horror' : 'Hide Horror') : (bazingaMode ? 'Qagh Horror' : 'Show Horror')}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => setShowPC(!showPC)}>
-          <Text style={styles.horrorTxt}>{showPC ? (bazingaMode ? 'ghItlh PC' : 'Hide PC') : (bazingaMode ? 'Qagh PC' : 'Show PC')}</Text>
-        </TouchableOpacity>
-
-        {/* Leaving Soon */}
-        { games.some(g => g.leaving) && (
-          <Text style={styles.sectionTitle}>{bazingaMode ? 'yItlhutlh qet' : 'Leaving Soon'}</Text>
-        )}
         <View style={styles.grid}>
-          {games.filter(game => game.leaving).map(game => (
+          {games.map(game => (
             <View key={game.title.en} style={{ width: itemWidth }}>
               <Game
-                name={bazingaMode ? game.title.tlh ?? game.title.en : game.title.en}
+                name={game.title.en}
                 imageSource={game.img}
                 decor={decal}
-                leaving={game.leaving}
-                onPress={() => openGame(game)}
-                bazinga={bazingaMode}
-                broken={game.broken}
-                pcOnly={game.pc}
-                ban={isBanned}
+                ban={isBanned(game)}
+                onPress={() => {
+                  if (isBanned(game)) return;
+                  setModalGame(game);
+                  setIframeKey(k => k + 1);
+                  addRecent(game.title.en);
+                  logEvent(analytics, 'play_game', { game_name: game.title.en });
+                }}
               />
-              <TouchableOpacity onPress={() => toggleFav(game.title.en)} style={styles.star}>
-                <Ionicons name={favs.includes(game.title.en) ? 'star' : 'star-outline'} size={22} color="#60a5fa" />
-              </TouchableOpacity>
-            </View>
-          ))}
-        </View>
-
-        {/* All Games */}
-        <Text style={styles.sectionTitle}>{bazingaMode ? 'Qap' : 'Games'}</Text>
-        <View style={styles.grid}>
-          {games.filter(game => !game.leaving).map(game => (
-            <View key={game.title.en} style={{ width: itemWidth }}>
-              <Game
-                name={bazingaMode ? game.title.tlh ?? game.title.en : game.title.en}
-                imageSource={game.img}
-                decor={decal}
-                onPress={() => openGame(game)}
-                bazinga={bazingaMode}
-                ban={isBanned}
-              />
-              <TouchableOpacity onPress={() => toggleFav(game.title.en)} style={styles.star}>
-                <Ionicons name={favs.includes(game.title.en) ? 'star' : 'star-outline'} size={22} color="#60a5fa" />
-              </TouchableOpacity>
             </View>
           ))}
         </View>
       </ScrollView>
 
-      {/* Modal */}
       <Modal visible={!!modalGame} transparent animationType="fade">
         <View style={styles.modalBg}>
           <View style={styles.modalContent}>
-            <View style={styles.modalHeader}>
+            <View style={styles.modalTop}>
               <TouchableOpacity onPress={() => setModalGame(null)}>
-                <Text style={styles.modalX}>✕</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={handleFullscreen}>
-                <Ionicons name="scan" size={28} color="#60a5fa" />
+                <Ionicons name="close" size={28} color="#60a5fa" />
               </TouchableOpacity>
 
-              {modalGame?.title.en && !modalGame?.soundboard && (
-                <TouchableOpacity onPress={() => toggleFav(modalGame.title.en)}>
-                  <Ionicons name={favs.includes(modalGame.title.en) ? 'star' : 'star-outline'} size={28} color="#60a5fa" />
+              <View style={styles.modalRight}>
+                <TouchableOpacity onPress={() => setIframeKey(k => k + 1)}>
+                  <Ionicons name="refresh" size={24} color="white" />
                 </TouchableOpacity>
-              )}
-
-              <TouchableOpacity onPress={() => setIframeKey(k => k + 1)}>
-                <Ionicons name="refresh" size={28} color="#60a5fa" />
-              </TouchableOpacity>
+                <TouchableOpacity onPress={() => iframeRef.current?.requestFullscreen?.()}>
+                  <Ionicons name="expand" size={24} color="white" />
+                </TouchableOpacity>
+              </View>
             </View>
 
             <iframe
@@ -460,101 +191,25 @@ export default function HomeScreen() {
   );
 }
 
-/* ---------------- Styles ---------------- */
 const styles = StyleSheet.create({
-  container: { 
-    flex: 1, 
-    backgroundColor: '#020617' // Deep midnight blue/black
-  },
+  container: { flex: 1, backgroundColor: '#020617' },
   scrollContent: { paddingBottom: 40 },
-  sparkleGlow: {
-    position: 'absolute',
-    width: 420,
-    height: 420,
-    borderRadius: 420,
-    backgroundColor: '#3b82f6', // Electric Blue
-    top: -140,
-    alignSelf: 'center',
-    filter: 'blur(80px)', // Adds that soft atmospheric glow
-  },
-  'new-year': { height: 175, width: 400, top: 10, alignSelf: 'center' },
-
   noticeBox: {
     margin: 16,
     padding: 22,
     borderRadius: 20,
-    backgroundColor: 'rgba(30, 58, 138, 0.2)', // Deep blue tint
+    backgroundColor: 'rgba(30,58,138,0.2)',
     borderWidth: 1,
-    borderColor: 'rgba(59, 130, 246, 0.3)', // Cyan-blue border
+    borderColor: 'rgba(59,130,246,0.3)',
   },
-  noticeTitle: { 
-    color: '#60a5fa', // Light sky blue
-    fontSize: 22, 
-    fontWeight: '900', 
-    textAlign: 'center',
-    textShadowColor: 'rgba(59, 130, 246, 0.5)',
-    textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: 10
-  },
+  noticeTitle: { color: '#60a5fa', fontSize: 22, fontWeight: '900', textAlign: 'center' },
   noticeText: { color: '#bfdbfe', textAlign: 'center', marginTop: 6 },
-
-  search: {
-    marginHorizontal: 16,
-    marginBottom: 12,
-    padding: 14,
-    borderRadius: 14,
-    backgroundColor: '#0f172a', // Slate blue
-    color: 'white',
-    borderWidth: 1,
-    borderColor: '#1e293b',
-  },
-  toggles: { flexDirection: 'row', justifyContent: 'center', gap: 8, marginBottom: 10 },
-  toggle: { 
-    paddingVertical: 8, 
-    paddingHorizontal: 14, 
-    borderRadius: 14, 
-    backgroundColor: '#1e293b' 
-  },
-  toggleActive: { 
-    backgroundColor: '#2563eb', // Vibrant Primary Blue
-    shadowColor: '#2563eb',
-    shadowOpacity: 0.5,
-    shadowRadius: 10,
-  },
-  toggleText: { color: 'white', fontWeight: '700' },
-  horrorTxt: { 
-    textAlign: 'center', 
-    marginBottom: 12, 
-    color: '#93c5fd', // Soft blue instead of red for "horror" to stay in theme
-    fontWeight: '800' 
-  },
-  sectionTitle: { 
-    color: '#ffffff', 
-    textAlign: 'center', 
-    marginBottom: 12, 
-    fontSize: 20, 
-    fontWeight: '800',
-    letterSpacing: 1
-  },
+  iconRow: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 14, marginTop: 20 },
+  pipe: { color: '#334155', fontSize: 22, fontWeight: '700' },
+  search: { marginHorizontal: 16, marginBottom: 16, padding: 14, borderRadius: 14, backgroundColor: '#0f172a', color: 'white', borderWidth: 1, borderColor: '#1e293b' },
   grid: { flexDirection: 'row', flexWrap: 'wrap', paddingHorizontal: 8 },
-  star: { position: 'absolute', right: 10, top: 10 },
-
-  modalBg: { flex: 1, backgroundColor: 'rgba(2, 6, 23, 0.9)', justifyContent: 'center', alignItems: 'center' },
-  modalContent: { 
-    width: '95%', 
-    height: '90%', 
-    backgroundColor: '#0f172a', 
-    borderRadius: 20, 
-    overflow: 'hidden',
-    borderWidth: 1,
-    borderColor: '#334155'
-  },
-  modalHeader: { 
-    flexDirection: 'row', 
-    justifyContent: 'flex-end', 
-    padding: 8, 
-    gap: 12, 
-    backgroundColor: '#1e293b' 
-  },
-  modalX: { color: '#60a5fa', fontSize: 28, fontWeight: '900' },
+  modalBg: { flex: 1, backgroundColor: 'rgba(2,6,23,0.9)', justifyContent: 'center', alignItems: 'center' },
+  modalContent: { width: '95%', height: '90%', backgroundColor: '#0f172a', borderRadius: 20, overflow: 'hidden' },
+  modalTop: { flexDirection: 'row', justifyContent: 'space-between', padding: 10, alignItems: 'center' },
+  modalRight: { flexDirection: 'row', gap: 18 },
 });

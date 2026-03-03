@@ -99,7 +99,7 @@ export default function HomeScreen() {
         <View style={styles.noticeBox}>
           <Text style={styles.noticeTitle}>✨ Sparkly Games ✨</Text>
           <Text style={styles.noticeText}>Officially joining the UBGU!</Text>
-          <Text style={styles.noticeText}>v7.8.6 · 21/02/26</Text>
+          <Text style={styles.noticeText}>v7.9.2 · 03/03/26</Text>
 
           <View style={styles.iconRow}>
             <TouchableOpacity onPress={() => Linking.openURL('https://github.com/sparkly-games')}>

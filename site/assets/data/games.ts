@@ -94,4 +94,5 @@ export const gamesData = [
   { title: { en: "Doge Miner 2", tlh: "Doge ghoS cha'" }, img: "bd", url: "/doge-miner-2/" },
 
   { title: { en: "Tomb of the Mask", tlh: "TOTM" }, img: "ae", url: "/totm.html" },
+  { title: { en: "Rocket Goal", tlh: "Rocket Goal" }, img: "bq", url: "/rocketgoal/" },
 ];

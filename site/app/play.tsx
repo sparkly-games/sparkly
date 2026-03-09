@@ -80,7 +80,7 @@ export default function HomeScreen() {
     return filtered.sort((a, b) => a.title.en.localeCompare(b.title.en));
   }, [query, showHorror, showPC, view, favs, recent]);
 
-  const columns = width < 420 ? 2 : width < 900 ? 5 : 8;
+  const columns = width < 420 ? 2 : width < 1200 ? 5 : 8;
   const itemWidth = (width - 32) / columns;
   const isBanned = () => banList.includes(localStorage.getItem('sparkly:uid'));
 

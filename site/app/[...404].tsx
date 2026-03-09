@@ -1,11 +1,5 @@
-import React, { useEffect, useRef } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Animated,
-  Pressable,
-} from 'react-native';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
+import { View, Text, StyleSheet, Animated, Pressable } from 'react-native';
 import { SvgCss as SvgXml } from 'react-native-svg/css';
 import { useRouter } from 'expo-router';
 
@@ -164,59 +158,384 @@ const SVG_404 = `
 </svg>
 `;
 
+const GlitchTypewriter = ({ children }) => {
+  const [displayedText, setDisplayedText] = useState("");
+  const [isDoneTyping, setIsDoneTyping] = useState(false);
+  
+  // Animation Values
+  const offset1 = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
+  const offset2 = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
+  const opacity = useRef(new Animated.Value(1)).current;
+
+  // Typewriter Logic
+  useEffect(() => {
+    setDisplayedText("");
+    setIsDoneTyping(false);
+    let i = 0;
+    const typingSpeed = 40; // milliseconds per character
+
+    const timer = setInterval(() => {
+      setDisplayedText(children.substring(0, i + 1));
+      i++;
+      if (i >= children.length) {
+        clearInterval(timer);
+        setIsDoneTyping(true);
+      }
+    }, typingSpeed);
+
+    return () => clearInterval(timer);
+  }, [children]);
+
+  // Glitch Logic (Active only when typing is done or during random bursts)
+  useEffect(() => {
+    const glitchSequence = () => {
+      // Create a "burst" of jitter
+      Animated.parallel([
+        Animated.timing(offset1, {
+          toValue: { x: Math.random() * 4 - 2, y: Math.random() * 2 - 1 },
+          duration: 40,
+          useNativeDriver: true,
+        }),
+        Animated.timing(offset2, {
+          toValue: { x: Math.random() * 4 - 2, y: Math.random() * 2 - 1 },
+          duration: 40,
+          useNativeDriver: true,
+        }),
+        Animated.timing(opacity, {
+          toValue: Math.random() > 0.8 ? 0.5 : 1,
+          duration: 40,
+          useNativeDriver: true,
+        }),
+      ]).start(() => {
+        // Return to center
+        Animated.parallel([
+          Animated.timing(offset1, { toValue: { x: 0, y: 0 }, duration: 20, useNativeDriver: true }),
+          Animated.timing(offset2, { toValue: { x: 0, y: 0 }, duration: 20, useNativeDriver: true }),
+          Animated.timing(opacity, { toValue: 1, duration: 20, useNativeDriver: true }),
+        ]).start();
+
+        // Loop with random intervals for a non-linear feel
+        setTimeout(glitchSequence, Math.random() * 500 + 100);
+      });
+    };
+
+    glitchSequence();
+  }, []);
+
+  return (
+    <View style={styles.glitchContainer}>
+      {/* Cyan Layer (Glitch) */}
+      <Animated.Text 
+        style={[styles.message, styles.glitchLayer, { color: '#00fff2', transform: offset1.getTranslateTransform() }]}
+      >
+        {displayedText}
+      </Animated.Text>
+      
+      {/* Magenta Layer (Glitch) */}
+      <Animated.Text 
+        style={[styles.message, styles.glitchLayer, { color: '#ff00ff', transform: offset2.getTranslateTransform() }]}
+      >
+        {displayedText}
+      </Animated.Text>
+      
+      {/* Main Text Layer */}
+      <Animated.Text style={[styles.message, { opacity }]}>
+        {displayedText}
+        {!isDoneTyping && <Text style={styles.cursor}>_</Text>}
+      </Animated.Text>
+    </View>
+  );
+};
+
 export default function NotFoundScreen() {
   const router = useRouter();
   const float = useRef(new Animated.Value(0)).current;
-  const items = [
-    "Oops! The page you're looking for doesn't exist.",
-    "404 Error: Page not found.",
-    "Hmm, we can't seem to find that page.",
-    "This is not the page you're looking for.",
+
+  const items = useMemo(() => [
+    // Classics & Retro
+    "Your princess is in another castle!",
+    "It's dangerous to go alone! Take this 404.",
+    "All your base are belong to us (except this page).",
+    "GAME OVER. Insert coin to retry.",
+    "Winners don't use broken links.",
+    "Wakka wakka wakka... page eaten by ghosts.",
+    "The cake is a lie, and so is this URL.",
+    "He's on fire! (The server, not the game).",
+    "Boomshakalaka! Page not found.",
+    "Continue? 9... 8... 7... 6...",
+    "You have died of dysentery on the Oregon Trail.",
+    "A secret to everybody: this page doesn't exist.",
+    "Sorry, but our 404 is in another castle.",
+    "Join the Nintendo Fun Club today! (Not here though).",
+    "0% Completed. Press Start to go home.",
+    "Everything is error. Error is everything.",
+    "The Wizard needs food, badly! (And a valid link).",
+    "You’ve met with a terrible fate, haven’t you?",
+    "Up, Up, Down, Down, Left, Right, Left, Right, B, A... No?",
+    "FATALITY. This link was finished.",
+    "Toasty! This page just got burned.",
+    "Blue Shell hit the server. We're in last place now.",
+    "Snake? Snake!? SNAAAAAAKE!!!",
+    "Don't be a leaf on the wind. Find a real page.",
+    "I’m sorry, Dave. I’m afraid I can’t find that.",
+
+    // RPG & Adventure
+    "Quest Failed: The page de-spawned.",
+    "You must gather your party before venturing here.",
+    "I used to be a webpage like you, then I took an arrow in the knee.",
+    "A wild 404 appears! It uses Confusion.",
+    "Inventory Full: Cannot carry any more errors.",
+    "You are over-encumbered and cannot run to this page.",
+    "Level Up! Achievement Unlocked: Found the Void.",
+    "This area is locked. High-level players only.",
+    "Mana depleted. Cannot cast 'Show Page'.",
+    "You encountered a Mimic. It looks like a page, but it's a 404.",
+    "The Fog of War is thick here. Try another path.",
+    "Saving... Error: Memory Card not found.",
+    "Stay awhile and listen... to the sound of a 404.",
+    "Praise the Sun! (But the link is dark).",
+    "You died. You lost 5000 souls reaching this error.",
+    "C-C-C-Combo Breaker! Link chain snapped.",
+    "Khajiit has pages, if you have coin.",
+    "An illusion! What are you hiding?",
+    "The blood moon rises once again... and hides the page.",
+    "You can't sleep while monsters are nearby (or 404s).",
+    "Critical Hit! Your browser dealt 404 damage.",
+    "Expelled from the guild for following dead links.",
+    "Side Quest: Find the Home Page.",
+    "You found a Legendary Trash Link.",
+    "Your social link with this URL has broken.",
+
+    // FPS & Action
+    "Mission Failed: We’ll get ‘em next time.",
+    "404: Connection Timed Out. Host ended session.",
+    "You’ve been kicked by PunkBuster.",
+    "Enemy AC-130 above! (Hide the URLs!)",
+    "Friendly fire! You clicked a dead link.",
+    "No-scoped by the server. 404 Headshot.",
+    "Out of bounds. Returning to combat area in 5...",
+    "Your K/D ratio just dropped because of this error.",
+    "Camping this page won't make it appear.",
+    "Fire in the hole! (The server room is on fire).",
+    "Reloading... Still 404.",
+    "Bravo Six, Going Dark. (Like this page).",
+    "Check those corners! This link was an ambush.",
+    "Tactical Nuke Inbound. Page destroyed.",
+    "Rush B! (B stands for Back Button).",
+    "You are the Last Man Standing. Everyone else left this page.",
+    "Negative, Ghost Rider. The pattern is full.",
+    "Defuse failed. The 404 exploded.",
+    "Spawn-killed by a bad redirect.",
+    "GG WP. (But mostly just WP).",
+    "Stop peaking! There's nothing here.",
+    "Clutch or kick. You chose 404.",
+    "Armor at 0%. Page integrity compromised.",
+    "Extraction point moved. This page is compromised.",
+    "Enemy spotted! Oh wait, it’s just a 404.",
+
+    // Strategy & Simulation
+    "Construct additional Pylons to see this page.",
+    "Not enough Vespene Gas.",
+    "Spawn more Overlords!",
+    "You cannot build that here.",
+    "Our base is under attack! (The 404 is a diversion).",
+    "Nuclear launch detected.",
+    "Insufficient funds to render this URL.",
+    "The population limit has been reached.",
+    "Wololo! Now this page is a 404.",
+    "Your civilization has collapsed. Start a new era?",
+    "Nuclear Ghandi has deleted this page.",
+    "You clicked a tile with no resources.",
+    "Technology 'Webpage' has not been researched yet.",
+    "Reticulating Splines... still nothing.",
+    "The Sims are confused. No ladder in the pool.",
+    "Error 404: The architect was deleted.",
+    "City Budget: -$404. Services shut down.",
+    "Unit lost. (The unit was your mouse cursor).",
+    "Fog of War: This directory is unexplored.",
+    "Zug zug. Something need doing? (Not this link).",
+    "Work work. Page not ready.",
+    "More gold is required.",
+    "Your throne has been usurped by a 404.",
+    "Turn Limit Reached. Game Over.",
+    "The AI has decided this page shouldn't exist.",
+
+    // Technical & Meta
+    "Lag is real. Page not found.",
+    "404: Desync detected.",
+    "Achievement Unlocked: How did you get here?",
+    "Frame drop! Page lost in the stutter.",
+    "Input lag: We received your request 10 years too late.",
+    "Error: High Ping. Page moved to another region.",
+    "Your GPU driver has crashed. (It's just a 404).",
+    "Corrupted Save File. Start from the beginning?",
+    "Buffer Overflow. 404s spilling everywhere.",
+    "Blue Screen of Death (Lite Edition).",
+    "Hardware failure: This link is made of cardboard.",
+    "Oops! The RNG gods cursed this link.",
+    "Collision detection failed. You fell through the map.",
+    "Missing Textures. This page is just purple cubes.",
+    "Speedrun Fail: This skip doesn't work.",
+    "Frame Data: 404 is minus on block.",
+    "The developer left this as a placeholder. Oops.",
+    "Soft-locked! You can't move until you go back.",
+    "Overflow: Too much gamer energy for one page.",
+    "You found an Easter Egg! (It's an empty page).",
+    "Data corrupted by a stray cosmic ray.",
+    "404: The server is currently in 'Spectator Mode'.",
+    "Your license for this page has expired.",
+    "Update Required: Version 4.0.4 not found.",
+    "Page has clipped through the floor.",
+
+    // General & Witty
+    "Take this sword and head back.",
+    "Whoops! This page has wandered off.",
     "Lost in space? This page is missing.",
     "Uh-oh! We hit a 404.",
-    "The page you requested could not be found.",
     "Looks like you've taken a wrong turn.",
-    "Sorry, we couldn't find that page.",
-    "Whoops! This page has wandered off.",
-    "Take this sword and head back."
-  ]
-  const item = items[Math.floor(Math.random()*items.length)];
+    "I’m a 404, not a miracle worker!",
+    "This is not the page you are looking for.",
+    "Move along, move along.",
+    "Great Scott! This page is from 1955.",
+    "Warning: Link contains 0% nutrients.",
+    "This page is currently at a LAN party.",
+    "Don't blink. Blink and the page is gone.",
+    "A glitch in the Matrix.",
+    "The server says 'No'.",
+    "Computer says 'Maybe'... but mostly 'No'.",
+    "404: The intern deleted the database again.",
+    "This link is a mimic. Roll for initiative.",
+    "You’ve entered the Twilight Zone.",
+    "Houston, we have a 404.",
+    "The page was a lie anyway.",
+    "Does not compute.",
+    "Danger, Will Robinson! Danger!",
+    "Beam me up, Scotty. There’s no life here.",
+    "Resistance is futile. Accept the 404.",
+    "The front fell off.",
+    "Everything is fine. (It's not).",
+    "Keep calm and... oh, forget it.",
+    "The page is shy. Try again later?",
+    "The hamsters powering the server are tired.",
+    "Please insert Disk 2 to see this page.",
+    "You used a Master Ball on a 404. Wasteful.",
+    "I'll be back. (But this page won't).",
+    "Game over, man! Game over!",
+    "If you're reading this, you're lost.",
+    "You should have turned left at Albuquerque.",
+    "404: Just like my social life.",
+    "The page is in another dimension.",
+    "This link is a ghost. Haunted 404.",
+    "404: The final frontier.",
+    "Engage! (Backwards, preferably).",
+    "Live long and... find another page.",
+    "One does not simply walk into a 404.",
+    "My precious! (Is gone).",
+    "Run, you fools!",
+    "Fly, you fools!",
+    "404: The fellowship has broken.",
+    "The page is sleeping. Shhh.",
+    "Nothing to see here. Move on.",
+    "You've been gnomed!",
+    "404: The cake was a lie.",
+    "Portal closed.",
+    "Gravity is working. The page fell.",
+    "A glitch is just a feature you haven't met.",
+    "404: Pixelated sadness.",
+    "The page went to go find itself.",
+    "Brb, finding the page. (Not really).",
+    "Error: 100% chance of disappointment.",
+    "The server is allergic to this URL.",
+    "404: The missing link.",
+    "Evolution failed. This page didn't survive.",
+    "404: Send help.",
+    "I can't feel my pages!",
+    "This link is a trap!",
+    "404: It’s a bold strategy, Cotton.",
+    "I have a bad feeling about this.",
+    "The odds of finding this page are 3,720 to 1!",
+    "Never tell me the odds!",
+    "404: That's no moon.",
+    "It’s a trap!",
+    "Great kid, don't get cocky.",
+    "The Force is not with this link.",
+    "I find your lack of page disturbing.",
+    "404: These aren't the droids you're looking for.",
+    "This link is podracing!",
+    "Hello there! General 404.",
+    "The high ground is the Home page.",
+    "You were the chosen link!",
+    "404: Unlimited Power! (Not really).",
+    "I don't like sand... or 404s.",
+    "Execute Order 404.",
+    "404: A long time ago, in a server far away.",
+    "The dark side has this page.",
+    "Judge me by my size, do you? (404 bytes).",
+    "Do or do not. There is no page.",
+    "Much 404. Very error. So wow.",
+    "Is this real life? Or is this just fantasy?",
+    "Caught in a 404, no escape from reality.",
+    "Open your eyes, look up to the URLs and see.",
+    "I'm just a poor 404, I need no sympathy.",
+    "Anyway the wind blows, doesn't really matter to me.",
+    "Mama, just killed a link.",
+    "404: Another one bites the dust.",
+    "Don't stop me now, I'm having such a bad time.",
+    "We are the 404s, my friends.",
+    "Under pressure... to find this page.",
+    "404: Radioactive! Radioactive!",
+    "Welcome to the jungle, we got no pages.",
+    "404: Sweet child o' mine.",
+    "Stairway to... nowhere.",
+    "404: Highway to Hell.",
+    "I can't get no satisfaction (from this link).",
+    "404: Paint it black.",
+    "Smells like 404 spirit.",
+    "404: All apologies.",
+    "Come as you are, as you were, as a 404.",
+    "404: Black hole sun.",
+    "Won't you come and wash away the page?",
+    "404: Losing my religion.",
+    "That's me in the corner, that's me in the 404.",
+    "404: Everybody hurts.",
+    "Sometimes. (But this page always hurts).",
+    "404: Bitter sweet symphony.",
+    "404: Wonderwall.",
+    "Anyway, here's 404.",
+    "404: Don't look back in anger.",
+    "I heard you say that this page was dead.",
+    "404: Champagne supernova.",
+    "404: Creep.",
+    "I'm a 404, I'm a weirdo.",
+    "What the hell am I doing here? I don't belong here."
+  ], []);
+
+  const item = useMemo(() => items[Math.floor(Math.random() * items.length)], []);
 
   useEffect(() => {
     Animated.loop(
       Animated.sequence([
-        Animated.timing(float, {
-          toValue: -10,
-          duration: 2000,
-          useNativeDriver: true,
-        }),
-        Animated.timing(float, {
-          toValue: 0,
-          duration: 2000,
-          useNativeDriver: true,
-        }),
+        Animated.timing(float, { toValue: -10, duration: 2000, useNativeDriver: true }),
+        Animated.timing(float, { toValue: 0, duration: 2000, useNativeDriver: true }),
       ])
     ).start();
   }, []);
 
   return (
     <View style={styles.container}>
-      {/* SVG */}
       <Animated.View style={{ transform: [{ translateY: float }] }}>
-        <SvgXml
-          xml={SVG_404}
-          style={styles.svg}
-        />
+        <SvgXml xml={SVG_404} style={styles.svg} />
       </Animated.View>
 
-      {/* 404 TEXT */}
-      <Text style={styles.message}>
-        {item}
-      </Text>
+      <GlitchTypewriter>{item}</GlitchTypewriter>
+
       {typeof window !== 'undefined' && window.self === window.top &&
-      <Pressable style={styles.button} onPress={() => router.replace('/play')}>
-        <Text style={styles.buttonText}>Play</Text>
-      </Pressable>
+        <Pressable 
+          style={({ pressed }) => [styles.button, pressed && { opacity: 0.8, transform: [{ scale: 0.95 }] }]} 
+          onPress={() => router.replace('/play')}
+        >
+          <Text style={styles.buttonText}>RESPAWN</Text>
+        </Pressable>
       }
     </View>
   );
@@ -225,31 +544,47 @@ export default function NotFoundScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0f172a',
+    backgroundColor: '#020617', // Darker "void" color
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 24,
   },
-  code: {
-    fontSize: 64,
-    fontWeight: '800',
-    color: '#f8fafc',
-    marginTop: 12,
+  glitchContainer: {
+    position: 'relative',
+    marginVertical: 30,
+    minHeight: 60, // Prevents layout jump when text appears
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  glitchLayer: {
+    position: 'absolute',
+    opacity: 0.6,
   },
   message: {
-    fontSize: 16,
-    color: '#cbd5f5',
-    marginBottom: 24,
+    fontSize: 18,
+    color: '#f8fafc',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontFamily: 'monospace', // Or your custom pixel font
+    textTransform: 'uppercase', // Makes it look more like an old terminal
+    letterSpacing: 1,
+  },
+  cursor: {
+    color: '#ec4899', // Pink cursor to match your button
+    fontWeight: 'bold',
   },
   button: {
     backgroundColor: '#ec4899',
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderRadius: 999,
+    paddingHorizontal: 30,
+    paddingVertical: 15,
+    borderRadius: 4, // More "boxy" gamer look
+    borderBottomWidth: 4,
+    borderBottomColor: '#be185d',
   },
   buttonText: {
     color: 'white',
-    fontWeight: '600',
+    fontWeight: '800',
+    letterSpacing: 2,
   },
   svg: {
     width: 600,

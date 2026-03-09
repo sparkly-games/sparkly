@@ -16,6 +16,7 @@ export const gamesData = [
   { title: { en: "Five Nights at Freddy’s 1", tlh: "Freddy vaS vagh jajlogh wa'" }, img: "a", url: "/fnaf/FNAF1/", horror: true },
   { title: { en: "Five Nights at Freddy’s 2", tlh: "Freddy vaS vagh jajlogh cha'" }, img: "ah", url: "/fnaf/FNAF2/", horror: true },
   { title: { en: "Five Nights at Freddy’s 3", tlh: "Freddy vaS vagh jajlogh wej" }, img: "ai", url: "/fnaf/FNAF3/", horror: true },
+  { title: { en: "Five Nights at Epstein’s", tlh: "Epstein vaS vagh jajlogh" }, img: "br", url: "/fnae.html", horror: true },
 
   { title: { en: "Geometry Dash Wave", tlh: "ngoQ SuS meQ" }, img: "x", url: "/gd-wave/" },
 

@@ -6,6 +6,7 @@ import {
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
 import Head from 'expo-router/head';
+import { GlitchText } from '@/assets/components/GlitchImage';
 
 // Components & Data
 import { Game } from '../assets/components/Game';
@@ -34,7 +35,6 @@ export default function HomeScreen() {
   const [isStealth, setIsStealth] = useState(false);
 
   useEffect(() => {
-    // Initial Load
     const f = JSON.parse(localStorage.getItem(STORAGE_KEYS.FAVS) || '[]');
     const r = JSON.parse(localStorage.getItem(STORAGE_KEYS.RECENT) || '[]');
     setFavs(f);
@@ -49,7 +49,6 @@ export default function HomeScreen() {
       `;
       document.head.append(style);
 
-      // PANIC KEY: Escape triggers stealth
       const handlePanic = (e) => { if (e.key === 'Escape') toggleStealth(); };
       window.addEventListener('keydown', handlePanic);
       return () => window.removeEventListener('keydown', handlePanic);
@@ -96,13 +95,12 @@ export default function HomeScreen() {
           <FlipClock targetDate="2026-03-20T11:44:00" caption="the onlinegames12 anniversary" />
         )}
 
-        {/* Dynamic Header */}
         <View style={[styles.noticeBox, isStealth && styles.stealthNoticeBox]}>
           <Text style={[styles.noticeTitle, isStealth && styles.stealthTextPrimary]}>
-            {isStealth ? "Document 03/20: Final Notes" : "✨ Sparkly Games ✨"}
+            {isStealth ? "Document 03/20: Final Notes" : <GlitchText>✨ Sparkly ✨</GlitchText>}
           </Text>
           <Text style={[styles.noticeText, isStealth && styles.stealthTextSecondary]}>
-            {isStealth ? "Last edited 2 minutes ago" : "v7.9.5 | 8/3/26"}
+            {isStealth ? "Last edited 2 minutes ago" : "v7.9.7 | 9/3/26"}
           </Text>
 
           <View style={styles.iconRow}>
@@ -137,7 +135,6 @@ export default function HomeScreen() {
           style={[styles.search, isStealth && styles.stealthSearch]}
         />
 
-        {/* Games Grid */}
         <View style={styles.grid}>
           {games.map(game => (
             <View key={game.title.en} style={{ width: itemWidth, padding: 6 }}>
@@ -158,8 +155,7 @@ export default function HomeScreen() {
         </View>
       </ScrollView>
 
-      {/* Modern Game Modal */}
-      <Modal visible={!!modalGame} transparent animationType="slide">
+      <Modal visible={!!modalGame} transparent animationType="slide" className="modal">
         <View style={styles.modalBg}>
           <View style={[styles.modalContent, isStealth && styles.stealthModal]}>
             <View style={[styles.modalTop, isStealth && styles.stealthModalTop]}>
@@ -193,11 +189,8 @@ const ControlIcon = ({ name, onPress, color = "white", disabled = false }) => (
   <TouchableOpacity 
     onPress={onPress} 
     activeOpacity={0.7} 
-    disabled={disabled} // This stops the click event
-    style={[
-      styles.iconBtn, 
-      disabled && { opacity: 0.3 } // This makes it look "greyed out"
-    ]}
+    disabled={disabled} 
+    style={[styles.iconBtn, disabled && { opacity: 0.3 }]}
   >
     <Ionicons name={name} size={22} color={color} />
   </TouchableOpacity>
@@ -214,7 +207,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'rgba(59, 130, 246, 0.2)',
     marginBottom: 20,
-    backdropFilter: 'blur(10px)', // Web only
+    backdropFilter: 'blur(10px)',
   },
   stealthNoticeBox: {
     backgroundColor: '#fff',

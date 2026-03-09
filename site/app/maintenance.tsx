@@ -1,13 +1,25 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Linking } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Head from 'expo-router/head';
+import { router } from 'expo-router';
+import { GlitchText } from '@/assets/components/GlitchImage';
 
 export default function MaintenanceScreen() {
 
   const refresh = () => {
-    if (typeof window !== "undefined") window.location.reload();
+    window.location.href = '/play';
   };
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const modal = document.querySelector('#modal');
+      if (modal) modal.remove();
+    }
+    else {
+        console.error('Couldn\'t remove modal.')
+    }
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -17,18 +29,18 @@ export default function MaintenanceScreen() {
       </Head>
 
       <View style={styles.centerWrap}>
-
         <View style={styles.noticeBox}>
+
           <Text style={styles.noticeTitle}>🚧</Text>
 
-          <Text style={styles.noticeText}>
-            Sparkly Games is under essential maintainance to improve it's services for everyone.
-          </Text>
+          <GlitchText style={styles.noticeText}>
+            Sparkly Games is under essential maintenance to improve its services for everyone.
+          </GlitchText>
+
           <Text style={styles.noticeSub}>
-            {"\n\n"}
-            <strong>What can you do?</strong>
-            {"\n\n"}- Wait for the maintenance to be completed (soon!)
-            {"\n\n"}- Check out the GitHub (below) for the latest updates and news.
+            <strong>{"\n\n"}What can you do?</strong>
+            {"\n\n"}• Wait for the maintenance to be completed (soon!)
+            {"\n\n"}• Check out the GitHub below for updates and news.
           </Text>
 
           <View style={styles.iconRow}>
@@ -38,8 +50,8 @@ export default function MaintenanceScreen() {
               onPress={() => Linking.openURL('https://github.com/sparkly-games')}
             />
           </View>
-        </View>
 
+        </View>
       </View>
     </View>
   );
@@ -76,10 +88,9 @@ const styles = StyleSheet.create({
 
   noticeTitle: {
     color: '#60a5fa',
-    fontSize: 32,
+    fontSize: 40,
     fontWeight: '900',
     textAlign: 'center',
-    letterSpacing: -0.5,
   },
 
   noticeText: {

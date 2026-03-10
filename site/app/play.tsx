@@ -1,12 +1,14 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react';
 import {
-  View, Text, ScrollView, TouchableOpacity, TextInput, 
-  StyleSheet, useWindowDimensions, Linking, Modal, Platform 
+  View, Text, ScrollView, TouchableOpacity, TextInput,
+  StyleSheet, useWindowDimensions, Linking, Modal, Platform, Image, Animated
 } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
 import Head from 'expo-router/head';
 import { GlitchText } from '@/assets/components/GlitchImage';
+import { app } from '@/assets/data/firebaseConfig.js';
+import { getRemoteConfig, fetchAndActivate, getString } from 'firebase/remote-config';
 
 // Components & Data
 import { Game } from '../assets/components/Game';
@@ -17,13 +19,13 @@ import { FlipClock } from '@/assets/components/FlipClock';
 import banList from '@/public/banlist.json';
 
 const STORAGE_KEYS = { FAVS: 'sparkly:favs', RECENT: 'sparkly:recent' };
+const ver = { date: '10/3/26', verText: '7.9.6' };
 
 export default function HomeScreen() {
   const { width } = useWindowDimensions();
   const router = useRouter();
   const iframeRef = useRef(null);
 
-  // --- UI & Content State ---
   const [query, setQuery] = useState('');
   const [view, setView] = useState('all');
   const [favs, setFavs] = useState([]);
@@ -33,12 +35,38 @@ export default function HomeScreen() {
   const [modalGame, setModalGame] = useState(null);
   const [iframeKey, setIframeKey] = useState(0);
   const [isStealth, setIsStealth] = useState(false);
+  const [remoteVerText, setRemoteVerText] = useState('');
+  const [showBanner, setShowBanner] = useState(false);
+
+  // --- Popular slideshow state ---
+  const popularGames = useMemo(() => gamesData.filter(g => g.popular), []);
+  const [shuffledPopular, setShuffledPopular] = useState([...popularGames].sort(() => Math.random() - 0.5));
+  const [popularIndex, setPopularIndex] = useState(0);
+  const fadeAnim = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
+    // Local Storage
     const f = JSON.parse(localStorage.getItem(STORAGE_KEYS.FAVS) || '[]');
     const r = JSON.parse(localStorage.getItem(STORAGE_KEYS.RECENT) || '[]');
     setFavs(f);
     setRecent(r);
+
+    // Firebase Remote Config
+    const checkUpdate = async () => {
+      try {
+        const config = getRemoteConfig(app);
+        config.settings.minimumFetchIntervalMillis = 0;
+        await fetchAndActivate(config);
+        const remoteVersion = getString(config, 'lastVer');
+        if (remoteVersion && remoteVersion !== ver.verText) {
+          setRemoteVerText(remoteVersion);
+          setShowBanner(true);
+        }
+      } catch (error) {
+        console.error('Update check failed:', error);
+      }
+    };
+    checkUpdate();
 
     if (Platform.OS === 'web') {
       const style = document.createElement('style');
@@ -54,6 +82,17 @@ export default function HomeScreen() {
       return () => window.removeEventListener('keydown', handlePanic);
     }
   }, []);
+
+  // Popular slideshow effect
+  useEffect(() => {
+    const interval = setInterval(() => {
+      Animated.timing(fadeAnim, { toValue: 0, duration: 500, useNativeDriver: true }).start(() => {
+        setPopularIndex(i => (i + 1) % shuffledPopular.length);
+        Animated.timing(fadeAnim, { toValue: 1, duration: 500, useNativeDriver: true }).start();
+      });
+    }, 10000);
+    return () => clearInterval(interval);
+  }, [fadeAnim, shuffledPopular.length]);
 
   const toggleStealth = () => {
     setIsStealth(!isStealth);
@@ -75,7 +114,6 @@ export default function HomeScreen() {
 
     if (view === 'favs') filtered = filtered.filter(g => favs.includes(g.title.en));
     if (view === 'recent') filtered = filtered.filter(g => recent.includes(g.title.en));
-
     return filtered.sort((a, b) => a.title.en.localeCompare(b.title.en));
   }, [query, showHorror, showPC, view, favs, recent]);
 
@@ -90,17 +128,41 @@ export default function HomeScreen() {
         <link rel="icon" href={isStealth ? 'https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico' : '/favicon.ico'} />
       </Head>
 
+      {!isStealth && showBanner && (
+        <TouchableOpacity 
+          activeOpacity={0.9}
+          style={styles.updateBanner} 
+          onPress={() => window.location.href = '/play'}
+        >
+          <View style={styles.bannerContent}>
+            <View style={styles.bannerIconBg}>
+              <Ionicons name="rocket-sharp" size={18} color="#fff" />
+            </View>
+            <View>
+              <Text style={styles.bannerTitle}>New Update Available!</Text>
+              <Text style={styles.bannerSub}>Version {remoteVerText} is now available. Click here to update!</Text>
+            </View>
+          </View>
+          <View style={styles.buttonCornerBannerUpdate}>
+            <TouchableOpacity onPress={() => Linking.openURL(`https://github.com/sparkly-games/sparkly/compare/v${ver.verText}..${remoteVerText}`)} style={styles.ghReleasesButton}>
+              <Text style={{color:'#fff'}}>View Release Notes</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setShowBanner(false)} style={styles.bannerCloseBtn}>
+              <Ionicons name="close" size={20} color="#94a3b8" />
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+      )}
+
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        {!isStealth && (
-          <FlipClock targetDate="2026-03-20T11:44:00" caption="the onlinegames12 anniversary" />
-        )}
+        {!isStealth && <FlipClock targetDate="2026-03-20T11:44:00" caption="the onlinegames12 anniversary" />}
 
         <View style={[styles.noticeBox, isStealth && styles.stealthNoticeBox]}>
           <Text style={[styles.noticeTitle, isStealth && styles.stealthTextPrimary]}>
             {isStealth ? "Document 03/20: Final Notes" : <GlitchText>✨ Sparkly ✨</GlitchText>}
           </Text>
           <Text style={[styles.noticeText, isStealth && styles.stealthTextSecondary]}>
-            {isStealth ? "Last edited 2 minutes ago" : "v7.9.7 | 9/3/26"}
+            {isStealth ? "Last edited 2 minutes ago" : `v${ver.verText} | ${ver.date}`}
           </Text>
 
           <View style={styles.iconRow}>
@@ -121,7 +183,7 @@ export default function HomeScreen() {
                   color={showHorror ? '#ef4444' : '#475569'} 
                   onPress={() => setShowHorror(!showHorror)} 
                 />
-                <ControlIcon name="eye-off-outline" onPress={toggleStealth} disabled />
+                <ControlIcon name="eye-off-outline" onPress={toggleStealth} />
               </>
             )}
           </View>
@@ -135,15 +197,38 @@ export default function HomeScreen() {
           style={[styles.search, isStealth && styles.stealthSearch]}
         />
 
+        {/* Popular Game Grid */}
+        <Text style={[styles.sectionTitle, isStealth && styles.stealthTextPrimary]}>
+          Popular Games
+        </Text>
+        <View style={styles.grid}>
+          {popularGames.map(game => (
+            <View key={game.title.en} style={{ width: itemWidth * 0.8, padding: 6 }}>
+              <Game
+                name={isStealth ? `RESEARCH-${game.title.en.replace(/\s+/g, '').toUpperCase()}` : game.title.en}
+                imageSource={isStealth ? "useDocOfficial_abc" : game.img}
+                ban={isBanned()}
+                onPress={() => {
+                  if (isBanned()) return;
+                  setModalGame(game);
+                  setIframeKey(k => k + 1);
+                  addRecent(game.title.en);
+                  logEvent(analytics, 'play_game', { game_name: game.title.en });
+                }}
+              />
+            </View>
+          ))}
+        </View>
+        {/* Game Grid */}
         <View style={styles.grid}>
           {games.map(game => (
             <View key={game.title.en} style={{ width: itemWidth, padding: 6 }}>
               <Game
                 name={isStealth ? `RESEARCH-${game.title.en.replace(/\s+/g, '').toUpperCase()}` : game.title.en}
                 imageSource={isStealth ? "useDocOfficial_abc" : game.img}
-                ban={isBanned(game)}
+                ban={isBanned()}
                 onPress={() => {
-                  if (isBanned(game)) return;
+                  if (isBanned()) return;
                   setModalGame(game);
                   setIframeKey(k => k + 1);
                   addRecent(game.title.en);
@@ -155,7 +240,7 @@ export default function HomeScreen() {
         </View>
       </ScrollView>
 
-      <Modal visible={!!modalGame} transparent animationType="slide" className="modal">
+      <Modal visible={!!modalGame} transparent animationType="slide">
         <View style={styles.modalBg}>
           <View style={[styles.modalContent, isStealth && styles.stealthModal]}>
             <View style={[styles.modalTop, isStealth && styles.stealthModalTop]}>
@@ -186,10 +271,10 @@ export default function HomeScreen() {
 }
 
 const ControlIcon = ({ name, onPress, color = "white", disabled = false }) => (
-  <TouchableOpacity 
-    onPress={onPress} 
-    activeOpacity={0.7} 
-    disabled={disabled} 
+  <TouchableOpacity
+    onPress={onPress}
+    activeOpacity={0.7}
+    disabled={disabled}
     style={[styles.iconBtn, disabled && { opacity: 0.3 }]}
   >
     <Ionicons name={name} size={22} color={color} />
@@ -197,6 +282,8 @@ const ControlIcon = ({ name, onPress, color = "white", disabled = false }) => (
 );
 
 const styles = StyleSheet.create({
+  ghReleasesButton: { backgroundColor: '#1717179d', padding: 5, borderRadius: 5, borderColor: '#8181816b', borderWidth: 2, opacity: 0.98 },
+  buttonCornerBannerUpdate: { flexDirection: 'row', gap: 12 },
   container: { flex: 1, backgroundColor: '#020617' },
   stealthContainer: { backgroundColor: '#ffffff' },
   scrollContent: { padding: 16, paddingBottom: 60 },
@@ -224,6 +311,29 @@ const styles = StyleSheet.create({
   iconRow: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 16, marginTop: 16 },
   iconBtn: { padding: 8, borderRadius: 12, backgroundColor: 'rgba(255,255,255,0.05)' },
   vPipe: { width: 1, height: 24, backgroundColor: '#1e293b' },
+  sectionTitle: { color: '#60a5fa', fontSize: 18, fontWeight: '700', marginBottom: 12, marginTop: 8 },
+  stealthSectionTitle: { color: '#202124', fontSize: 18, fontWeight: '700', marginBottom: 12, marginTop: 8 },
+  updateBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    margin: 24,
+    justifyContent: 'space-between',
+    backgroundColor: '#1e293b',
+    padding: 12,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: '#3b82f6',
+    marginBottom: 20,
+    shadowColor: '#3b82f6',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+  },
+  bannerContent: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  bannerIconBg: { backgroundColor: '#3b82f6', padding: 8, borderRadius: 10 },
+  bannerTitle: { color: '#fff', fontWeight: 'bold', fontSize: 14 },
+  bannerSub: { color: '#94a3b8', fontSize: 12 },
+  bannerCloseBtn: { padding: 4 },
   search: {
     padding: 16,
     borderRadius: 16,
@@ -242,4 +352,13 @@ const styles = StyleSheet.create({
   modalTop: { flexDirection: 'row', justifyContent: 'space-between', padding: 14, alignItems: 'center', backgroundColor: '#1e293b' },
   stealthModalTop: { backgroundColor: '#f8f9fa', borderBottomWidth: 1, borderColor: '#dadce0' },
   modalRight: { flexDirection: 'row', gap: 20 },
+
+  // Popular banner
+  popularBanner: {
+    width: '100%',
+    height: 180,
+    borderRadius: 16,
+    overflow: 'hidden',
+    marginBottom: 8,
+  },
 });

@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Linking } from 'react-native'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Head from 'expo-router/head';
 import { router } from 'expo-router';
-import { GlitchText } from '@/assets/components/GlitchImage';
+import { GlitchText } from '@/assets/components/GlitchText';
 
 export default function MaintenanceScreen() {
 

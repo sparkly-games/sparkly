@@ -1,5 +1,5 @@
 export const gamesData = [
-  { title: { en: "A Small World Cup", tlh: "qo' mach quj" }, img: "ag", url: "/small-world-cup.html" },
+  { title: { en: "Small World Cup", tlh: "qo' mach quj" }, img: "ag", url: "/small-world-cup.html", popular: true },
   { title: { en: "Basket Random", tlh: "Sap QumwI' Dotlh" }, img: "ac", url: "/randoms/basket/" },
   { title: { en: "BitLife", tlh: "bit yIn" }, img: "6", url: "/bitlife/" },
   { title: { en: "Block Blast", tlh: "ngem SuS" }, img: "aa", url: "/block-blast/" },
@@ -8,7 +8,7 @@ export const gamesData = [
   { title: { en: "Crazy Crash Landing", tlh: "Qaw'Ha' ghItlh" }, img: "n", url: "/ccl.htm" },
   { title: { en: "Darts Pro", tlh: "jeDya' po'wI'" }, img: "f", url: "/dartspro/" },
   { title: { en: "Draw Climber", tlh: "ngem 'ej pegh" }, img: "g", url: "/draw-climber/" },
-  { title: { en: "Drive Mad", tlh: "Do'Ha' Hegh" }, img: "9", url: "/drive-mad/" },
+  { title: { en: "Drive Mad", tlh: "Do'Ha' Hegh" }, img: "9", url: "/drive-mad/", popular: true },
   { title: { en: "Duck Duck Clicker", tlh: "ghItlh ghItlh boQ" }, img: "4", url: "/duck-duck-clicker/" },
   { title: { en: "Fast Runner", tlh: "QItbe' loD" }, img: "t", url: "/fast-runner/" },
   { title: { en: "Flappy Bird", tlh: "boQbogh puqloD" }, img: "h", url: "/flappy-bird/" },
@@ -23,7 +23,7 @@ export const gamesData = [
   { title: { en: "Gobble", tlh: "Sopqu'" }, img: "r", url: "/gobble/" },
   { title: { en: "Google Games Baseball", tlh: "Google baseball quj" }, img: "y", url: "/baseball/" },
   { title: { en: "Google Games Cricket", tlh: "Google cricket quj" }, img: "z", url: "/cricket17/" },
-  { title: { en: "GunSpin", tlh: "puQbe' HIch" }, img: "8", url: "/gunspin/" },
+  { title: { en: "GunSpin", tlh: "puQbe' HIch" }, img: "8", url: "/gunspin/", popular: true },
 
   { title: { en: "Idle Football Manager", tlh: "mIllogh football ra'wI'" }, img: "k", url: "/idle-football/" },
   { title: { en: "Happy Glass", tlh: "'" }, img: "an", url: "/happyglass/" },
@@ -48,7 +48,7 @@ export const gamesData = [
   { title: { en: "Survival Race", tlh: "taHghach He" }, img: "d", url: "/survival-race/" },
   { title: { en: "Tap Goal", tlh: "ngoD boQ" }, img: "s", url: "/tap-goal/" },
   { title: { en: "There Is No Game", tlh: "quj tu'be'" }, img: "af", url: "/there-is-no-game.html" },
-  { title: { en: "Thorns and Balloons", tlh: "Quch 'ej beq" }, img: "5", url: "/thorns-and-balloons/" },
+  { title: { en: "Thorns and Balloons", tlh: "Quch 'ej beq" }, img: "5", url: "/thorns-and-balloons/", popular: true },
 
   { title: { en: "Tiny Fishing", tlh: "mach gheD" }, img: "1", url: "/tiny-fishing/" },
   { title: { en: "Volley Random", tlh: "volley QumwI'" }, img: "al", url: "/randoms/volley/" },
@@ -69,7 +69,7 @@ export const gamesData = [
 
   { title: { en: "Breaking the Bank", tlh: "Huch paq pummoH" }, img: "az", url: "/stickmin/breakingthebank/" },
   { title: { en: "Crossy Road", tlh: "He QIb" }, img: "ba", url: "/crossy-road.html" },
-  { title: { en: "Monkey Mart", tlh: "mangHom malja'" }, img: "bb", url: "/monkey-mart.html" },
+  { title: { en: "Monkey Mart", tlh: "mangHom malja'" }, img: "bb", url: "/monkey-mart.html", popular: true },
   { title: { en: "Draw the Hill", tlh: "HuD ghItlh" }, img: "bc", url: "/draw-the-hill/" },
 
   { title: { en: "OvO Dimensions", tlh: "OvO Hoch logh" }, img: "be", url: "/ovo-dimensions.html" },
@@ -96,4 +96,5 @@ export const gamesData = [
 
   { title: { en: "Tomb of the Mask", tlh: "TOTM" }, img: "ae", url: "/totm.html" },
   { title: { en: "Rocket Goal", tlh: "Rocket Goal" }, img: "bq", url: "/rocketgoal/" },
+  { title: { en: "Angry Birds", tlh: "Angry Birds" }, img: "bs", url: "/angrybirds.htm" },
 ];

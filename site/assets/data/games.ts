@@ -96,4 +96,5 @@ export const gamesData = [
 
   { title: { en: "Tomb of the Mask", tlh: "TOTM" }, img: "ae", url: "/totm.html" },
   { title: { en: "Rocket Goal", tlh: "Rocket Goal" }, img: "bq", url: "/rocketgoal/" },
+  { title: { en: "Angry Birds", tlh: "Angry Birds" }, img: "bs", url: "/angrybirds.htm" },
 ];

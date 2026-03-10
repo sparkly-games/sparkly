@@ -1,38 +1,49 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity, TextInput,
-  StyleSheet, useWindowDimensions, Linking, Modal, Platform, Image, Animated
+  StyleSheet, useWindowDimensions, Linking, Modal, Platform, Image
 } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
 import Head from 'expo-router/head';
-import { GlitchText } from '@/assets/components/GlitchImage';
+import { GlitchText } from '@/assets/components/GlitchText';
+// @ts-ignore
 import { app } from '@/assets/data/firebaseConfig.js';
+// @ts-ignore
 import { getRemoteConfig, fetchAndActivate, getString } from 'firebase/remote-config';
-
-// Components & Data
 import { Game } from '../assets/components/Game';
 import { gamesData } from '../assets/data/games';
 import { analytics } from '@/assets/data/firebaseConfig.js';
+// @ts-ignore
 import { logEvent } from 'firebase/analytics';
 import { FlipClock } from '@/assets/components/FlipClock';
 import banList from '@/public/banlist.json';
 
+type GameType = {
+  title: { en: string; tlh: string };
+  img: string;
+  url: string;
+  popular?: boolean;
+  horror?: boolean;
+  broken?: boolean;
+  pc?: boolean;
+};
+
 const STORAGE_KEYS = { FAVS: 'sparkly:favs', RECENT: 'sparkly:recent' };
-const ver = { date: '10/3/26', verText: '7.9.6' };
+const ver = { date: '10/3/26', verText: '7.9.8' };
 
 export default function HomeScreen() {
   const { width } = useWindowDimensions();
   const router = useRouter();
-  const iframeRef = useRef(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
 
   const [query, setQuery] = useState('');
   const [view, setView] = useState('all');
-  const [favs, setFavs] = useState([]);
-  const [recent, setRecent] = useState([]);
+  const [favs, setFavs] = useState<string[]>([]);
+  const [recent, setRecent] = useState<string[]>([]);
   const [showHorror, setShowHorror] = useState(false);
   const [showPC, setShowPC] = useState(false);
-  const [modalGame, setModalGame] = useState(null);
+  const [modalGame, setModalGame] = useState<GameType | null>(null);
   const [iframeKey, setIframeKey] = useState(0);
   const [isStealth, setIsStealth] = useState(false);
   const [remoteVerText, setRemoteVerText] = useState('');
@@ -40,9 +51,6 @@ export default function HomeScreen() {
 
   // --- Popular slideshow state ---
   const popularGames = useMemo(() => gamesData.filter(g => g.popular), []);
-  const [shuffledPopular, setShuffledPopular] = useState([...popularGames].sort(() => Math.random() - 0.5));
-  const [popularIndex, setPopularIndex] = useState(0);
-  const fadeAnim = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
     // Local Storage
@@ -77,22 +85,11 @@ export default function HomeScreen() {
       `;
       document.head.append(style);
 
-      const handlePanic = (e) => { if (e.key === 'Escape') toggleStealth(); };
+      const handlePanic = (e: KeyboardEvent) => { if (e.key === 'Escape') toggleStealth(); };
       window.addEventListener('keydown', handlePanic);
       return () => window.removeEventListener('keydown', handlePanic);
     }
   }, []);
-
-  // Popular slideshow effect
-  useEffect(() => {
-    const interval = setInterval(() => {
-      Animated.timing(fadeAnim, { toValue: 0, duration: 500, useNativeDriver: true }).start(() => {
-        setPopularIndex(i => (i + 1) % shuffledPopular.length);
-        Animated.timing(fadeAnim, { toValue: 1, duration: 500, useNativeDriver: true }).start();
-      });
-    }, 10000);
-    return () => clearInterval(interval);
-  }, [fadeAnim, shuffledPopular.length]);
 
   const toggleStealth = () => {
     setIsStealth(!isStealth);
@@ -101,7 +98,7 @@ export default function HomeScreen() {
     }
   };
 
-  const addRecent = (name) => {
+  const addRecent = (name: string) => {
     const updated = [name, ...recent.filter(r => r !== name)].slice(0, 20);
     setRecent(updated);
     localStorage.setItem(STORAGE_KEYS.RECENT, JSON.stringify(updated));
@@ -119,7 +116,11 @@ export default function HomeScreen() {
 
   const columns = width < 420 ? 2 : width < 1200 ? 5 : 8;
   const itemWidth = (width - 32) / columns;
-  const isBanned = () => banList.includes(localStorage.getItem('sparkly:uid'));
+  const isBanned = () => {
+    const uid = localStorage.getItem('sparkly:uid');
+    // @ts-ignore
+    return uid ? banList.includes(uid) : false;
+  };
 
   return (
     <View style={[styles.container, isStealth && styles.stealthContainer]}>
@@ -155,11 +156,11 @@ export default function HomeScreen() {
       )}
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        {!isStealth && <FlipClock targetDate="2026-03-20T11:44:00" caption="the onlinegames12 anniversary" />}
+        {!isStealth && <FlipClock targetDate="2026-03-20T11:44:00" />}
 
         <View style={[styles.noticeBox, isStealth && styles.stealthNoticeBox]}>
           <Text style={[styles.noticeTitle, isStealth && styles.stealthTextPrimary]}>
-            {isStealth ? "Document 03/20: Final Notes" : <GlitchText>✨ Sparkly ✨</GlitchText>}
+            {isStealth ? "Document 03/20: Final Notes" : <GlitchText style={styles.noticeTitle}>✨ Sparkly ✨</GlitchText>}
           </Text>
           <Text style={[styles.noticeText, isStealth && styles.stealthTextSecondary]}>
             {isStealth ? "Last edited 2 minutes ago" : `v${ver.verText} | ${ver.date}`}
@@ -183,7 +184,7 @@ export default function HomeScreen() {
                   color={showHorror ? '#ef4444' : '#475569'} 
                   onPress={() => setShowHorror(!showHorror)} 
                 />
-                <ControlIcon name="eye-off-outline" onPress={toggleStealth} />
+                <ControlIcon name="eye-off-outline" onPress={toggleStealth} disabled />
               </>
             )}
           </View>
@@ -251,7 +252,10 @@ export default function HomeScreen() {
                 <TouchableOpacity onPress={() => setIframeKey(k => k + 1)}>
                   <Ionicons name="refresh" size={24} color={isStealth ? "#5f6368" : "#94a3b8"} />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => iframeRef.current?.requestFullscreen?.()}>
+                <TouchableOpacity onPress={() => {
+                  // @ts-ignore
+                  iframeRef.current?.requestFullscreen?.();
+                }}>
                   <Ionicons name="expand" size={24} color={isStealth ? "#5f6368" : "#94a3b8"} />
                 </TouchableOpacity>
               </View>
@@ -270,14 +274,20 @@ export default function HomeScreen() {
   );
 }
 
-const ControlIcon = ({ name, onPress, color = "white", disabled = false }) => (
+const ControlIcon: React.FC<{
+  name: string;
+  onPress: () => void;
+  color?: string;
+  disabled?: boolean;
+}> = ({ name, onPress, color = "white", disabled = false }) => (
   <TouchableOpacity
     onPress={onPress}
     activeOpacity={0.7}
     disabled={disabled}
     style={[styles.iconBtn, disabled && { opacity: 0.3 }]}
   >
-    <Ionicons name={name} size={22} color={color} />
+      {/* @ts-ignore */}
+      <Ionicons name={name} size={22} color={color} />
   </TouchableOpacity>
 );
 
@@ -287,23 +297,8 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#020617' },
   stealthContainer: { backgroundColor: '#ffffff' },
   scrollContent: { padding: 16, paddingBottom: 60 },
-  noticeBox: {
-    padding: 24,
-    borderRadius: 24,
-    backgroundColor: 'rgba(15, 23, 42, 0.6)',
-    borderWidth: 1,
-    borderColor: 'rgba(59, 130, 246, 0.2)',
-    marginBottom: 20,
-    backdropFilter: 'blur(10px)',
-  },
-  stealthNoticeBox: {
-    backgroundColor: '#fff',
-    borderColor: '#e2e8f0',
-    borderRadius: 4,
-    borderWidth: 0,
-    borderBottomWidth: 1,
-    padding: 10,
-  },
+  noticeBox: { padding: 24, borderRadius: 24, backgroundColor: 'rgba(15, 23, 42, 0.6)', borderWidth: 1, borderColor: 'rgba(59, 130, 246, 0.2)', marginBottom: 20, backdropFilter: 'blur(10px)' },
+  stealthNoticeBox: { backgroundColor: '#fff', borderColor: '#e2e8f0', borderRadius: 4, borderWidth: 0, borderBottomWidth: 1, padding: 10 },
   noticeTitle: { color: '#60a5fa', fontSize: 28, fontWeight: '900', textAlign: 'center', letterSpacing: -0.5 },
   stealthTextPrimary: { color: '#202124', fontSize: 22, fontWeight: '400', textAlign: 'left', fontFamily: 'Arial' },
   noticeText: { color: '#94a3b8', textAlign: 'center', marginTop: 4, fontWeight: '600', fontSize: 13 },
@@ -313,37 +308,13 @@ const styles = StyleSheet.create({
   vPipe: { width: 1, height: 24, backgroundColor: '#1e293b' },
   sectionTitle: { color: '#60a5fa', fontSize: 18, fontWeight: '700', marginBottom: 12, marginTop: 8 },
   stealthSectionTitle: { color: '#202124', fontSize: 18, fontWeight: '700', marginBottom: 12, marginTop: 8 },
-  updateBanner: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    margin: 24,
-    justifyContent: 'space-between',
-    backgroundColor: '#1e293b',
-    padding: 12,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: '#3b82f6',
-    marginBottom: 20,
-    shadowColor: '#3b82f6',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-  },
+  updateBanner: { flexDirection: 'row', alignItems: 'center', margin: 24, justifyContent: 'space-between', backgroundColor: '#1e293b', padding: 12, borderRadius: 16, borderWidth: 1, borderColor: '#3b82f6', marginBottom: 20, shadowColor: '#3b82f6', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.2, shadowRadius: 8 },
   bannerContent: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   bannerIconBg: { backgroundColor: '#3b82f6', padding: 8, borderRadius: 10 },
   bannerTitle: { color: '#fff', fontWeight: 'bold', fontSize: 14 },
   bannerSub: { color: '#94a3b8', fontSize: 12 },
   bannerCloseBtn: { padding: 4 },
-  search: {
-    padding: 16,
-    borderRadius: 16,
-    backgroundColor: '#0f172a',
-    color: 'white',
-    borderWidth: 1,
-    borderColor: '#1e293b',
-    fontSize: 16,
-    marginBottom: 20,
-  },
+  search: { padding: 16, borderRadius: 16, backgroundColor: '#0f172a', color: 'white', borderWidth: 1, borderColor: '#1e293b', fontSize: 16, marginBottom: 20 },
   stealthSearch: { backgroundColor: '#f1f3f4', color: '#000', borderColor: 'transparent', borderRadius: 8, height: 40 },
   grid: { flexDirection: 'row', flexWrap: 'wrap' },
   modalBg: { flex: 1, backgroundColor: 'rgba(2,6,23,0.95)', justifyContent: 'center', alignItems: 'center' },
@@ -352,13 +323,4 @@ const styles = StyleSheet.create({
   modalTop: { flexDirection: 'row', justifyContent: 'space-between', padding: 14, alignItems: 'center', backgroundColor: '#1e293b' },
   stealthModalTop: { backgroundColor: '#f8f9fa', borderBottomWidth: 1, borderColor: '#dadce0' },
   modalRight: { flexDirection: 'row', gap: 20 },
-
-  // Popular banner
-  popularBanner: {
-    width: '100%',
-    height: 180,
-    borderRadius: 16,
-    overflow: 'hidden',
-    marginBottom: 8,
-  },
 });

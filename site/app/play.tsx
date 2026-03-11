@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity, TextInput,
-  StyleSheet, useWindowDimensions, Linking, Modal, Platform, Image
+  StyleSheet, useWindowDimensions, Linking, Modal, Platform, Image,
+  Animated
 } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
@@ -30,7 +31,7 @@ type GameType = {
 };
 
 const STORAGE_KEYS = { FAVS: 'sparkly:favs', RECENT: 'sparkly:recent' };
-const ver = { date: '10/3/26', verText: '7.9.8' };
+const ver = { date: '11/3/26', verText: '7.9.85' };
 
 export default function HomeScreen() {
   const { width } = useWindowDimensions();
@@ -48,6 +49,7 @@ export default function HomeScreen() {
   const [isStealth, setIsStealth] = useState(false);
   const [remoteVerText, setRemoteVerText] = useState('');
   const [showBanner, setShowBanner] = useState(false);
+  const [gameLoading, setGameLoading] = useState(true);
 
   // --- Popular slideshow state ---
   const popularGames = useMemo(() => gamesData.filter(g => g.popular), []);
@@ -91,12 +93,29 @@ export default function HomeScreen() {
     }
   }, []);
 
+  const spin = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.loop(
+      Animated.timing(spin, {
+        toValue: 1,
+        duration: 2000,
+        useNativeDriver: true
+      })
+    ).start();
+  }, []);
+
   const toggleStealth = () => {
     setIsStealth(!isStealth);
     if (Platform.OS === 'web' && !isStealth) {
       window.history.replaceState({}, '', '/v7-research-notes-p9.pdf');
     }
   };
+
+  const rotate = spin.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '360deg']
+  });
 
   const addRecent = (name: string) => {
     const updated = [name, ...recent.filter(r => r !== name)].slice(0, 20);
@@ -116,10 +135,13 @@ export default function HomeScreen() {
 
   const columns = width < 420 ? 2 : width < 1200 ? 5 : 8;
   const itemWidth = (width - 32) / columns;
-  const isBanned = () => {
+  const banned = useMemo(() => {
     const uid = localStorage.getItem('sparkly:uid');
-    // @ts-ignore
     return uid ? banList.includes(uid) : false;
+  }, []);
+  const playRandom = () => {
+    const g = gamesData[Math.floor(Math.random() * gamesData.length)];
+    setModalGame(g);
   };
 
   return (
@@ -189,15 +211,16 @@ export default function HomeScreen() {
             )}
           </View>
         </View>
-
-        <TextInput
-          value={query}
-          onChangeText={setQuery}
-          placeholder={isStealth ? "Search files..." : "Search games..."}
-          placeholderTextColor={isStealth ? "#94a3b8" : "#475569"}
-          style={[styles.search, isStealth && styles.stealthSearch]}
-        />
-
+        <View style={{ flexDirection: 'row', gap: 12, height: 80 }}>
+          <TextInput
+            value={query}
+            onChangeText={setQuery}
+            placeholder={isStealth ? "Search files..." : "Search games..."}
+            placeholderTextColor={isStealth ? "#94a3b8" : "#475569"}
+            style={[styles.search, isStealth && styles.stealthSearch]}
+          />
+          <Text style={[styles.iconBtn, { fontSize: 36, padding: 10, height: 65, width: 65, textAlign: 'center' }]} onPress={playRandom}>🎲</Text>
+        </View>
         {/* Popular Game Grid */}
         <Text style={[styles.sectionTitle, isStealth && styles.stealthTextPrimary]}>
           Popular Games
@@ -208,10 +231,11 @@ export default function HomeScreen() {
               <Game
                 name={isStealth ? `RESEARCH-${game.title.en.replace(/\s+/g, '').toUpperCase()}` : game.title.en}
                 imageSource={isStealth ? "useDocOfficial_abc" : game.img}
-                ban={isBanned()}
+                ban={banned}
                 onPress={() => {
-                  if (isBanned()) return;
+                  if (banned) return;
                   setModalGame(game);
+                  setGameLoading(true);
                   setIframeKey(k => k + 1);
                   addRecent(game.title.en);
                   logEvent(analytics, 'play_game', { game_name: game.title.en });
@@ -227,10 +251,11 @@ export default function HomeScreen() {
               <Game
                 name={isStealth ? `RESEARCH-${game.title.en.replace(/\s+/g, '').toUpperCase()}` : game.title.en}
                 imageSource={isStealth ? "useDocOfficial_abc" : game.img}
-                ban={isBanned()}
+                ban={banned}
                 onPress={() => {
-                  if (isBanned()) return;
+                  if (banned) return;
                   setModalGame(game);
+                  setGameLoading(true);
                   setIframeKey(k => k + 1);
                   addRecent(game.title.en);
                   logEvent(analytics, 'play_game', { game_name: game.title.en });
@@ -249,6 +274,14 @@ export default function HomeScreen() {
                 <Ionicons name="close-circle" size={32} color={isStealth ? "#5f6368" : "#f1f5f9"} />
               </TouchableOpacity>
               <View style={styles.modalRight}>
+                <TouchableOpacity
+                  onPress={() => {
+                    logEvent(analytics, 'report_game', { game_name: modalGame?.title.en });
+                    alert('Game reported. Thanks!');
+                  }}
+                >
+                  <Ionicons name="warning-outline" size={24} color="#f87171" />
+                </TouchableOpacity>
                 <TouchableOpacity onPress={() => setIframeKey(k => k + 1)}>
                   <Ionicons name="refresh" size={24} color={isStealth ? "#5f6368" : "#94a3b8"} />
                 </TouchableOpacity>
@@ -260,13 +293,29 @@ export default function HomeScreen() {
                 </TouchableOpacity>
               </View>
             </View>
-            <iframe
-              ref={iframeRef}
-              key={iframeKey}
-              src={modalGame?.url}
-              style={{ flex: 1, width: '100%', border: 'none' }}
-              title="Game Content"
-            />
+            <View style={{ flex: 1 }}>
+              {gameLoading && (
+                <View style={styles.spinnerContainer}>
+                  <Animated.View style={{ transform: [{ rotate }] }}>
+                    <Ionicons name="game-controller" size={48} color="#60a5fa" />
+                  </Animated.View>
+                  <Text style={styles.loadingText}>Loading game...</Text>
+                </View>
+              )}
+
+              <iframe
+                ref={iframeRef}
+                key={iframeKey}
+                src={modalGame?.url}
+                onLoad={() => setGameLoading(false)}
+                style={{
+                  flex: 1,
+                  width: '100%',
+                  border: 'none',
+                  opacity: gameLoading ? 0 : 1
+                }}
+              />
+            </View>
           </View>
         </View>
       </Modal>
@@ -292,6 +341,8 @@ const ControlIcon: React.FC<{
 );
 
 const styles = StyleSheet.create({
+  spinnerContainer: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center', backgroundColor: '#0f172a', zIndex: 10 },
+  loadingText: { color: '#94a3b8', marginTop: 12, fontSize: 14 },
   ghReleasesButton: { backgroundColor: '#1717179d', padding: 5, borderRadius: 5, borderColor: '#8181816b', borderWidth: 2, opacity: 0.98 },
   buttonCornerBannerUpdate: { flexDirection: 'row', gap: 12 },
   container: { flex: 1, backgroundColor: '#020617' },
@@ -314,7 +365,7 @@ const styles = StyleSheet.create({
   bannerTitle: { color: '#fff', fontWeight: 'bold', fontSize: 14 },
   bannerSub: { color: '#94a3b8', fontSize: 12 },
   bannerCloseBtn: { padding: 4 },
-  search: { padding: 16, borderRadius: 16, backgroundColor: '#0f172a', color: 'white', borderWidth: 1, borderColor: '#1e293b', fontSize: 16, marginBottom: 20 },
+  search: { padding: 16, borderRadius: 16, backgroundColor: '#0f172a', color: 'white', borderWidth: 1, borderColor: '#1e293b', fontSize: 16, marginBottom: 20, width: '95%' },
   stealthSearch: { backgroundColor: '#f1f3f4', color: '#000', borderColor: 'transparent', borderRadius: 8, height: 40 },
   grid: { flexDirection: 'row', flexWrap: 'wrap' },
   modalBg: { flex: 1, backgroundColor: 'rgba(2,6,23,0.95)', justifyContent: 'center', alignItems: 'center' },

@@ -1,5 +1,6 @@
-import { router, Stack } from 'expo-router';
+import { router, Stack, usePathname } from 'expo-router';
 import React, { useEffect, useState } from 'react';
+import { Platform } from 'react-native';
 import Head from 'expo-router/head';
 import { BazingaProvider } from '@/assets/context/BazingaContext';
 
@@ -9,23 +10,50 @@ import { getRemoteConfig, fetchAndActivate, getValue } from 'firebase/remote-con
 
 export default function RootLayout() {
   const [maintenance, setMaintenance] = useState(false);
+  const [isShutdown, setIsShutdown] = useState(false);
   const [ready, setReady] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
-    const checkMaintenance = async () => {
-      if (typeof window === 'undefined') return;
+    const checkConfig = async () => {
+      // Only run hostname/web logic on Web
+      if (Platform.OS !== 'web' || typeof window === 'undefined') {
+        setReady(true);
+        return;
+      }
 
       try {
         const rc = getRemoteConfig(app);
         rc.settings = { minimumFetchIntervalMillis: 60000, fetchTimeoutMillis: 10000 };
-        rc.defaultConfig = { isUnderMaintainance: false };
+        rc.defaultConfig = { 
+          isUnderMaintainance: false,
+          deprecatedURI: '[]' 
+        };
+
         await fetchAndActivate(rc);
 
-        const isMaint = getValue(rc, 'isUnderMaintainance').asBoolean();
-        console.log('Maintenance flag:', isMaint);
-        setMaintenance(isMaint);
+        // 1. Check General Maintenance
+        const maintFlag = getValue(rc, 'isUnderMaintainance').asBoolean();
+        setMaintenance(maintFlag);
 
-        if (isMaint) logEvent(analytics, 'maintenance_redirect');
+        // 2. Check Hostname for Shutdown (deprecatedURI check)
+        const currentHost = window.location.hostname;
+        const deprecatedDataRaw = getValue(rc, 'deprecatedURI').asString();
+        
+        try {
+          const deprecatedList = JSON.parse(deprecatedDataRaw);
+          // Checks if the current browser hostname is in your JSON array
+          const shouldShutdown = Array.isArray(deprecatedList) 
+            ? deprecatedList.includes(currentHost)
+            : false;
+            
+          setIsShutdown(shouldShutdown);
+        } catch (e) {
+          console.error("Failed to parse deprecatedURI JSON from Firebase", e);
+        }
+
+        if (maintFlag) logEvent(analytics, 'maintenance_redirect');
+        
       } catch (err) {
         console.warn('Remote config fetch failed', err);
       } finally {
@@ -33,18 +61,29 @@ export default function RootLayout() {
       }
     };
 
-    checkMaintenance();
+    checkConfig();
   }, []);
 
   useEffect(() => {
     if (!ready) return;
-    if (maintenance && router.pathname !== '/maintenance') {
-      router.replace('/maintenance');
+
+    // Shutdown (Killswitch) takes priority
+    if (isShutdown) {
+      if (pathname !== '/killswitch') {
+        router.replace('/killswitch');
+      }
+      return; 
     }
-    if (!maintenance && router.pathname === '/maintenance') {
+
+    // Maintenance secondary priority
+    if (maintenance) {
+      if (pathname !== '/maintenance') {
+        router.replace('/maintenance');
+      }
+    } else if (pathname === '/maintenance' || pathname === '/killswitch') {
       router.replace('/');
     }
-  }, [maintenance, ready, router.pathname]);
+  }, [maintenance, isShutdown, ready, pathname]);
 
   if (!ready) return null;
 
@@ -66,7 +105,7 @@ export default function RootLayout() {
         <meta property="twitter:image" content="/og-preview.png" />
         <meta property="og:url" content="https://sparkly.creepers.sbs/" />
         <meta property="og:site_name" content="Sparkly Games" />
-        <meta property="description" content="With Sparkly, get ready to game into the future like never before!" />
+        <meta name="description" content="With Sparkly, get ready to game into the future like never before!" />
         <meta property="og:image" content="/og-preview.png" />
         <link rel="canonical" href="https://sparkly.creepers.sbs/" />
         <meta name="google-site-verification" content="WtKSIKOGxz7QiYaXQyBKvFKAkOfFQ_NjfYGeZrEt6mI" />
@@ -77,7 +116,7 @@ export default function RootLayout() {
           headerShown:
             route.name === 'vids' ||
             route.name === 'vids.backup' ||
-            route.name.substring(0, 10) === 'vidplayer/',
+            route.name.startsWith('vidplayer/'),
         })}
       />
     </BazingaProvider>

@@ -5,7 +5,7 @@ export const gamesData = [
   { title: { en: "Block Blast", tlh: "ngem SuS" }, img: "aa", url: "/block-blast/" },
   { title: { en: "Bloons Tower Defence 5", tlh: "Bloons ngoch Hub vagh" }, img: "m", url: "/btd5.htm" },
   { title: { en: "Boxing Random", tlh: "QumwI' pummoH" }, img: "ab", url: "/randoms/boxing/" },
-  { title: { en: "Crazy Crash Landing", tlh: "Qaw'Ha' ghItlh" }, img: "n", url: "/ccl.htm" },
+  { title: { en: "Crazy Crash Landing", tlh: "Qaw'Ha' ghItlh" }, img: "n", url: "/ccl.htm", popular: true },
   { title: { en: "Darts Pro", tlh: "jeDya' po'wI'" }, img: "f", url: "/dartspro/" },
   { title: { en: "Draw Climber", tlh: "ngem 'ej pegh" }, img: "g", url: "/draw-climber/" },
   { title: { en: "Drive Mad", tlh: "Do'Ha' Hegh" }, img: "9", url: "/drive-mad/", popular: true },
@@ -63,9 +63,9 @@ export const gamesData = [
   { title: { en: "Infiltrating the Airship", tlh: "Duj botlhDaq ghoS" }, img: "au", url: "/stickmin/infiltratingtheairship/" },
 
   { title: { en: "Swoop", tlh: "HeD" }, img: "ap", url: "/SWOOOP.html" },
-  { title: { en: "Jetpack Joyride", tlh: "qul boQ He" }, img: "aw", url: "/jetpack-joyride/" },
+  { title: { en: "Jetpack Joyride", tlh: "qul boQ He" }, img: "aw", url: "/jetpack-joyride/", popular: true },
   { title: { en: "Cut the Rope", tlh: "rop pe'" }, img: "ay", url: "/ctr/" },
-  { title: { en: "Stickman Hook", tlh: "qInHom Qaw'" }, img: "ax", url: "/stickman-hook.html" },
+  { title: { en: "Stickman Hook", tlh: "qInHom Qaw'" }, img: "ax", url: "/stickman-hook.html", popular: true },
 
   { title: { en: "Breaking the Bank", tlh: "Huch paq pummoH" }, img: "az", url: "/stickmin/breakingthebank/" },
   { title: { en: "Crossy Road", tlh: "He QIb" }, img: "ba", url: "/crossy-road.html" },

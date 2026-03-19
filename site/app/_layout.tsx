@@ -33,7 +33,7 @@ export default function RootLayout() {
         await fetchAndActivate(rc);
 
         // 1. Check General Maintenance
-        const maintFlag = getValue(rc, 'isUnderMaintainance').asBoolean();
+        const maintFlag = window.location.host == "localhost" ? getValue(rc, 'isUnderMaintainance').asBoolean() : false;
         setMaintenance(maintFlag);
 
         // 2. Check Hostname for Shutdown (deprecatedURI check)

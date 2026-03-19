@@ -206,7 +206,7 @@ export default function HomeScreen() {
       )}
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        {!isStealth && <FlipClock targetDate="2026-03-19T19:12:00" />}
+        {!isStealth && <FlipClock targetDate="2026-03-20T11:44:00" />}
 
         <View style={[styles.noticeBox, isStealth && styles.stealthNoticeBox]}>
           <TouchableOpacity onPress={() => triggerEgg('title_tap')}>

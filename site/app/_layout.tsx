@@ -9,6 +9,13 @@ import { logEvent } from 'firebase/analytics';
 import { getRemoteConfig, fetchAndActivate, getValue } from 'firebase/remote-config';
 
 export default function RootLayout() {
+  useEffect(() => {
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "w27gct3xid");
+  }, []);
   const [maintenance, setMaintenance] = useState(false);
   const [isShutdown, setIsShutdown] = useState(false);
   const [ready, setReady] = useState(false);

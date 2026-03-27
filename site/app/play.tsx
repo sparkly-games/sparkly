@@ -30,7 +30,7 @@ type GameType = {
 };
 
 const STORAGE_KEYS = { FAVS: 'sparkly:favs', RECENT: 'sparkly:recent', EGGS: 'sparkly:eggs_found' };
-const ver = { date: '19/3/26', verText: '7.10' };
+const ver = { date: '27/3/26', verText: '7.10.2' };
 
 export default function HomeScreen() {
   const { width } = useWindowDimensions();
@@ -206,8 +206,6 @@ export default function HomeScreen() {
       )}
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        {!isStealth && <FlipClock targetDate="2026-03-20T11:44:00" />}
-
         <View style={[styles.noticeBox, isStealth && styles.stealthNoticeBox]}>
           <TouchableOpacity onPress={() => triggerEgg('title_tap')}>
             <Text style={[styles.noticeTitle, isStealth && styles.stealthTextPrimary]}>

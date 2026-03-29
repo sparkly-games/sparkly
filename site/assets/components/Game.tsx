@@ -26,7 +26,6 @@ interface GameProps {
   leaving?: string;
   bazinga?: boolean;
   broken?: boolean;
-  isStealth?: boolean;
 }
 
 const PLACEHOLDER: ImageSourcePropType = {
@@ -55,9 +54,8 @@ export function Game({
   bazinga = false,
   ban = false,
   broken = false,
-  isStealth = false,
 }: GameProps) {
-  
+
   /* -------------------- Logic & Icons -------------------- */
   const resolvedIcons = gameIcons();
   const rawIcon = resolvedIcons[imageSource] ?? PLACEHOLDER;
@@ -65,52 +63,56 @@ export function Game({
 
   const pulseAnim = useRef(new Animated.Value(1)).current;
   const hoverAnim = useRef(new Animated.Value(1)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
 
-  // Pulse for Awards/Badges
+  // Pulse animation
   useEffect(() => {
-    if (isStealth) return;
     const anim = Animated.loop(
       Animated.sequence([
-        Animated.timing(pulseAnim, { toValue: 1.08, duration: 1000, useNativeDriver: true }),
-        Animated.timing(pulseAnim, { toValue: 1, duration: 1000, useNativeDriver: true }),
+        Animated.timing(pulseAnim, { toValue: 1.05, duration: 1200, useNativeDriver: true }),
+        Animated.timing(pulseAnim, { toValue: 1, duration: 1200, useNativeDriver: true }),
       ])
     );
     anim.start();
     return () => anim.stop();
-  }, [isStealth]);
+  }, []);
 
-  const handlePressIn = () => !isStealth && Animated.spring(hoverAnim, { toValue: 0.96, useNativeDriver: true }).start();
-  const handlePressOut = () => !isStealth && Animated.spring(hoverAnim, { toValue: 1, useNativeDriver: true }).start();
+  const handlePressIn = () => {
+    Animated.spring(hoverAnim, { toValue: 0.96, useNativeDriver: true }).start();
+  };
+
+  const handlePressOut = () => {
+    Animated.spring(hoverAnim, { toValue: 1, useNativeDriver: true }).start();
+  };
 
   const finalImage = useMemo<ImageSourcePropType>(() => {
-    if (isStealth || !bazinga) return baseIcon;
+    if (!bazinga) return baseIcon;
     if (Math.floor(Math.random() * 1000) === 0) return DOG;
     return CHAOS[Math.floor(Math.random() * CHAOS.length)];
-  }, [bazinga, baseIcon, isStealth]);
+  }, [bazinga, baseIcon]);
 
   const [imgSource, setImgSource] = useState<ImageSourcePropType>(finalImage);
   useEffect(() => setImgSource(finalImage), [finalImage]);
 
   const showNewBadge = useMemo(() => {
-    if (!newUntil || isStealth) return false;
+    if (!newUntil) return false;
     const year = 2000 + Math.floor(newUntil / 1000000);
     const month = Math.floor((newUntil % 1000000) / 10000) - 1;
     const day = Math.floor((newUntil % 10000) / 100);
     const hour = newUntil % 100;
     return Date.now() < new Date(year, month, day, hour).getTime();
-  }, [newUntil, isStealth]);
+  }, [newUntil]);
 
   const decorIcon = useMemo(() => {
-    if (!decor || !decorIcons[decor] || isStealth) return null;
+    if (!decor || !decorIcons[decor]) return null;
     const options = decorIcons[decor];
     return options[Math.floor(Math.random() * options.length)];
-  }, [decor, isStealth]);
+  }, [decor]);
 
   /* -------------------- Render -------------------- */
   return (
     <View style={styles.outerContainer}>
-      {/* Decorations Layer */}
-      {decorIcon && !isStealth && (
+      {decorIcon && (
         <Image source={decorIcon} style={styles.decor} resizeMode="contain" />
       )}
 
@@ -121,39 +123,47 @@ export function Game({
           onPressOut={handlePressOut}
           onPress={onPress}
           disabled={ban}
-          style={[
-            styles.cardBase,
-            isStealth ? styles.stealthCard : styles.glassCard,
-            ban && { opacity: 0.4 }
-          ]}
+          style={[styles.cardBase, styles.glassCard, ban && { opacity: 0.4 }]}
         >
-          {/* IMAGE CONTAINER: Uniform Square Fix */}
-          <View style={[styles.imageFrame, isStealth && styles.stealthImageFrame]}>
-            <Image
+
+          <View style={styles.imageFrame}>
+            <Animated.Image
               source={imgSource}
-              style={styles.fullImage}
+              style={[styles.fullImage, { opacity: fadeAnim }]}
               resizeMode="cover"
+              onLoad={() => {
+                fadeAnim.setValue(0);
+                Animated.timing(fadeAnim, {
+                  toValue: 1,
+                  duration: 300,
+                  useNativeDriver: true,
+                }).start();
+              }}
               onError={() => setImgSource(PLACEHOLDER)}
             />
-            
-            {/* Glossy Badges */}
-            {!isStealth && (
-              <View style={styles.badgeStrip}>
-                {showNewBadge && <Text style={styles.badgeNew}>NEW</Text>}
-                {pcOnly && <View style={styles.badgePC}><Text style={styles.badgeTextSmall}>PC</Text></View>}
+
+            <View style={styles.badgeStrip}>
+              {showNewBadge && <Text style={styles.badgeNew}>NEW</Text>}
+              {pcOnly && (
+                <View style={styles.badgePC}>
+                  <Text style={styles.badgeTextSmall}>PC</Text>
+                </View>
+              )}
+            </View>
+
+            {broken && (
+              <View style={styles.brokenOverlay}>
+                <Text style={styles.brokenText}>⚠</Text>
               </View>
             )}
           </View>
 
-          {/* TEXT CONTAINER: Prevents vertical shapeshifting */}
-          <View style={[styles.textBox, isStealth && styles.stealthTextBox]}>
-            <Text style={[isStealth ? styles.stealthTitle : styles.title]} numberOfLines={1}>
+          <View style={styles.textBox}>
+            <Text style={styles.title} numberOfLines={1}>
               {name}
             </Text>
-            {isStealth && <Text style={styles.stealthDate}>Modified: Mar 8, 2026</Text>}
           </View>
 
-          {/* Ban Overlay */}
           {ban && (
             <View style={styles.lockOverlay}>
               <Text style={{ fontSize: 32 }}>🔒</Text>
@@ -173,9 +183,8 @@ const styles = StyleSheet.create({
   },
   cardBase: {
     overflow: 'hidden',
-    transition: 'all 0.3s ease',
   },
-  // --- GLASS STYLE ---
+
   glassCard: {
     backgroundColor: 'rgba(255, 255, 255, 0.05)',
     borderRadius: 22,
@@ -183,72 +192,41 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.12)',
     alignItems: 'center',
-    ...(Platform.OS === 'web' && { 
-        backdropFilter: 'blur(16px) saturate(180%)',
-        boxShadow: '0 4px 20px rgba(0,0,0,0.3)' 
+    ...(Platform.OS === 'web' && {
+      backdropFilter: 'blur(16px) saturate(180%)',
+      boxShadow: '0 6px 30px rgba(0,0,0,0.4)',
     }),
   },
-  // --- STEALTH STYLE (File Explorer Row) ---
-  stealthCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'transparent',
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#f1f5f9',
-  },
-  // --- IMAGE LOGIC (The Uniform Fix) ---
+
   imageFrame: {
     width: '100%',
-    aspectRatio: 1, // Strictly maintains square shape
+    aspectRatio: 1,
     borderRadius: 16,
     backgroundColor: '#000',
     overflow: 'hidden',
   },
-  stealthImageFrame: {
-    width: 32,
-    height: 32,
-    aspectRatio: 1,
-    borderRadius: 4,
-    backgroundColor: '#f8fafc',
-  },
+
   fullImage: {
     width: '100%',
     height: '100%',
   },
-  // --- TEXT LOGIC ---
+
   textBox: {
     marginTop: 10,
-    height: 20, // Strict height to keep rows even
+    height: 20,
     justifyContent: 'center',
     width: '100%',
   },
-  stealthTextBox: {
-    marginTop: 0,
-    marginLeft: 12,
-    height: 'auto',
-    flex: 1,
-  },
+
   title: {
     color: '#ffffff',
     fontSize: 12,
     fontWeight: '700',
     textAlign: 'center',
     letterSpacing: 0.2,
+    paddingHorizontal: 4,
   },
-  stealthTitle: {
-    color: '#000000',
-    fontSize: 13,
-    fontWeight: '400',
-    textAlign: 'left',
-  },
-  stealthDate: {
-    fontSize: 10,
-    color: '#000000',
-    marginTop: 2,
-  },
-  // --- DECOR & BADGES ---
+
   decor: {
     position: 'absolute',
     top: -4,
@@ -257,6 +235,7 @@ const styles = StyleSheet.create({
     height: 34,
     zIndex: 50,
   },
+
   badgeStrip: {
     position: 'absolute',
     top: 6,
@@ -264,7 +243,10 @@ const styles = StyleSheet.create({
     right: 6,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    zIndex: 10,
+    pointerEvents: 'none',
   },
+
   badgeNew: {
     backgroundColor: '#10b981',
     color: '#fff',
@@ -274,16 +256,38 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
     borderRadius: 6,
     overflow: 'hidden',
+    shadowColor: '#10b981',
+    shadowOpacity: 0.6,
+    shadowRadius: 6,
   },
+
   badgePC: {
-    backgroundColor: 'rgba(0,0,0,0.6)',
+    backgroundColor: 'rgba(0,0,0,0.75)',
     paddingHorizontal: 5,
     paddingVertical: 2,
     borderRadius: 5,
     borderWidth: 0.5,
     borderColor: 'rgba(255,255,255,0.3)',
   },
+
   badgeTextSmall: { color: '#fff', fontSize: 8, fontWeight: '800' },
+
+  brokenOverlay: {
+    position: 'absolute',
+    top: 6,
+    right: 6,
+    backgroundColor: 'rgba(239,68,68,0.9)',
+    borderRadius: 6,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+  },
+
+  brokenText: {
+    color: '#fff',
+    fontSize: 30,
+    fontWeight: '900',
+  },
+
   lockOverlay: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(2, 6, 23, 0.8)',

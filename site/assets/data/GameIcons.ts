@@ -83,7 +83,6 @@ export const gameIcons = () => {
     'bq': require("../icons/bq.jpg"),
     'br': require("../icons/br.jpg"),
     'bs': require("../icons/bs.jpg"),
-
-    'useDocOfficial_abc': "https://cdn-icons-png.flaticon.com/512/2991/2991108.png"
+    'bt': require("../icons/bt.jpg"),
   };
 };

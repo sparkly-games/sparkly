@@ -13,7 +13,7 @@ export default function RootLayout() {
   const [maintenance, setMaintenance] = useState(false);
   const [isShutdown, setIsShutdown] = useState(false);
   const [ready, setReady] = useState(false);
-  const [branch, setBranch] = useState<'stable' | 'canary'>('stable');
+  const [branch, setBranch] = useState<'stable' | 'canary'>();
   const [showPicker, setShowPicker] = useState(false);
   const [remoteConfig, setRemoteConfig] = useState<RemoteConfig | null>(null);
   const pathname = usePathname();
@@ -33,8 +33,8 @@ export default function RootLayout() {
   useEffect(() => {
     const initApp = async () => {
       if (Platform.OS !== 'web' || typeof window === 'undefined') { setReady(true); return; }
-      const savedBranch = (localStorage.getItem('sparkly_branch') as 'stable' | 'canary') || 'stable';
-      setBranch(savedBranch);
+      const savedBranch = (localStorage.getItem('sparkly_branch') as 'stable' | 'canary');
+      setBranch(savedBranch || getValue(getRemoteConfig(app), 'startBranch').asString());
       try {
         const rc = getRemoteConfig(app);
         rc.settings = { minimumFetchIntervalMillis: 60000, fetchTimeoutMillis: 10000 };

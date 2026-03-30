@@ -1,7 +1,7 @@
 export const gamesData = [
   { title: { en: "Small World Cup" }, img: "ag", url: "/small-world-cup.html", popular: true },
   { title: { en: "Basket Random" }, img: "ac", url: "/randoms/basket/" },
-  { title: { en: "BitLife" }, img: "6", url: "/bitlife/" },
+  { title: { en: "BitLife" }, img: "6", url: "/bitlife/", popular: true },
   { title: { en: "Block Blast" }, img: "aa", url: "/block-blast/" },
   { title: { en: "Bloons Tower Defence 5" }, img: "m", url: "/btd5.htm" },
   { title: { en: "Boxing Random" }, img: "ab", url: "/randoms/boxing/" },
@@ -26,7 +26,7 @@ export const gamesData = [
 
   { title: { en: "Idle Football Manager" }, img: "k", url: "/idle-football/" },
   { title: { en: "Happy Glass" }, img: "an", url: "/happyglass/" },
-  { title: { en: "NEW Tiny Fishing" }, img: "aq", url: "/tiny-fishing/update", broken: true },
+  { title: { en: "NEW Tiny Fishing" }, img: "aq", url: "/tiny-fishing/update" },
   { title: { en: "Nut Sort" }, img: "aj", url: "/nutsort/" },
   { title: { en: "OvO" }, img: "7", url: "/ovo/" },
   { title: { en: "Paper.io 2" }, img: "am", url: "/paperio2/" },
@@ -75,20 +75,20 @@ export const gamesData = [
   { title: { en: "Recoil" }, img: "bf", url: "/recoil.html" },
   { title: { en: "OvO 2" }, img: "bh", url: "/ovo2.html", pc: true },
 
-  { title: { en: "Fruit Ninja" }, img: "v", url: "/fruitninja.htm" },
-  { title: { en: "GD SubZero" }, img: "j", url: "/gd-sub0.htm"},
-  { title: { en: "GD World" }, img: "av", url: "/gdworld.htm"},
+  { title: { en: "Fruit Ninja" }, img: "v", url: "/fruitninja.htm", popular: true },
+  { title: { en: "Geometry Dash SubZero" }, img: "j", url: "/gd-sub0.htm"},
+  { title: { en: "Geometry Dash World" }, img: "av", url: "/gdworld.htm"},
   { title: { en: "Driven Wild" }, img: "ao", url: "/drivenwild/index.html" },
   { title: { en: "Knife Hit" }, img: "bg", url: "/knifehit/" },
   { title: { en: "Car Drawing Game" }, img: "ad", url: "/car-drawing-game/" },
   { title: { en: "Monster Tracks" }, img: "o", url: "/monster-tracks.html" },
 
-  { title: { en: "Doge Miner" }, img: "bi", url: "/DogeMiner/" },
+  { title: { en: "Doge Miner" }, img: "bi", url: "/DogeMiner/", popular: true },
   { title: { en: "Impossible Quiz" }, img: "bj", url: "/impossiblequiz/" },
   { title: { en: "Sky Race 3D" }, img: "bk", url: "/skyrace3d.html" },
 
   { title: { en: "Moto X3M" }, img: "bl", url: "/moto-x3m.html" },
-  { title: { en: "GD Lite" }, img: "bn", url: "/gdlite/" },
+  { title: { en: "Geometry Dash Lite" }, img: "bn", url: "/gdlite/" },
   { title: { en: "Cookie Clicker" }, img: "bo", url: "/cookieclicker/", broken: true },
   { title: { en: "Bridge Race" }, img: "bp", url: "/bridge-race/" },
   { title: { en: "Doge Miner 2" }, img: "bd", url: "/doge-miner-2/" },

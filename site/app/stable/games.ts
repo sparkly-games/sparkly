@@ -89,11 +89,12 @@ export const gamesData = [
 
   { title: { en: "Moto X3M" }, img: "bl", url: "/moto-x3m.html" },
   { title: { en: "GD Lite" }, img: "bn", url: "/gdlite/" },
-  { title: { en: "Cookie Clicker" }, img: "bo", url: "/cookieclicker/" },
+  { title: { en: "Cookie Clicker" }, img: "bo", url: "/cookieclicker/", broken: true },
   { title: { en: "Bridge Race" }, img: "bp", url: "/bridge-race/" },
   { title: { en: "Doge Miner 2" }, img: "bd", url: "/doge-miner-2/" },
 
   { title: { en: "Tomb of the Mask" }, img: "ae", url: "/totm.html" },
   { title: { en: "Rocket Goal" }, img: "bq", url: "/rocketgoal/" },
   { title: { en: "Angry Birds" }, img: "bs", url: "/angrybirds.htm" },
+  { title: { en: "Cut The Rope: Time Travel" }, img: "bt", url: "/time-travel/index.html" },
 ];

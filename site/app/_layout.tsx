@@ -109,6 +109,7 @@ export default function RootLayout() {
               <Text style={styles.triggerText}>{branch === 'canary' ? 'CANARY' : 'STABLE'}</Text>
             </Pressable>
             <ControlIcon name="logo-octocat" onPress={() => Linking.openURL('https://github.com/sparkly-games')} style={{ marginLeft: 10, padding: 4 }} />
+            <ControlIcon name="game-controller-outline" onPress={() => Linking.openURL('https://github.com/sparkly-games/sparkly/issues/new?template=game-request.md')} style={{ marginLeft: 8, padding: 4 }} />
           </View>
         </View>
       )}

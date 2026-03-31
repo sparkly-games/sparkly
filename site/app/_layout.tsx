@@ -1,6 +1,6 @@
 import { router, Stack, usePathname } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { Platform, View, Text, Pressable, StyleSheet, TouchableOpacity, Linking } from 'react-native';
+import { Platform, View, Text, Pressable, StyleSheet, TouchableOpacity, Linking, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Head from 'expo-router/head';
 import { BazingaProvider } from '@/assets/context/BazingaContext';
@@ -9,6 +9,23 @@ import { app, analytics } from '@/assets/data/firebaseConfig.js';
 import { getRemoteConfig, fetchAndActivate, getValue, RemoteConfig } from 'firebase/remote-config';
 import { logEvent } from 'firebase/analytics';
 
+// Firebase Auth & Firestore Imports
+import { 
+  getAuth, 
+  onAuthStateChanged, 
+  signInWithPopup, 
+  GoogleAuthProvider, 
+  GithubAuthProvider, 
+  signOut, 
+  User 
+} from 'firebase/auth';
+import { getFirestore, doc, setDoc, getDoc } from 'firebase/firestore';
+
+const auth = getAuth(app);
+const db = getFirestore(app);
+const googleProvider = new GoogleAuthProvider();
+const githubProvider = new GithubAuthProvider();
+
 export default function RootLayout() {
   const [maintenance, setMaintenance] = useState(false);
   const [isShutdown, setIsShutdown] = useState(false);
@@ -16,8 +33,71 @@ export default function RootLayout() {
   const [branch, setBranch] = useState<'stable' | 'canary'>();
   const [showPicker, setShowPicker] = useState(false);
   const [remoteConfig, setRemoteConfig] = useState<RemoteConfig | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const pathname = usePathname();
 
+  // --- CLOUD SYNC LOGIC ---
+  // This pushes your localStorage data to Firebase whenever it changes
+  const syncToCloud = async (u: User) => {
+    if (Platform.OS !== 'web') return;
+    const favs = localStorage.getItem('sparkly:favs');
+    const recent = localStorage.getItem('sparkly:recent');
+    try {
+      await setDoc(doc(db, "users", u.uid), {
+        favs: favs ? JSON.parse(favs) : [],
+        recent: recent ? JSON.parse(recent) : [],
+        lastSync: new Date().toISOString(),
+        username: u.displayName,
+        email: u.email
+      }, { merge: true });
+    } catch (e) { console.error("Sync Failed", e); }
+  };
+
+  // This pulls data from Firebase and injects it into localStorage
+  const pullFromCloud = async (u: User) => {
+    if (Platform.OS !== 'web') return;
+    const docRef = doc(db, "users", u.uid);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      if (data.favs) localStorage.setItem('sparkly:favs', JSON.stringify(data.favs));
+      if (data.recent) localStorage.setItem('sparkly:recent', JSON.stringify(data.recent));
+      // Trigger a soft refresh if on the play page
+      if (pathname.includes('play')) router.replace(pathname as any);
+    }
+  };
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      if (currentUser) {
+        pullFromCloud(currentUser);
+        
+        // MONKEY PATCH LOCALSTORAGE: 
+        // Intercept setItem so whenever any part of the app saves a favorite, it syncs to cloud automatically
+        if (Platform.OS === 'web') {
+          const originalSetItem = localStorage.setItem;
+          localStorage.setItem = function(key, value) {
+            originalSetItem.apply(this, [key, value]);
+            if (key.startsWith('sparkly:')) {
+              syncToCloud(currentUser);
+            }
+          };
+        }
+      }
+    });
+    return () => unsubscribe();
+  }, [pathname]);
+
+  const handleLogin = async (provider: any) => {
+    try {
+      await signInWithPopup(auth, provider);
+    } catch (e) {
+      console.error("Auth Error", e);
+    }
+  };
+
+  // --- ORIGINAL INITIALIZATION LOGIC ---
   useEffect(() => {
     if (Platform.OS === 'web') {
       (function(c: any, l: Document, a: string, r: string, i: string) {
@@ -91,6 +171,31 @@ export default function RootLayout() {
 
       <Stack screenOptions={({ route }) => ({ headerShown: route.name === 'vids' || route.name === 'vids.backup' || route.name.startsWith('vidplayer/') })} />
 
+      {/* AUTH OVERLAY (Top Right) */}
+      {Platform.OS === 'web' && !isShutdown && !maintenance && (
+        <View style={styles.authContainer}>
+          {user ? (
+            <TouchableOpacity style={styles.profileBadge} onPress={() => signOut(auth)}>
+              <Image source={{ uri: user.photoURL || 'https://via.placeholder.com/32' }} style={styles.avatar} />
+              <View>
+                <Text style={styles.userText}>{user.displayName?.split(' ')[0] || 'User'}</Text>
+                <Text style={styles.syncText}>CLOUD SYNC ON</Text>
+              </View>
+            </TouchableOpacity>
+          ) : (
+            <View style={styles.loginRow}>
+               <TouchableOpacity style={[styles.loginBtn, { backgroundColor: '#EA4335' }]} onPress={() => handleLogin(googleProvider)}>
+                  <Ionicons name="logo-google" size={16} color="white" />
+               </TouchableOpacity>
+               <TouchableOpacity style={[styles.loginBtn, { backgroundColor: '#333' }]} onPress={() => handleLogin(githubProvider)}>
+                  <Ionicons name="logo-github" size={16} color="white" />
+               </TouchableOpacity>
+            </View>
+          )}
+        </View>
+      )}
+
+      {/* BRANCH PICKER (Bottom Right) */}
       {Platform.OS === 'web' && !isShutdown && !maintenance && (
         <View style={styles.floatingContainer}>
           {showPicker && (
@@ -109,7 +214,7 @@ export default function RootLayout() {
               <Text style={styles.triggerText}>{branch === 'canary' ? 'CANARY' : 'STABLE'}</Text>
             </Pressable>
             <ControlIcon name="logo-octocat" onPress={() => Linking.openURL('https://github.com/sparkly-games')} style={{ marginLeft: 10, padding: 4 }} />
-            <ControlIcon name="game-controller-outline" onPress={() => Linking.openURL('https://github.com/sparkly-games/sparkly/issues/new?template=game-request.md')} style={{ marginLeft: 8, padding: 4 }} />
+            <ControlIcon name="game-controller-outline" onPress={() => Linking.openURL('https://github.com/sparkly-games/game-requests/issues/new?template=game-request.md')} style={{ marginLeft: 8, padding: 4 }} />
           </View>
         </View>
       )}
@@ -124,6 +229,25 @@ const ControlIcon = ({ name, onPress, color = "white", size = 18, style = {} }: 
 );
 
 const styles = StyleSheet.create({
+  // New Auth Styles
+  authContainer: { position: 'absolute', top: 20, right: 20, zIndex: 10000 },
+  loginRow: { flexDirection: 'row', gap: 8 },
+  loginBtn: { padding: 10, borderRadius: 12, elevation: 5, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.3, shadowRadius: 4 },
+  profileBadge: { 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    backgroundColor: 'rgba(15, 23, 42, 0.9)', 
+    padding: 6, 
+    paddingRight: 12,
+    borderRadius: 20, 
+    borderWidth: 1, 
+    borderColor: '#334155' 
+  },
+  avatar: { width: 28, height: 28, borderRadius: 14, marginRight: 8 },
+  userText: { color: 'white', fontWeight: 'bold', fontSize: 11 },
+  syncText: { color: '#4CAF50', fontSize: 8, fontWeight: '900' },
+
+  // Existing Styles
   floatingContainer: { position: 'absolute', bottom: 20, right: 20, zIndex: 99999, alignItems: 'flex-end' },
   trigger: { backgroundColor: '#111', flexDirection: 'row', alignItems: 'center', paddingHorizontal: 12, paddingVertical: 8, borderRadius: 8, borderWidth: 1, borderColor: '#333' },
   statusDot: { width: 8, height: 8, borderRadius: 4, marginRight: 8 },

@@ -1,5 +1,7 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getAnalytics, logEvent } from 'firebase/analytics'; // JS SDK, not native
+import { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: "AIzaSyANQlvPCbx1eDGVNkmK9HenAh0Cw_fD4Bw",
@@ -17,4 +19,10 @@ const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
 // Initialize Analytics safely for Web
 const analytics = typeof window !== 'undefined' ? getAnalytics(app) : null;
 
-export { app, analytics, logEvent };
+// Initialize Authentication
+const auth = getAuth(app);
+
+export const db = getFirestore(app); // Export this!
+
+
+export { app, analytics, logEvent, auth };

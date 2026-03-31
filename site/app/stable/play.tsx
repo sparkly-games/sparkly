@@ -27,7 +27,7 @@ type GameType = {
 };
 
 const STORAGE_KEYS = { FAVS: 'sparkly:favs', RECENT: 'sparkly:recent', FILTERS: 'sparkly:filters' };
-const ver = { date: '30/3/26', verText: '7.11.0' };
+const ver = { date: '30/3/26', verText: '7.11.1' };
 
 export default function HomeScreen() {
   const { width } = useWindowDimensions();
@@ -91,7 +91,6 @@ export default function HomeScreen() {
   useEffect(() => {
     Animated.loop(Animated.timing(spin, { toValue: 1, duration: 2000, useNativeDriver: true })).start();
   }, []);
-
   const rotate = spin.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '360deg'] });
 
   const addRecent = (name: string) => {
@@ -146,8 +145,9 @@ export default function HomeScreen() {
       <Head><link rel="icon" href='/favicon.ico' /></Head>
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+        {/* NOTICE */}
         <View style={styles.noticeBox}>
-          <GlitchText style={styles.noticeTitle}>✨ Sparkly ✨</GlitchText>
+          <GlitchText style={styles.noticeTitle}>✨ Sparkly Hub ✨</GlitchText>
           <Text style={styles.noticeText}>{`v${ver.verText} | ${ver.date}`}</Text>
 
           <View style={styles.iconRow}>
@@ -174,7 +174,7 @@ export default function HomeScreen() {
           <TextInput
             value={query}
             onChangeText={setQuery}
-            placeholder="Search games..."
+            placeholder="Find your next obsession..."
             placeholderTextColor="#475569"
             style={styles.search}
           />
@@ -182,14 +182,14 @@ export default function HomeScreen() {
             <ControlIcon name="close" onPress={() => setQuery('')} />
           )}
           <TouchableOpacity onPress={playRandom}>
-            <Text style={[styles.iconBtn, { fontSize: 36, padding: 10, height: 65, width: 65, textAlign: 'center' }]}>🎲</Text>
+            <Text style={[styles.iconBtn, { fontSize: 36, padding: 10, height: 65, width: 65, textAlign: 'center' }]}>🎲 Surprise Me</Text>
           </TouchableOpacity>
         </View>
 
         {/* RECENT */}
         {recent.length > 0 && (
           <>
-            <Text style={styles.sectionTitle}>Recently Played</Text>
+            <Text style={styles.sectionTitle}>Your Hits 🔥</Text>
             <View style={styles.grid}>
               {recent.map(name => {
                 const game = gamesData.find(g => g.title.en === name);
@@ -218,7 +218,7 @@ export default function HomeScreen() {
         )}
 
         {/* POPULAR */}
-        <Text style={styles.sectionTitle}>Popular Games</Text>
+        <Text style={styles.sectionTitle}>Trending Now 🌟</Text>
         <View style={styles.grid}>
           {popularGames.map(game => (
             <View key={game.title.en} style={{ width: itemWidth * 0.8, padding: 6 }}>
@@ -239,7 +239,7 @@ export default function HomeScreen() {
         </View>
 
         {/* ALL GAMES */}
-        <Text style={styles.sectionTitle}>All Games</Text>
+        <Text style={styles.sectionTitle}>Full Arcade</Text>
         <View style={styles.grid}>
           {games.map(game => (
             <View key={game.title.en} style={{ width: itemWidth, padding: 6 }}>
@@ -261,7 +261,7 @@ export default function HomeScreen() {
 
         {games.length === 0 && (
           <Text style={{ color: '#64748b', textAlign: 'center', marginTop: 20 }}>
-            No games found.
+            Nothing matched your search. Try another!
           </Text>
         )}
       </ScrollView>
@@ -271,7 +271,7 @@ export default function HomeScreen() {
         <View style={styles.modalBg}>
           <View style={styles.modalContent}>
             <View style={styles.modalTop}>
-              {/* Left: close */}
+              {/* Close */}
               <ControlIcon
                 name="close-circle"
                 size={32}
@@ -279,7 +279,7 @@ export default function HomeScreen() {
                 onPress={() => setModalGame(null)}
                 style={{ backgroundColor: 'transparent' }}
               />
-              {/* Right: buttons */}
+              {/* Buttons */}
               <View style={styles.modalTopRightOverlay}>
                 <ControlIcon name="refresh" size={28} color="#60a5fa" onPress={reloadGame} />
                 <ControlIcon name="expand" size={28} color="#60a5fa" onPress={fullscreenGame} />
@@ -293,7 +293,7 @@ export default function HomeScreen() {
                   <Animated.View style={{ transform: [{ rotate }] }}>
                     <Ionicons name="game-controller" size={48} color="#60a5fa" />
                   </Animated.View>
-                  <Text style={styles.loadingText}>Loading game...</Text>
+                  <Text style={styles.loadingText}>Booting the fun... 🚀</Text>
                 </View>
               )}
               {modalGame && (

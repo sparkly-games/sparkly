@@ -208,6 +208,8 @@ export default function Home() {
             <Image source={{ uri: '/favicon.ico' }} style={styles.footerLogo} />
             <Text style={styles.footerLabel}>SPARKLY ECOSYSTEM</Text>
           </View>
+          <a href="/policies/privacy/index.htm">Privacy Policy</a>
+          <a href="#" className="termly-display-preferences">Consent Preferences</a>
           <Text style={styles.footerText}>
             Open Source © 2026 Sparkly Games. Keep shining.
           </Text>

@@ -161,6 +161,7 @@ export default function RootLayout() {
         <title>{branch === 'canary' ? '🧪 Sparkly Canary' : 'Sparkly Games'}</title>
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5114925324085905" crossOrigin="anonymous" />
         <script src="https://sparkly.statuspage.io/embed/script.js" defer />
+        <script src="https://app.termly.io/resource-blocker/bdedf029-0b36-4542-9171-9745e20154ed?autoBlock=on"></script>
         <meta name="description" content="With Sparkly, get ready to game into the future like never before!" />
         <meta property="og:title" content={branch === 'canary' ? 'Sparkly Canary' : 'Sparkly Games'} />
         <meta property="og:url" content="https://sparkly.creepers.sbs/" />
@@ -168,32 +169,6 @@ export default function RootLayout() {
         <meta name="theme-color" content={branch === 'canary' ? '#ffcc00' : '#60a5fa'} />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
-      <Stack screenOptions={({ route }) => ({ headerShown: route.name === 'vids' || route.name === 'vids.backup' || route.name.startsWith('vidplayer/') })} />
-
-      {/* AUTH OVERLAY (Top Right) */}
-      {Platform.OS === 'web' && !isShutdown && !maintenance && (
-        <View style={styles.authContainer}>
-          {user ? (
-            <TouchableOpacity style={styles.profileBadge} onPress={() => signOut(auth)}>
-              <Image source={{ uri: user.photoURL || 'https://via.placeholder.com/32' }} style={styles.avatar} />
-              <View>
-                <Text style={styles.userText}>{user.displayName?.split(' ')[0] || 'User'}</Text>
-                <Text style={styles.syncText}>CLOUD SYNC ON</Text>
-              </View>
-            </TouchableOpacity>
-          ) : (
-            <View style={styles.loginRow}>
-               <TouchableOpacity style={[styles.loginBtn, { backgroundColor: '#EA4335' }]} onPress={() => handleLogin(googleProvider)}>
-                  <Ionicons name="logo-google" size={16} color="white" />
-               </TouchableOpacity>
-               <TouchableOpacity style={[styles.loginBtn, { backgroundColor: '#333' }]} onPress={() => handleLogin(githubProvider)}>
-                  <Ionicons name="logo-github" size={16} color="white" />
-               </TouchableOpacity>
-            </View>
-          )}
-        </View>
-      )}
 
       {/* BRANCH PICKER (Bottom Right) */}
       {Platform.OS === 'web' && !isShutdown && !maintenance && (

@@ -6,7 +6,7 @@
     "start": "expo start",
     "test": "jest --watchAll",
     "lint": "expo lint",
-    "export": "expo export -p web --output-dir export && cp -r ./export/* ../export/"
+    "export": "expo export -p web --output-dir export"
   },
   "jest": {
     "preset": "jest-expo"

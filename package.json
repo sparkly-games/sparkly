@@ -1,10 +1,6 @@
 {
   "name": "sparkly-monorepo",
   "private": true,
-  "workspaces": [
-    "site",
-    "docs"
-  ],
   "scripts": {
     "export": "sh ./export.sh",
     "start": "concurrently \"cd site && npm start\" \"cd docs && npm start\""

@@ -86,7 +86,10 @@ Feature requests are welcome too!
 
 - https://sparxapi19.firebaseapp.com
 - https://sparxapi19.web.app
-- https://sparxapi20.vercel.app
+- https://sparxapi18.vercel.app
+- https://sparxapi17.vercel.app
+- https://sparkly.lgbt.sh
+
 
 <details>
 <summary>More Deployments</summary>

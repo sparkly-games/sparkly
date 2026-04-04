@@ -152,16 +152,17 @@ export default function RootLayout() {
     setShowPicker(false);
   };
 
-  if (!ready) return null;
+  if (!ready) return <Stack screenOptions={{ headerShown: false }}/>;
   const displayVersion = remoteConfig ? getValue(remoteConfig, 'lastVer').asString() : '1.0.0';
 
   return (
     <BazingaProvider>
+      <Stack screenOptions={{ headerShown: false }} />
       <Head>
         <title>{branch === 'canary' ? '🧪 Sparkly Canary' : 'Sparkly Games'}</title>
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5114925324085905" crossOrigin="anonymous" />
         <script src="https://sparkly.statuspage.io/embed/script.js" defer />
-        <script src="https://app.termly.io/resource-blocker/bdedf029-0b36-4542-9171-9745e20154ed?autoBlock=on"></script>
+        <script src="https://app.termly.io/resource-blocker/bdedf029-0b36-4542-9171-9745e20154ed"></script>
         <meta name="description" content="With Sparkly, get ready to game into the future like never before!" />
         <meta property="og:title" content={branch === 'canary' ? 'Sparkly Canary' : 'Sparkly Games'} />
         <meta property="og:url" content="https://sparkly.creepers.sbs/" />

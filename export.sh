@@ -7,6 +7,7 @@ cd ../site
 cp -r ../docs/build/* ./public/docs
 npm run export
 
+mkdir ../export
 cp -r export/* ../export
 
 cd ../

@@ -15,7 +15,7 @@ import { gamesData } from './games';
 
 // Configuration & Mock Data (Replace with your imports)
 const STORAGE_KEYS = { FAVS: 'sparkly:favs', RECENT: 'sparkly:recent', FILTERS: 'sparkly:filters' };
-const VER_INFO = { date: '4/4/26', text: '7.11.4' };
+const VER_INFO = { date: '6/4/26', text: '7.11.9' };
 
 type GameType = {
   title: { en: string };

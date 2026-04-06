@@ -1,7 +1,7 @@
 #!/bin/zsh
 
 # Define paths relative to the script location
-APP_DIR="./site/app"
+APP_DIR="./app"
 CANARY_DIR="$APP_DIR/canary"
 STABLE_DIR="$APP_DIR/stable"
 

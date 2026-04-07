@@ -13,18 +13,14 @@ import { logEvent } from 'firebase/analytics';
 import { 
   getAuth, 
   onAuthStateChanged, 
-  signInWithPopup, 
-  GoogleAuthProvider, 
-  GithubAuthProvider, 
-  signOut, 
+  AuthError,
   User 
 } from 'firebase/auth';
 import { getFirestore, doc, setDoc, getDoc } from 'firebase/firestore';
 
 const auth = getAuth(app);
 const db = getFirestore(app);
-const googleProvider = new GoogleAuthProvider();
-const githubProvider = new GithubAuthProvider();
+const CLOUD_SYNC_INTERVAL_MS = 60 * 60 * 1000;
 
 export default function RootLayout() {
   const [maintenance, setMaintenance] = useState(false);
@@ -34,68 +30,103 @@ export default function RootLayout() {
   const [showPicker, setShowPicker] = useState(false);
   const [remoteConfig, setRemoteConfig] = useState<RemoteConfig | null>(null);
   const [user, setUser] = useState<User | null>(null);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
   const pathname = usePathname();
+
+  const showErrorToast = (message: string) => {
+    setToastMessage(message);
+  };
+
+  const getFirebaseErrorMessage = (error: unknown, fallback: string) => {
+    if (error && typeof error === 'object') {
+      const firebaseError = error as Partial<AuthError> & { message?: string };
+      if (firebaseError.code && firebaseError.message) {
+        return `${firebaseError.code}: ${firebaseError.message}`;
+      }
+      if (firebaseError.message) {
+        return firebaseError.message;
+      }
+    }
+
+    return fallback;
+  };
 
   // --- CLOUD SYNC LOGIC ---
   // This pushes your localStorage data to Firebase whenever it changes
   const syncToCloud = async (u: User) => {
     if (Platform.OS !== 'web') return;
-    const favs = localStorage.getItem('sparkly:favs');
-    const recent = localStorage.getItem('sparkly:recent');
+
     try {
+      const favs = localStorage.getItem('sparkly:favs');
+      const recent = localStorage.getItem('sparkly:recent');
+      const branch = localStorage.getItem('sparkly_branch') || 'stable';
+
       await setDoc(doc(db, "users", u.uid), {
         favs: favs ? JSON.parse(favs) : [],
         recent: recent ? JSON.parse(recent) : [],
         lastSync: new Date().toISOString(),
         username: u.displayName,
-        email: u.email
+        email: u.email,
+        branch,
       }, { merge: true });
-    } catch (e) { console.error("Sync Failed", e); }
+    } catch (e) {
+      console.error("Sync Failed", e);
+      showErrorToast(getFirebaseErrorMessage(e, 'Cloud sync failed.'));
+    }
   };
 
   // This pulls data from Firebase and injects it into localStorage
   const pullFromCloud = async (u: User) => {
     if (Platform.OS !== 'web') return;
-    const docRef = doc(db, "users", u.uid);
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      const data = docSnap.data();
-      if (data.favs) localStorage.setItem('sparkly:favs', JSON.stringify(data.favs));
-      if (data.recent) localStorage.setItem('sparkly:recent', JSON.stringify(data.recent));
-      // Trigger a soft refresh if on the play page
-      if (pathname.includes('play')) router.replace(pathname as any);
+
+    try {
+      const docRef = doc(db, "users", u.uid);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        if (data.favs) localStorage.setItem('sparkly:favs', JSON.stringify(data.favs));
+        if (data.recent) localStorage.setItem('sparkly:recent', JSON.stringify(data.recent));
+        // Trigger a soft refresh if on the play page
+        if (pathname.includes('play')) router.replace(pathname as any);
+      }
+    } catch (e) {
+      console.error("Cloud pull failed", e);
+      showErrorToast(getFirebaseErrorMessage(e, 'Cloud restore failed.'));
     }
   };
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
+
       if (currentUser) {
-        pullFromCloud(currentUser);
-        
-        // MONKEY PATCH LOCALSTORAGE: 
-        // Intercept setItem so whenever any part of the app saves a favorite, it syncs to cloud automatically
-        if (Platform.OS === 'web') {
-          const originalSetItem = localStorage.setItem;
-          localStorage.setItem = function(key, value) {
-            originalSetItem.apply(this, [key, value]);
-            if (key.startsWith('sparkly:')) {
-              syncToCloud(currentUser);
-            }
-          };
-        }
+        await pullFromCloud(currentUser);
+        await syncToCloud(currentUser);
       }
     });
-    return () => unsubscribe();
-  }, [pathname]);
 
-  const handleLogin = async (provider: any) => {
-    try {
-      await signInWithPopup(auth, provider);
-    } catch (e) {
-      console.error("Auth Error", e);
-    }
-  };
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    if (Platform.OS !== 'web' || !user) return;
+
+    const intervalId = setInterval(() => {
+      void syncToCloud(user);
+    }, CLOUD_SYNC_INTERVAL_MS);
+
+    return () => clearInterval(intervalId);
+  }, [user]);
+
+  useEffect(() => {
+    if (!toastMessage) return;
+
+    const timeoutId = setTimeout(() => {
+      setToastMessage(null);
+    }, 4000);
+
+    return () => clearTimeout(timeoutId);
+  }, [toastMessage]);
 
   // --- ORIGINAL INITIALIZATION LOGIC ---
   useEffect(() => {
@@ -133,14 +164,13 @@ export default function RootLayout() {
 
   useEffect(() => {
     if (!ready) return;
-    if (isShutdown && pathname !== '/killswitch') { router.replace('/killswitch'); return; }
     if (maintenance && pathname !== '/maintenance') { router.replace('/maintenance'); return; }
     const isSystemPage = ['/maintenance', '/killswitch'].includes(pathname);
     if (!isSystemPage && Platform.OS === 'web') {
-      const hasCorrectPrefix = pathname.startsWith(`/${branch}`);
+      const hasCorrectPrefix = pathname.startsWith(`/${branch || 'stable'}`);
       if (!hasCorrectPrefix) {
         const cleanPath = pathname.replace(/^\/(stable|canary)/, '');
-        router.replace(`/${branch}${cleanPath === '/' ? '' : cleanPath}` as any);
+        router.replace(`/${branch || 'stable'}${cleanPath === '/' ? '' : cleanPath}` as any);
       }
     }
   }, [maintenance, isShutdown, ready, pathname, branch]);
@@ -170,6 +200,12 @@ export default function RootLayout() {
         <meta name="theme-color" content={branch === 'canary' ? '#ffcc00' : '#60a5fa'} />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
+      {toastMessage && (
+        <View style={styles.toastContainer} pointerEvents="none">
+          <Text style={styles.toastText}>{toastMessage}</Text>
+        </View>
+      )}
 
       {/* BRANCH PICKER (Bottom Right) */}
       {Platform.OS === 'web' && !isShutdown && !maintenance && (
@@ -233,4 +269,23 @@ const styles = StyleSheet.create({
   activeItem: { backgroundColor: '#1a1a1a' },
   menuText: { color: '#ccc', fontSize: 13 },
   iconBtn: { borderRadius: 6 },
+  toastContainer: {
+    position: 'absolute',
+    top: 20,
+    right: 20,
+    zIndex: 100000,
+    maxWidth: 260,
+    backgroundColor: 'rgba(127, 29, 29, 0.96)',
+    borderWidth: 1,
+    borderColor: 'rgba(248, 113, 113, 0.55)',
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 12,
+    elevation: 8,
+  },
+  toastText: { color: '#fecaca', fontSize: 12, fontWeight: '700' },
 });

@@ -89,10 +89,6 @@ export default function Home() {
 
   return (
     <View style={styles.root}>
-      <Head>
-        <title>Sparkly Games | Play Unblocked</title>
-      </Head>
-
       <StatusBar style="light" />
 
       {/* --- BACKGROUND --- */}
@@ -117,7 +113,7 @@ export default function Home() {
         <View style={styles.headerInner}>
           <Pressable onPress={() => router.replace('/')} style={styles.brand}>
             <Image source={{ uri: '/favicon.ico' }} style={styles.logo} />
-            <Text style={[styles.brandText, styles.gradientText]}>Sparkly</Text>
+            <Text style={[styles.brandText, styles.gradientText]}>Sparkly Games</Text>
           </Pressable>
 
           {!isMobile && (

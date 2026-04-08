@@ -26,7 +26,8 @@ export default function RootLayout() {
   const [maintenance, setMaintenance] = useState(false);
   const [isShutdown, setIsShutdown] = useState(false);
   const [ready, setReady] = useState(false);
-  const [branch, setBranch] = useState<'stable' | 'canary'>();
+  // Added 'devpatch' to the branch union type
+  const [branch, setBranch] = useState<'stable' | 'canary' | 'devpatch'>();
   const [showPicker, setShowPicker] = useState(false);
   const [remoteConfig, setRemoteConfig] = useState<RemoteConfig | null>(null);
   const [user, setUser] = useState<User | null>(null);
@@ -47,19 +48,17 @@ export default function RootLayout() {
         return firebaseError.message;
       }
     }
-
     return fallback;
   };
 
   // --- CLOUD SYNC LOGIC ---
-  // This pushes your localStorage data to Firebase whenever it changes
   const syncToCloud = async (u: User) => {
     if (Platform.OS !== 'web') return;
 
     try {
       const favs = localStorage.getItem('sparkly:favs');
       const recent = localStorage.getItem('sparkly:recent');
-      const branch = localStorage.getItem('sparkly_branch') || 'stable';
+      const branchVal = localStorage.getItem('sparkly_branch') || 'stable';
 
       await setDoc(doc(db, "users", u.uid), {
         favs: favs ? JSON.parse(favs) : [],
@@ -67,7 +66,7 @@ export default function RootLayout() {
         lastSync: new Date().toISOString(),
         username: u.displayName,
         email: u.email,
-        branch,
+        branch: branchVal,
       }, { merge: true });
     } catch (e) {
       console.error("Sync Failed", e);
@@ -75,7 +74,6 @@ export default function RootLayout() {
     }
   };
 
-  // This pulls data from Firebase and injects it into localStorage
   const pullFromCloud = async (u: User) => {
     if (Platform.OS !== 'web') return;
 
@@ -86,7 +84,6 @@ export default function RootLayout() {
         const data = docSnap.data();
         if (data.favs) localStorage.setItem('sparkly:favs', JSON.stringify(data.favs));
         if (data.recent) localStorage.setItem('sparkly:recent', JSON.stringify(data.recent));
-        // Trigger a soft refresh if on the play page
         if (pathname.includes('play')) router.replace(pathname as any);
       }
     } catch (e) {
@@ -98,37 +95,30 @@ export default function RootLayout() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
-
       if (currentUser) {
         await pullFromCloud(currentUser);
         await syncToCloud(currentUser);
       }
     });
-
     return () => unsubscribe();
   }, []);
 
   useEffect(() => {
     if (Platform.OS !== 'web' || !user) return;
-
     const intervalId = setInterval(() => {
       void syncToCloud(user);
     }, CLOUD_SYNC_INTERVAL_MS);
-
     return () => clearInterval(intervalId);
   }, [user]);
 
   useEffect(() => {
     if (!toastMessage) return;
-
     const timeoutId = setTimeout(() => {
       setToastMessage(null);
     }, 4000);
-
     return () => clearTimeout(timeoutId);
   }, [toastMessage]);
 
-  // --- ORIGINAL INITIALIZATION LOGIC ---
   useEffect(() => {
     if (Platform.OS === 'web') {
       (function(c: any, l: Document, a: string, r: string, i: string) {
@@ -144,7 +134,7 @@ export default function RootLayout() {
   useEffect(() => {
     const initApp = async () => {
       if (Platform.OS !== 'web' || typeof window === 'undefined') { setReady(true); return; }
-      const savedBranch = (localStorage.getItem('sparkly_branch') as 'stable' | 'canary');
+      const savedBranch = (localStorage.getItem('sparkly_branch') as 'stable' | 'canary' | 'devpatch');
       setBranch(savedBranch || getValue(getRemoteConfig(app), 'startBranch').asString());
       try {
         const rc = getRemoteConfig(app);
@@ -169,13 +159,14 @@ export default function RootLayout() {
     if (!isSystemPage && Platform.OS === 'web') {
       const hasCorrectPrefix = pathname.startsWith(`/${branch || 'stable'}`);
       if (!hasCorrectPrefix) {
-        const cleanPath = pathname.replace(/^\/(stable|canary)/, '');
+        // Regex now includes devpatch for replacement
+        const cleanPath = pathname.replace(/^\/(stable|canary|devpatch)/, '');
         router.replace(`/${branch || 'stable'}${cleanPath === '/' ? '' : cleanPath}` as any);
       }
     }
   }, [maintenance, isShutdown, ready, pathname, branch]);
 
-  const toggleBranch = (newBranch: 'stable' | 'canary') => {
+  const toggleBranch = (newBranch: 'stable' | 'canary' | 'devpatch') => {
     if (newBranch === branch) return;
     localStorage.setItem('sparkly_branch', newBranch);
     setBranch(newBranch);
@@ -185,11 +176,23 @@ export default function RootLayout() {
   if (!ready) return <Stack screenOptions={{ headerShown: false }}/>;
   const displayVersion = remoteConfig ? getValue(remoteConfig, 'lastVer').asString() : '1.0.0';
 
+  // Helper for dynamic colors based on branch
+  const getBranchColor = () => {
+    switch (branch) {
+      case 'canary': return '#ffcc00';
+      case 'devpatch': return '#a855f7'; // Purple for Dev
+      default: return '#4CAF50';
+    }
+  };
+
   return (
     <BazingaProvider>
       <Stack screenOptions={{ headerShown: false }} />
       <Head>
-        <title>{branch === 'canary' ? '🧪 Sparkly Canary' : 'Sparkly Games'}</title>
+        <title>
+          {branch === 'canary' ? '🧪 Sparkly Canary' : 
+           branch === 'devpatch' ? '🛠️ Sparkly Devpatch' : 'Sparkly Games'}
+        </title>
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5114925324085905" crossOrigin="anonymous" />
         <script src="https://sparkly.statuspage.io/embed/script.js" defer />
         <script src="https://app.termly.io/resource-blocker/bdedf029-0b36-4542-9171-9745e20154ed"></script>
@@ -197,7 +200,7 @@ export default function RootLayout() {
         <meta property="og:title" content={branch === 'canary' ? 'Sparkly Canary' : 'Sparkly Games'} />
         <meta property="og:url" content="https://sparkly.creepers.sbs/" />
         <meta property="og:image" content="/og-preview.png" />
-        <meta name="theme-color" content={branch === 'canary' ? '#ffcc00' : '#60a5fa'} />
+        <meta name="theme-color" content={getBranchColor()} />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -218,12 +221,16 @@ export default function RootLayout() {
               <Pressable onPress={() => toggleBranch('canary')} style={[styles.menuItem, branch === 'canary' && styles.activeItem]}>
                 <Text style={[styles.menuText, { color: '#ffcc00' }]}>🧪 Canary Build {branch === 'canary' && '✓'}</Text>
               </Pressable>
+              {/* New Devpatch Option */}
+              <Pressable onPress={() => toggleBranch('devpatch')} style={[styles.menuItem, branch === 'devpatch' && styles.activeItem]}>
+                <Text style={[styles.menuText, { color: '#a855f7' }]}>🛠️ Devpatch Build {branch === 'devpatch' && '✓'}</Text>
+              </Pressable>
             </View>
           )}
           <View style={styles.trigger}>
             <Pressable onPress={() => setShowPicker(!showPicker)} style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <View style={[styles.statusDot, { backgroundColor: branch === 'canary' ? '#ffcc00' : '#4CAF50' }]} />
-              <Text style={styles.triggerText}>{branch === 'canary' ? 'CANARY' : 'STABLE'}</Text>
+              <View style={[styles.statusDot, { backgroundColor: getBranchColor() }]} />
+              <Text style={styles.triggerText}>{branch?.toUpperCase() || 'STABLE'}</Text>
             </Pressable>
             <ControlIcon name="logo-octocat" onPress={() => Linking.openURL('https://github.com/sparkly-games')} style={{ marginLeft: 10, padding: 4 }} />
             <ControlIcon name="game-controller-outline" onPress={() => Linking.openURL('https://github.com/sparkly-games/game-requests/issues/new?template=game-request.md')} style={{ marginLeft: 8, padding: 4 }} />
@@ -241,7 +248,6 @@ const ControlIcon = ({ name, onPress, color = "white", size = 18, style = {} }: 
 );
 
 const styles = StyleSheet.create({
-  // New Auth Styles
   authContainer: { position: 'absolute', top: 20, right: 20, zIndex: 10000 },
   loginRow: { flexDirection: 'row', gap: 8 },
   loginBtn: { padding: 10, borderRadius: 12, elevation: 5, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.3, shadowRadius: 4 },
@@ -258,8 +264,6 @@ const styles = StyleSheet.create({
   avatar: { width: 28, height: 28, borderRadius: 14, marginRight: 8 },
   userText: { color: 'white', fontWeight: 'bold', fontSize: 11 },
   syncText: { color: '#4CAF50', fontSize: 8, fontWeight: '900' },
-
-  // Existing Styles
   floatingContainer: { position: 'absolute', bottom: 20, right: 20, zIndex: 99999, alignItems: 'flex-end' },
   trigger: { backgroundColor: '#111', flexDirection: 'row', alignItems: 'center', paddingHorizontal: 12, paddingVertical: 8, borderRadius: 8, borderWidth: 1, borderColor: '#333' },
   statusDot: { width: 8, height: 8, borderRadius: 4, marginRight: 8 },

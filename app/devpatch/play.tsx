@@ -63,7 +63,7 @@ const VER_PATCHES = [
   "5rs46hkv",
   "otg548fh",
 ]
-const VER_INFO = { date: '7/4/26', text: '8.0.0', patch: VER_PATCHES[0] };
+const VER_INFO = { date: '7/4/26', text: '8.0.0', patch: VER_PATCHES[1] };
 
 // --- SHARED SUB-COMPONENTS ---
 

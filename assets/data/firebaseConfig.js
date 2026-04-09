@@ -9,6 +9,7 @@ const firebaseConfig = {
   projectId: "sparxapi",
   storageBucket: "sparxapi.firebasestorage.app",
   messagingSenderId: "291924279653",
+  databaseURL: "https://sparxapi-default-rtdb.europe-west1.firebasedatabase.app",
   appId: "1:291924279653:web:328c9c8ceec6e5d401618c",
   measurementId: "G-0RM66GJ5FL"
 };

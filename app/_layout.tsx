@@ -1,6 +1,6 @@
 import { router, Stack, usePathname } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { Platform, View, Text, Pressable, StyleSheet, TouchableOpacity, Linking, Image } from 'react-native';
+import { Platform, View, Text, Pressable, StyleSheet, TouchableOpacity, Linking } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Head from 'expo-router/head';
 import { BazingaProvider } from '@/assets/context/BazingaContext';
@@ -9,24 +9,23 @@ import { app, analytics } from '@/assets/data/firebaseConfig.js';
 import { getRemoteConfig, fetchAndActivate, getValue, RemoteConfig } from 'firebase/remote-config';
 import { logEvent } from 'firebase/analytics';
 
-// Firebase Auth & Firestore Imports
+// Firebase Auth & Realtime Database Imports
 import { 
   getAuth, 
   onAuthStateChanged, 
   AuthError,
   User 
 } from 'firebase/auth';
-import { getFirestore, doc, setDoc, getDoc } from 'firebase/firestore';
+import { getDatabase, ref, set, get, child } from 'firebase/database';
 
 const auth = getAuth(app);
-const db = getFirestore(app);
+const rtdb = getDatabase(app);
 const CLOUD_SYNC_INTERVAL_MS = 60 * 60 * 1000;
 
 export default function RootLayout() {
   const [maintenance, setMaintenance] = useState(false);
   const [isShutdown, setIsShutdown] = useState(false);
   const [ready, setReady] = useState(false);
-  // Added 'devpatch' to the branch union type
   const [branch, setBranch] = useState<'stable' | 'canary' | 'devpatch'>();
   const [showPicker, setShowPicker] = useState(false);
   const [remoteConfig, setRemoteConfig] = useState<RemoteConfig | null>(null);
@@ -51,65 +50,173 @@ export default function RootLayout() {
     return fallback;
   };
 
-  // --- CLOUD SYNC LOGIC ---
+  // --- DATA CLEANING HELPER (Fixes "undefined" Firebase error) ---
+  const cleanData = (obj: any): any => {
+    if (Array.isArray(obj)) {
+      return obj.map(cleanData);
+    } else if (obj !== null && typeof obj === 'object') {
+      return Object.fromEntries(
+        Object.entries(obj).map(([k, v]) => [k, cleanData(v)])
+      );
+    }
+    return obj === undefined ? null : obj;
+  };
+
+  // --- INDEXEDDB EXPORT HELPER ---
+  const exportIDB = async (dbName: string) => {
+    return new Promise((resolve) => {
+      try {
+        const request = indexedDB.open(dbName);
+        request.onsuccess = async () => {
+          const db = request.result;
+          const dbData: Record<string, any> = {};
+          const storeNames = Array.from(db.objectStoreNames);
+
+          for (const storeName of storeNames) {
+            try {
+              const tx = db.transaction(storeName, "readonly");
+              const store = tx.objectStore(storeName);
+              const allRecords = await new Promise((res) => {
+                const req = store.getAll();
+                req.onsuccess = () => res(req.result);
+                req.onerror = () => res([]);
+              });
+              dbData[storeName.replace(/[.#$[\]]/g, '_')] = allRecords;
+            } catch (e) {
+              console.warn(`Export failed for store: ${storeName}`, e);
+            }
+          }
+          db.close();
+          resolve(dbData);
+        };
+        request.onerror = () => resolve(null);
+      } catch (e) {
+        resolve(null);
+      }
+    });
+  };
+
+  // --- CLOUD SYNC LOGIC (DEVPATCH ONLY) ---
   const syncToCloud = async (u: User) => {
-    if (Platform.OS !== 'web') return;
+    if (Platform.OS !== 'web' || branch !== 'devpatch') return;
 
     try {
-      const favs = localStorage.getItem('sparkly:favs');
-      const recent = localStorage.getItem('sparkly:recent');
-      const branchVal = localStorage.getItem('sparkly_branch') || 'stable';
+      const lsData: Record<string, any> = {};
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key) {
+          const val = localStorage.getItem(key);
+          const safeKey = key.replace(/[.#$[\]]/g, '_');
+          try { lsData[safeKey] = JSON.parse(val || ""); } catch { lsData[safeKey] = val; }
+        }
+      }
 
-      await setDoc(doc(db, "users", u.uid), {
-        favs: favs ? JSON.parse(favs) : [],
-        recent: recent ? JSON.parse(recent) : [],
-        lastSync: new Date().toISOString(),
-        username: u.displayName,
-        email: u.email,
-        branch: branchVal,
-      }, { merge: true });
+      const idbData: Record<string, any> = {};
+      if (indexedDB.databases) {
+        const dbs = await indexedDB.databases();
+        for (const dbInfo of dbs) {
+          if (dbInfo.name && !dbInfo.name.includes('UnityCache')) {
+            const exported = await exportIDB(dbInfo.name);
+            idbData[dbInfo.name.replace(/[.#$[\]]/g, '_')] = exported;
+          }
+        }
+      }
+
+      await set(ref(rtdb, `users/${u.uid}/backup`), {
+        localStorage: cleanData(lsData),
+        indexedDB: cleanData(idbData),
+        metadata: {
+          lastSync: new Date().toISOString(),
+          username: u.displayName,
+          email: u.email,
+          branch: branch
+        }
+      });
+      console.log("Devpatch: Cloud sync successful.");
     } catch (e) {
       console.error("Sync Failed", e);
-      showErrorToast(getFirebaseErrorMessage(e, 'Cloud sync failed.'));
     }
   };
 
   const pullFromCloud = async (u: User) => {
-    if (Platform.OS !== 'web') return;
+    if (Platform.OS !== 'web' || branch !== 'devpatch') return;
 
     try {
-      const docRef = doc(db, "users", u.uid);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        if (data.favs) localStorage.setItem('sparkly:favs', JSON.stringify(data.favs));
-        if (data.recent) localStorage.setItem('sparkly:recent', JSON.stringify(data.recent));
+      const dbRef = ref(rtdb);
+      const snapshot = await get(child(dbRef, `users/${u.uid}/backup`));
+      
+      if (snapshot.exists()) {
+        const cloudData = snapshot.val();
+
+        if (cloudData.localStorage) {
+          Object.keys(cloudData.localStorage).forEach((key) => {
+            const val = cloudData.localStorage[key];
+            const stringVal = typeof val === 'object' ? JSON.stringify(val) : String(val);
+            localStorage.setItem(key.replace(/_/g, '.'), stringVal);
+          });
+        }
+
+        if (cloudData.indexedDB) {
+          for (const dbNameEncoded in cloudData.indexedDB) {
+            const dbName = dbNameEncoded.replace(/_/g, '.');
+            const stores = cloudData.indexedDB[dbNameEncoded];
+            const openRequest = indexedDB.open(dbName);
+            
+            openRequest.onupgradeneeded = (event: any) => {
+              const db = event.target.result;
+              for (const storeName in stores) {
+                if (!db.objectStoreNames.contains(storeName)) {
+                  db.createObjectStore(storeName, { autoIncrement: true });
+                }
+              }
+            };
+
+            openRequest.onsuccess = (event: any) => {
+              const db = event.target.result;
+              for (const storeName in stores) {
+                try {
+                  const tx = db.transaction(storeName, "readwrite");
+                  const store = tx.objectStore(storeName);
+                  const records = stores[storeName];
+                  if (Array.isArray(records)) {
+                    records.forEach(record => {
+                        try { if (record !== null) store.put(record); } catch(e) {}
+                    });
+                  }
+                } catch (e) {
+                  console.warn(`Restore skipped for store ${storeName}`);
+                }
+              }
+              db.close();
+            };
+          }
+        }
+        console.log("Devpatch: Data restored.");
         if (pathname.includes('play')) router.replace(pathname as any);
       }
     } catch (e) {
-      console.error("Cloud pull failed", e);
-      showErrorToast(getFirebaseErrorMessage(e, 'Cloud restore failed.'));
+      console.error("Restore Failed", e);
     }
   };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
-      if (currentUser) {
+      if (currentUser && branch === 'devpatch') {
         await pullFromCloud(currentUser);
         await syncToCloud(currentUser);
       }
     });
     return () => unsubscribe();
-  }, []);
+  }, [branch]);
 
   useEffect(() => {
-    if (Platform.OS !== 'web' || !user) return;
+    if (Platform.OS !== 'web' || !user || branch !== 'devpatch') return;
     const intervalId = setInterval(() => {
       void syncToCloud(user);
     }, CLOUD_SYNC_INTERVAL_MS);
     return () => clearInterval(intervalId);
-  }, [user]);
+  }, [user, branch]);
 
   useEffect(() => {
     if (!toastMessage) return;
@@ -159,7 +266,6 @@ export default function RootLayout() {
     if (!isSystemPage && Platform.OS === 'web') {
       const hasCorrectPrefix = pathname.startsWith(`/${branch || 'stable'}`);
       if (!hasCorrectPrefix) {
-        // Regex now includes devpatch for replacement
         const cleanPath = pathname.replace(/^\/(stable|canary|devpatch)/, '');
         router.replace(`/${branch || 'stable'}${cleanPath === '/' ? '' : cleanPath}` as any);
       }
@@ -176,11 +282,10 @@ export default function RootLayout() {
   if (!ready) return <Stack screenOptions={{ headerShown: false }}/>;
   const displayVersion = remoteConfig ? getValue(remoteConfig, 'lastVer').asString() : '1.0.0';
 
-  // Helper for dynamic colors based on branch
   const getBranchColor = () => {
     switch (branch) {
       case 'canary': return '#ffcc00';
-      case 'devpatch': return '#a855f7'; // Purple for Dev
+      case 'devpatch': return '#a855f7'; 
       default: return '#4CAF50';
     }
   };
@@ -195,7 +300,6 @@ export default function RootLayout() {
         </title>
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5114925324085905" crossOrigin="anonymous" />
         <script src="https://sparkly.statuspage.io/embed/script.js" defer />
-        <script src="https://app.termly.io/resource-blocker/bdedf029-0b36-4542-9171-9745e20154ed"></script>
         <meta name="description" content="With Sparkly, get ready to game into the future like never before!" />
         <meta property="og:title" content={branch === 'canary' ? 'Sparkly Canary' : 'Sparkly Games'} />
         <meta property="og:url" content="https://sparkly.creepers.sbs/" />
@@ -210,7 +314,6 @@ export default function RootLayout() {
         </View>
       )}
 
-      {/* BRANCH PICKER (Bottom Right) */}
       {Platform.OS === 'web' && !isShutdown && !maintenance && (
         <View style={styles.floatingContainer}>
           {showPicker && (
@@ -221,7 +324,6 @@ export default function RootLayout() {
               <Pressable onPress={() => toggleBranch('canary')} style={[styles.menuItem, branch === 'canary' && styles.activeItem]}>
                 <Text style={[styles.menuText, { color: '#ffcc00' }]}>🧪 Canary Build {branch === 'canary' && '✓'}</Text>
               </Pressable>
-              {/* New Devpatch Option */}
               <Pressable onPress={() => toggleBranch('devpatch')} style={[styles.menuItem, branch === 'devpatch' && styles.activeItem]}>
                 <Text style={[styles.menuText, { color: '#a855f7' }]}>🛠️ Devpatch Build {branch === 'devpatch' && '✓'}</Text>
               </Pressable>
@@ -248,22 +350,6 @@ const ControlIcon = ({ name, onPress, color = "white", size = 18, style = {} }: 
 );
 
 const styles = StyleSheet.create({
-  authContainer: { position: 'absolute', top: 20, right: 20, zIndex: 10000 },
-  loginRow: { flexDirection: 'row', gap: 8 },
-  loginBtn: { padding: 10, borderRadius: 12, elevation: 5, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.3, shadowRadius: 4 },
-  profileBadge: { 
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    backgroundColor: 'rgba(15, 23, 42, 0.9)', 
-    padding: 6, 
-    paddingRight: 12,
-    borderRadius: 20, 
-    borderWidth: 1, 
-    borderColor: '#334155' 
-  },
-  avatar: { width: 28, height: 28, borderRadius: 14, marginRight: 8 },
-  userText: { color: 'white', fontWeight: 'bold', fontSize: 11 },
-  syncText: { color: '#4CAF50', fontSize: 8, fontWeight: '900' },
   floatingContainer: { position: 'absolute', bottom: 20, right: 20, zIndex: 99999, alignItems: 'flex-end' },
   trigger: { backgroundColor: '#111', flexDirection: 'row', alignItems: 'center', paddingHorizontal: 12, paddingVertical: 8, borderRadius: 8, borderWidth: 1, borderColor: '#333' },
   statusDot: { width: 8, height: 8, borderRadius: 4, marginRight: 8 },

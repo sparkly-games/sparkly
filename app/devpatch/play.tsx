@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo, useRef, useCallback, memo } from 'react';
 import {
   View, Text, FlatList, TouchableOpacity, TextInput,
-  StyleSheet, useWindowDimensions, Linking, Platform,
+  StyleSheet, useWindowDimensions, Linking, Modal, Platform,
   ActivityIndicator, Pressable
 } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
@@ -64,7 +64,7 @@ const VER_PATCHES = [
   "5rs46hkv",
   "otg548fh",
 ]
-const VER_INFO = { date: '7/4/26', text: '8.0.0', patch: VER_PATCHES[1] };
+const VER_INFO = { date: '7/4/26', text: '8.0.0', patch: VER_PATCHES[4] };
 
 // --- SHARED SUB-COMPONENTS ---
 
@@ -189,9 +189,9 @@ export default function HomeScreen() {
         <Text style={styles.noticeText}>{`v${VER_INFO.text} | ${VER_INFO.patch || VER_INFO.date}`}</Text>
 
         <View style={styles.iconRow}>
-          <ControlIcon name="logo-youtube" onPress={() => router.push('/vids')} />
-          <ControlIcon name="barcode-outline" onPress={() => Linking.openURL('/soundboard.htm')} />
-          <ControlIcon name="mic-outline" onPress={() => Linking.openURL('/tts.htm')} />
+          <ControlIcon name="logo-youtube" onPress={() => router.push('/youtube')} />
+          <ControlIcon name="volume-high" onPress={() => Linking.openURL('/soundUtils.htm')} />
+          <ControlIcon name="tv-outline" onPress={() => router.push('/soon')} />
           <View style={styles.vPipe} />
           <ControlIcon 
             name="desktop-outline" 

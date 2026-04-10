@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Linking, Platform } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Linking, Modal, Platform } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Head from 'expo-router/head';
 import { GlitchText } from '@/assets/components/GlitchText';

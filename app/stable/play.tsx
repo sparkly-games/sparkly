@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo, useRef, useCallback, memo } from 'react';
 import {
   View, Text, FlatList, TouchableOpacity, TextInput,
-  StyleSheet, useWindowDimensions, Linking, Platform,
+  StyleSheet, useWindowDimensions, Linking, Modal, Platform,
   ActivityIndicator, Pressable
 } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';

@@ -9,7 +9,7 @@
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.rilwag2612.onlinegames12"
+      "bundleIdentifier": "dev.sparkly.games"
     },
     "android": {
       "adaptiveIcon": {
@@ -43,6 +43,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": "https://sparkly.creepers.sbs"
+      },
+      "eas": {
+        "projectId": "8a0beb52-a483-4626-a787-cdd117da5b04"
+      }
     }
   }
 }

@@ -6,7 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function RootLayout() {
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ flex: 1 }}>
       <WebView
         source={{ uri: 'https://sparklyoss.lgbt.sh' }}
         style={{ flex: 1 }}

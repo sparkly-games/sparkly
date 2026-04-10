@@ -16,6 +16,9 @@ public/*/.git
 .metro-health-check*
 npm-debug.*
 yarn-debug.*
+android/app/build/
+android/app/src/main/assets/sparxapi.db
+ios/build
 yarn-error.*
 firebase-debug.log
 .DS_Store

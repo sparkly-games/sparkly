@@ -12,6 +12,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { GlitchText } from '@/assets/components/GlitchText';
 import { Game } from '../../assets/components/Game';
 import { gamesData } from './games';
+import { GameFrame } from '@/assets/components/GameFrame';
 
 // --- TYPES ---
 interface GameType {
@@ -63,7 +64,7 @@ const VER_PATCHES = [
   "5rs46hkv",
   "otg548fh",
 ]
-const VER_INFO = { date: '7/4/26', text: '8.0.0', patch: VER_PATCHES[0] };
+const VER_INFO = { date: '7/4/26', text: '8.0.0', patch: VER_PATCHES[4] };
 
 // --- SHARED SUB-COMPONENTS ---
 
@@ -188,9 +189,9 @@ export default function HomeScreen() {
         <Text style={styles.noticeText}>{`v${VER_INFO.text} | ${VER_INFO.patch || VER_INFO.date}`}</Text>
 
         <View style={styles.iconRow}>
-          <ControlIcon name="logo-youtube" onPress={() => router.push('/vids')} />
-          <ControlIcon name="barcode-outline" onPress={() => Linking.openURL('/soundboard.htm')} />
-          <ControlIcon name="mic-outline" onPress={() => Linking.openURL('/tts.htm')} />
+          <ControlIcon name="logo-youtube" onPress={() => router.push('/youtube')} />
+          <ControlIcon name="volume-high" onPress={() => Linking.openURL('/soundUtils.htm')} />
+          <ControlIcon name="tv-outline" onPress={() => router.push('/soon')} />
           <View style={styles.vPipe} />
           <ControlIcon 
             name="desktop-outline" 
@@ -308,7 +309,7 @@ export default function HomeScreen() {
             <View style={{ flex: 1, backgroundColor: '#000' }}>
               {gameLoading && <ActivityIndicator size="large" color="#60a5fa" style={styles.loader} />}
               {modalGame && (
-                <iframe
+                <GameFrame
                   ref={iframeRef}
                   src={modalGame.url}
                   style={{ flex: 1, border: 'none', opacity: gameLoading ? 0 : 1 }}

@@ -119,7 +119,7 @@ export default function VideosScreen() {
             )}
 
             {!loading && cobaltUrl && (
-              <iframe
+              <GameFrame
                 ref={iframeRef}
                 src={cobaltUrl}
                 style={{

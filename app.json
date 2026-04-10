@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "onlinegames12",
-    "slug": "onlinegames12",
-    "version": "6.0.0",
+    "name": "Sparkly Games",
+    "slug": "sparklygames",
+    "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/favicon.png",
     "scheme": "myapp",
@@ -13,11 +13,11 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/images/favicon.png",
+        "backgroundColor": "#818181"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.rilwag2612.onlinegames12"
+      "package": "dev.sparkly.games"
     },
     "web": {
       "bundler": "metro",
@@ -25,14 +25,19 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "expo-router",
+      [
+        "expo-router",
+        {
+          "origin": "https://sparkly.creepers.sbs"
+        }
+      ],
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/og12_logo_banner.png",
+          "image": "./assets/images/favicon.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "backgroundColor": "#818181"
         }
       ]
     ],

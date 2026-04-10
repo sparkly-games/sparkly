@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useMemo, useRef, useCallback, memo } from 'react';
 import {
   View, Text, FlatList, TouchableOpacity, TextInput,
-  StyleSheet, useWindowDimensions, Linking, Modal, Platform,
+  StyleSheet, useWindowDimensions, Linking, Platform,
   ActivityIndicator, Pressable
 } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import Head from 'expo-router/head';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { GameFrame } from '@/assets/components/GameFrame';
 
 // Assuming these exist in your project
 import { GlitchText } from '@/assets/components/GlitchText';
@@ -275,7 +276,7 @@ export default function HomeScreen() {
             <View style={{ flex: 1, backgroundColor: '#000' }}>
               {gameLoading && <ActivityIndicator size="large" color="#60a5fa" style={styles.loader} />}
               {modalGame && (
-                <iframe
+                <GameFrame
                   ref={iframeRef}
                   src={modalGame.url}
                   style={{ flex: 1, border: 'none', opacity: gameLoading ? 0 : 1 }}

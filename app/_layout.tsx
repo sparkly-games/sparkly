@@ -1,12 +1,20 @@
 'use client';
 
-import { Stack } from 'expo-router';
-import { BazingaProvider } from '@/assets/context/BazingaContext';
+import React from 'react';
+import { WebView } from 'react-native-webview';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function RootLayout() {
   return (
-    <BazingaProvider>
-      <Stack screenOptions={{ headerShown: false }} />
-    </BazingaProvider>
+    <SafeAreaView>
+      <WebView
+        source={{ uri: 'https://sparklyoss.lgbt.sh' }}
+        style={{ flex: 1 }}
+        javaScriptEnabled
+        domStorageEnabled
+        originWhitelist={['*']}
+        startInLoadingState
+      />
+    </SafeAreaView>
   );
 }

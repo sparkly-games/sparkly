@@ -64,7 +64,7 @@ const VER_PATCHES = [
   "5rs46hkv",
   "otg548fh",
 ]
-const VER_INFO = { date: '7/4/26', text: '8.0.0', patch: VER_PATCHES[4] };
+const VER_INFO = { date: '12/4/26', text: '8.0.0', patch: VER_PATCHES[7] };
 
 // --- SHARED SUB-COMPONENTS ---
 
@@ -186,11 +186,12 @@ export default function HomeScreen() {
     <View style={styles.headerContainer}>
       <View style={styles.noticeBox}>
         <GlitchText style={styles.noticeTitle}>✨ Sparkly Hub ✨</GlitchText>
-        <Text style={styles.noticeText}>{`v${VER_INFO.text} | ${VER_INFO.patch || VER_INFO.date}`}</Text>
+        <Text style={styles.noticeText}>{`v${VER_INFO.text} | ${localStorage.getItem('sparkly_branch')=== 'devpatch' ? VER_INFO.patch || VER_INFO.date : VER_INFO.date}`}</Text>
 
         <View style={styles.iconRow}>
           <ControlIcon name="logo-youtube" onPress={() => router.push('/youtube')} />
-          <ControlIcon name="volume-high" onPress={() => Linking.openURL('/soundUtils.htm')} />
+          <ControlIcon name="logo-soundcloud" onPress={() => Linking.openURL('https://soundcloak.instatunnel.my')} />
+          <ControlIcon name="volume-high" onPress={() => Linking.openURL('/soundboard.htm')} />
           <ControlIcon name="tv-outline" onPress={() => router.push('/soon')} />
           <View style={styles.vPipe} />
           <ControlIcon 

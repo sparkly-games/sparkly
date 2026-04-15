@@ -1,30 +1,16 @@
 import React, { useEffect, useRef, useState, useMemo, memo } from 'react';
 import { View, Text, StyleSheet, Animated, Pressable, Image, useWindowDimensions, FlatList, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
-import { gameIcons as icons } from '@/assets/data/GameIcons'; //
+import { GameWall } from '@/assets/components/GameWall';
 
-// Memoized Game Item for performance
-const GameItem = memo(({ iconName }) => {
-  const source = icons()[iconName];
-  if (!source) return null;
-  return <Image source={source} style={styles.wallGame} />;
-});
-
-export default function NotFoundScreen() {
+export default function ComingSoon() {
   const router = useRouter();
   const { width } = useWindowDimensions();
-  const isDesktop = width >= 1024;
   
-  // Animation Values
   const scrollAnim = useRef(new Animated.Value(0)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
-  // Data for the wall
-  const HERO_GAMES = useMemo(() => Object.keys(icons()).sort(() => Math.random() - 0.5), []);
-  const LOOP_GAMES = useMemo(() => [...HERO_GAMES, ...HERO_GAMES, ...HERO_GAMES, ...HERO_GAMES, ...HERO_GAMES, ...HERO_GAMES, ...HERO_GAMES], [HERO_GAMES]);
-
   useEffect(() => {
-    // Background Loop Animation[cite: 1]
     Animated.loop(
       Animated.timing(scrollAnim, {
         toValue: -1500,
@@ -38,8 +24,7 @@ export default function NotFoundScreen() {
 
   return (
     <View style={styles.container}>
-      {/* --- CONTENT SECTION --- */}
-      <View style={[styles.mainContent, isDesktop && styles.desktopContent]}>
+      <View style={styles.mainContent}>
         <Text style={styles.errorCode}>403</Text>
         <Text style={styles.message}>COMING SOON</Text>
         <Text style={styles.subtitle}>
@@ -53,23 +38,10 @@ export default function NotFoundScreen() {
           <Text style={styles.buttonText}>RETURN TO BASE</Text>
         </Pressable>
       </View>
-
-      {/* --- GAME WALL SECTION --- */}
-      {isDesktop && (
-        <View style={styles.wallContainer}>
-          <Animated.View style={{ transform: [{ translateY: scrollAnim }], opacity: 0.12 }}>
-            <FlatList
-              data={LOOP_GAMES}
-              keyExtractor={(item, index) => `wall-${index}`}
-              renderItem={({ item }) => <GameItem iconName={item} />}
-              numColumns={5}
-              scrollEnabled={false}
-              removeClippedSubviews={Platform.OS !== 'web'}
-            />
-          </Animated.View>
-          <View style={styles.wallOverlay} />
-        </View>
-      )}
+      <View style={styles.wallContainer}>
+        <GameWall />
+        <View style={styles.wallOverlay} />
+      </View>
     </View>
   );
 }
@@ -77,7 +49,7 @@ export default function NotFoundScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#020617', //[cite: 1]
+    backgroundColor: '#020617', 
     flexDirection: 'row',
   },
   mainContent: {
@@ -87,14 +59,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 40,
     zIndex: 10,
   },
-  desktopContent: {
-    alignItems: 'flex-start',
-    maxWidth: '50%',
-  },
   errorCode: {
     fontSize: 120,
     fontWeight: '900',
-    color: 'rgba(59, 130, 246, 0.3)', // Faint blue
+    color: 'rgba(59, 130, 246, 0.3)',
     position: 'absolute',
     top: '20%',
   },
@@ -112,7 +80,7 @@ const styles = StyleSheet.create({
     lineHeight: 26,
   },
   button: {
-    backgroundColor: '#2563eb', //[cite: 1]
+    backgroundColor: '#2563eb', 
     paddingHorizontal: 32,
     paddingVertical: 16,
     borderRadius: 12,
@@ -122,7 +90,6 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     fontSize: 16,
   },
-  // Wall Styles
   wallContainer: {
     flex: 1,
     height: '100%',
@@ -139,6 +106,6 @@ const styles = StyleSheet.create({
   },
   wallOverlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(2, 6, 23, 0.2)', // Darken the wall so text is readable
+    backgroundColor: 'rgba(2, 6, 23, 0.2)'
   },
 });

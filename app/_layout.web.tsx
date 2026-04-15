@@ -265,7 +265,7 @@ export default function RootLayout() {
 
   useEffect(() => {
     if (!ready) return;
-    if (maintenance && pathname !== `/${branch}/maintenance`) { router.replace(`/${branch}/maintenance`); return; }
+    if (maintenance && pathname !== `/${branch}/system/maintenance`) { router.replace(`/${branch}/system/maintenance`); return; }
     const isSystemPage = pathname.startsWith('/openmsg');
     if (!isSystemPage && Platform.OS === 'web') {
       const hasCorrectPrefix = pathname.startsWith(`/${branch || 'stable'}`);

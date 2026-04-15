@@ -1,11 +1,14 @@
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Linking } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Linking, useWindowDimensions } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Head from 'expo-router/head';
 import { router } from 'expo-router';
 import { GlitchText } from '@/assets/components/GlitchText';
+import { GameWall } from '@/assets/components/GameWall';
 
 export default function MaintenanceScreen() {
+  const { width } = useWindowDimensions();
+  const isDesktop = width >= 1024;
 
   const refresh = () => {
     window.location.href = '/play';
@@ -22,13 +25,14 @@ export default function MaintenanceScreen() {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, isDesktop && styles.desktopContainer]}>
+      <GameWall useAbsolute/>
       <Head>
         <title>Sparkly Games | Maintenance</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <View style={styles.centerWrap}>
+      <View style={[styles.centerWrap, isDesktop && styles.mainContent]}>
         <View style={styles.noticeBox}>
 
           <Text style={styles.noticeTitle}>🚧</Text>
@@ -69,11 +73,23 @@ const styles = StyleSheet.create({
     backgroundColor: '#020617',
     justifyContent: 'center',
     alignItems: 'center',
+    position: 'relative',
   },
 
   centerWrap: {
     width: '90%',
     maxWidth: 600,
+  },
+  desktopContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 24,
+  },
+  mainContent: {
+    flex: 1,
+    maxWidth: 600,
+    width: '100%',
   },
 
   noticeBox: {

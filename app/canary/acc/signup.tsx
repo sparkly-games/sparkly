@@ -15,15 +15,17 @@ import {
 import React, { useRef, useEffect, useState } from 'react';
 import { router } from 'expo-router';
 import Head from 'expo-router/head';
+import { GameWall } from '@/assets/components/GameWall';
 
 // Firebase Imports
 import { app } from '@/assets/data/firebaseConfig.js';
-import { getAuth, signInWithPopup, GoogleAuthProvider, GithubAuthProvider, createUserWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, signInWithPopup, GoogleAuthProvider, GithubAuthProvider, createUserWithEmailAndPassword, FacebookAuthProvider } from 'firebase/auth';
 import { Ionicons } from '@expo/vector-icons';
 
 export default function Login() {
   const { width } = useWindowDimensions();
   const isMobile = width < 768;
+  const isDesktop = width >= 1024;
   const auth = getAuth(app);
 
   // State
@@ -44,7 +46,7 @@ export default function Login() {
     ]).start();
   }, []);
 
-  const handleLogin = async (providerType: 'google' | 'github' | 'email') => {
+  const handleLogin = async (providerType: 'google' | 'github' | 'email' | 'facebook') => {
     if (providerType === 'email') {
       setShowEmailModal(true);
       return;
@@ -54,7 +56,7 @@ export default function Login() {
     setErrorMessage(null);
 
     try {
-      const provider = providerType === 'google' ? new GoogleAuthProvider() : providerType === 'github' ? new GithubAuthProvider() : null;
+      const provider = providerType === 'google' ? new GoogleAuthProvider() : providerType === 'github' ? new GithubAuthProvider() : providerType === 'facebook' ? new FacebookAuthProvider() : null;
       if (!provider) {
         setErrorMessage('Unsupported provider selected.');
         return;
@@ -117,7 +119,7 @@ export default function Login() {
   };
 
   return (
-    <View style={styles.root}>
+    <View style={[styles.root, isDesktop && styles.desktopContainer]}>
       <Head>
         <title>Login | Sparkly Games</title>
       </Head>
@@ -141,7 +143,7 @@ export default function Login() {
           <View style={styles.loginCard}>
             <Text style={styles.title}>Welcome!</Text>
             <Text style={styles.subtitle}>Choose a provider to continue to your dashboard.</Text>
-            <Text style={styles.subtitle}>Already have an account? <Text style={styles.linkText} onPress={() => router.push('/login')}>Log in</Text></Text>
+            <Text style={styles.subtitle}>Already have an account? <Text style={styles.linkText} onPress={() => router.push('/acc/login')}>Log in</Text></Text>
 
             {/* Error Message Display */}
             {errorMessage && (
@@ -168,7 +170,7 @@ export default function Login() {
               <Pressable
                 style={({ pressed }) => [
                   styles.authButton,
-                  { borderColor: 'rgba(255,255,255,0.1)', flexDirection: 'row' },
+                  { borderColor: 'rgba(255,255,255,0.1)', flexDirection: 'row', backgroundColor: 'rgba(219, 68, 55, 0.8)' },
                   pressed && styles.buttonPressed
                 ]}
                 onPress={() => handleLogin('google')}
@@ -190,6 +192,19 @@ export default function Login() {
                 <Ionicons name="logo-github" size={20} color="#fff" style={{ marginRight: 8 }} />
                 <Text style={styles.buttonText}>Continue with GitHub</Text>
               </Pressable>
+
+              <Pressable
+                style={({ pressed }) => [
+                  styles.authButton,
+                  { borderColor: 'rgba(255,255,255,0.1)', flexDirection: 'row', backgroundColor: 'rgba(59, 130, 246, 0.8)' },
+                  pressed && styles.buttonPressed
+                ]}
+                onPress={() => handleLogin('facebook')}
+                disabled={isLoading}
+              >
+                <Ionicons name="logo-facebook" size={20} color="#fff" style={{ marginRight: 8 }} />
+                <Text style={styles.buttonText}>Continue with Facebook</Text>
+              </Pressable>
             </View>
 
             <Text style={styles.footerNote}>
@@ -202,6 +217,7 @@ export default function Login() {
           </Pressable>
         </Animated.View>
       </ScrollView>
+      <GameWall />
 
       {/* --- EMAIL LOGIN MODAL --- */}
       <Modal
@@ -269,7 +285,8 @@ export default function Login() {
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: '#020617' },
+  root: { flex: 1, backgroundColor: '#020617', position: 'relative' },
+  desktopContainer: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
   scroll: { flexGrow: 1, justifyContent: 'center', padding: 24 },
   container: { maxWidth: 450, width: '100%', alignSelf: 'center', alignItems: 'center' },
 

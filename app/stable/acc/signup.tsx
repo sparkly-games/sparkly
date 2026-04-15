@@ -143,7 +143,7 @@ export default function Login() {
           <View style={styles.loginCard}>
             <Text style={styles.title}>Welcome!</Text>
             <Text style={styles.subtitle}>Choose a provider to continue to your dashboard.</Text>
-            <Text style={styles.subtitle}>Already have an account? <Text style={styles.linkText} onPress={() => router.push('/login')}>Log in</Text></Text>
+            <Text style={styles.subtitle}>Already have an account? <Text style={styles.linkText} onPress={() => router.push('/acc/login')}>Log in</Text></Text>
 
             {/* Error Message Display */}
             {errorMessage && (

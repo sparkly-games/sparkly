@@ -39,8 +39,8 @@ export default function App() {
       // Use a simpler fetch for the heartbeat to avoid preflight issues
       const res = await fetch(`${COBALT_URL}`, {mode: 'no-cors'});
       if (!res.ok && res.type !== 'opaque' || res.status !=302) {
-        throw new Error(`Server responded with status ${res.status}`);
         setServerOnline(false);
+        throw new Error(`Server responded with status ${res.status}`);
       }
       setServerOnline(true);
     } catch (err) {

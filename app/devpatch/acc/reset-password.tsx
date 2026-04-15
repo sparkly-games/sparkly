@@ -15,6 +15,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import { router } from 'expo-router';
 import Head from 'expo-router/head';
 import { Ionicons } from '@expo/vector-icons';
+import { GameWall } from '@/assets/components/GameWall';
 
 import { auth } from '@/assets/data/firebaseConfig.js';
 import { sendPasswordResetEmail } from 'firebase/auth';
@@ -22,6 +23,7 @@ import { sendPasswordResetEmail } from 'firebase/auth';
 export default function ResetPassword() {
   const { width } = useWindowDimensions();
   const isMobile = width < 768;
+  const isDesktop = width >= 1024;
 
   const [email, setEmail] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -71,7 +73,7 @@ export default function ResetPassword() {
   };
 
   return (
-    <View style={styles.root}>
+    <View style={[styles.root, isDesktop && styles.desktopContainer]}>
       <Head>
         <title>Reset Password | Sparkly Games</title>
       </Head>
@@ -147,7 +149,7 @@ export default function ResetPassword() {
                 styles.secondaryButton,
                 pressed && styles.buttonPressed,
               ]}
-              onPress={() => router.push('/login')}
+              onPress={() => router.push('/acc/login')}
               disabled={isLoading}
             >
               <Text style={styles.secondaryButtonText}>Back to login</Text>
@@ -159,12 +161,14 @@ export default function ResetPassword() {
           </Pressable>
         </Animated.View>
       </ScrollView>
+      <GameWall />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: '#020617' },
+  root: { flex: 1, backgroundColor: '#020617', position: 'relative' },
+  desktopContainer: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
   scroll: { flexGrow: 1, justifyContent: 'center', padding: 24 },
   container: { maxWidth: 450, width: '100%', alignSelf: 'center', alignItems: 'center' },
 

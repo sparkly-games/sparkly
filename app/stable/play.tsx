@@ -7,12 +7,13 @@ import {
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import Head from 'expo-router/head';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { GameFrame } from '@/assets/components/GameFrame';
 
 // Assuming these exist in your project
 import { GlitchText } from '@/assets/components/GlitchText';
 import { Game } from '../../assets/components/Game';
-import { gamesData } from './games';
+import { gamesData } from './media/games';
+import { GameFrame } from '@/assets/components/GameFrame';
+import { GameWall } from '@/assets/components/GameWall';
 
 // --- TYPES ---
 interface GameType {
@@ -30,8 +31,41 @@ const STORAGE_KEYS = {
   RECENT: 'sparkly:recent', 
   FILTERS: 'sparkly:filters' 
 };
-
-const VER_INFO = { date: '7/4/26', text: '7.12.0' };
+const VER_PATCHES = [
+  "3xclrdun",
+  "9xg4w9y5",
+  "0p5ttso7",
+  "g16fpq2h",
+  "1xf6zts0",
+  "iw74pgdl",
+  "uq8xvm3i",
+  "lkqiftyy",
+  "rr8ihcet",
+  "jl9q9q04",
+  "pebrgtjq",
+  "wpvym99n",
+  "zdf6ts8x",
+  "n69ldwh4",
+  "30flq6w1",
+  "sbte79gq",
+  "ss1ksqlb",
+  "o00wep4v",
+  "pb6cv93n",
+  "o1p01qc1",
+  "tqop6gez",
+  "wfbgx7ez",
+  "nkmptxv0",
+  "z6k98i0w",
+  "xjwj48ud",
+  "53qx9jfl",
+  "g213gtyp",
+  "exrkqldd",
+  "5gc3ymeh",
+  "oumntxws",
+  "5rs46hkv",
+  "otg548fh",
+]
+const VER_INFO = { date: '12/4/26', text: '8.0.0', patch: VER_PATCHES[7] };
 
 // --- SHARED SUB-COMPONENTS ---
 
@@ -153,12 +187,13 @@ export default function HomeScreen() {
     <View style={styles.headerContainer}>
       <View style={styles.noticeBox}>
         <GlitchText style={styles.noticeTitle}>✨ Sparkly Hub ✨</GlitchText>
-        <Text style={styles.noticeText}>{`v${VER_INFO.text} | ${VER_INFO.date}`}</Text>
+        <Text style={styles.noticeText}>{`v${VER_INFO.text} | ${localStorage.getItem('sparkly_branch')=== 'devpatch' ? VER_INFO.patch || VER_INFO.date : VER_INFO.date}`}</Text>
 
         <View style={styles.iconRow}>
-          <ControlIcon name="logo-youtube" onPress={() => router.push('/vids')} />
-          <ControlIcon name="barcode-outline" onPress={() => Linking.openURL('/soundboard.htm')} />
-          <ControlIcon name="mic-outline" onPress={() => Linking.openURL('/tts.htm')} />
+          <ControlIcon name="logo-youtube" onPress={() => router.push('/media/youtube')} />
+          <ControlIcon name="logo-soundcloud" onPress={() => Linking.openURL('https://soundcloak.instatunnel.my')} />
+          <ControlIcon name="volume-high" onPress={() => Linking.openURL('/soundboard.htm')} />
+          <ControlIcon name="tv-outline" onPress={() => router.push('/system/soon')} />
           <View style={styles.vPipe} />
           <ControlIcon 
             name="desktop-outline" 
@@ -274,7 +309,7 @@ export default function HomeScreen() {
               </View>
             </View>
             <View style={{ flex: 1, backgroundColor: '#000' }}>
-              {gameLoading && <ActivityIndicator size="large" color="#60a5fa" style={styles.loader} />}
+              {gameLoading && <><ActivityIndicator size="large" color="#60a5fa" style={styles.loader} /><GameWall /></>}
               {modalGame && (
                 <GameFrame
                   ref={iframeRef}

@@ -19,7 +19,7 @@ import { GameWall } from '@/assets/components/GameWall';
 
 // Firebase Imports
 import { app } from '@/assets/data/firebaseConfig.js';
-import { getAuth, signInWithPopup, GoogleAuthProvider, GithubAuthProvider, signInWithEmailAndPassword, FacebookAuthProvider } from 'firebase/auth';
+import { getAuth, signInWithPopup, GoogleAuthProvider, GithubAuthProvider, createUserWithEmailAndPassword, FacebookAuthProvider } from 'firebase/auth';
 import { Ionicons } from '@expo/vector-icons';
 
 export default function Login() {
@@ -96,7 +96,7 @@ export default function Login() {
     setErrorMessage(null);
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      await createUserWithEmailAndPassword(auth, email, password);
       setShowEmailModal(false);
       setEmail('');
       setPassword('');
@@ -141,9 +141,9 @@ export default function Login() {
 
           {/* --- LOGIN CARD --- */}
           <View style={styles.loginCard}>
-            <Text style={styles.title}>Welcome Back</Text>
+            <Text style={styles.title}>Welcome!</Text>
             <Text style={styles.subtitle}>Choose a provider to continue to your dashboard.</Text>
-            <Text style={styles.subtitle}>Don't have an account? <Text style={styles.linkText} onPress={() => router.push('/signup')}>Sign up</Text></Text>
+            <Text style={styles.subtitle}>Already have an account? <Text style={styles.linkText} onPress={() => router.push('/acc/login')}>Log in</Text></Text>
 
             {/* Error Message Display */}
             {errorMessage && (
@@ -196,7 +196,7 @@ export default function Login() {
               <Pressable
                 style={({ pressed }) => [
                   styles.authButton,
-                  { backgroundColor: '#0f468d', borderWidth: 0, flexDirection: 'row' },
+                  { borderColor: 'rgba(255,255,255,0.1)', flexDirection: 'row', backgroundColor: 'rgba(59, 130, 246, 0.8)' },
                   pressed && styles.buttonPressed
                 ]}
                 onPress={() => handleLogin('facebook')}
@@ -208,7 +208,7 @@ export default function Login() {
             </View>
 
             <Text style={styles.footerNote}>
-              By signing in, you agree to our Terms of Service.
+              By signing up, you agree to our Terms of Service.
             </Text>
           </View>
 
@@ -217,6 +217,7 @@ export default function Login() {
           </Pressable>
         </Animated.View>
       </ScrollView>
+      <GameWall />
 
       {/* --- EMAIL LOGIN MODAL --- */}
       <Modal
@@ -255,12 +256,6 @@ export default function Login() {
                 <Text style={styles.errorText}>{errorMessage}</Text>
               </View>
             )}
-            <Text style={{ color: '#94a3b8', fontSize: 12, textAlign: 'center', marginTop: 8 }}>
-              Forgot password? <Text style={styles.linkText} onPress={() => {
-                setShowEmailModal(false);
-                router.push('/reset-password');
-              }}>Reset Password</Text>
-            </Text>
 
             <Pressable
               style={({ pressed }) => [styles.modalButton, styles.signInButton, pressed && styles.buttonPressed]}
@@ -285,7 +280,6 @@ export default function Login() {
           </View>
         </View>
       </Modal>
-      <GameWall />
     </View>
   );
 }

@@ -11,8 +11,9 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 // Assuming these exist in your project
 import { GlitchText } from '@/assets/components/GlitchText';
 import { Game } from '../../assets/components/Game';
-import { gamesData } from './games';
+import { gamesData } from './media/games';
 import { GameFrame } from '@/assets/components/GameFrame';
+import { GameWall } from '@/assets/components/GameWall';
 
 // --- TYPES ---
 interface GameType {
@@ -189,10 +190,10 @@ export default function HomeScreen() {
         <Text style={styles.noticeText}>{`v${VER_INFO.text} | ${localStorage.getItem('sparkly_branch')=== 'devpatch' ? VER_INFO.patch || VER_INFO.date : VER_INFO.date}`}</Text>
 
         <View style={styles.iconRow}>
-          <ControlIcon name="logo-youtube" onPress={() => router.push('/youtube')} />
+          <ControlIcon name="logo-youtube" onPress={() => router.push('/media/youtube')} />
           <ControlIcon name="logo-soundcloud" onPress={() => Linking.openURL('https://soundcloak.instatunnel.my')} />
           <ControlIcon name="volume-high" onPress={() => Linking.openURL('/soundboard.htm')} />
-          <ControlIcon name="tv-outline" onPress={() => router.push('/soon')} />
+          <ControlIcon name="tv-outline" onPress={() => router.push('/system/soon')} />
           <View style={styles.vPipe} />
           <ControlIcon 
             name="desktop-outline" 
@@ -308,7 +309,7 @@ export default function HomeScreen() {
               </View>
             </View>
             <View style={{ flex: 1, backgroundColor: '#000' }}>
-              {gameLoading && <ActivityIndicator size="large" color="#60a5fa" style={styles.loader} />}
+              {gameLoading && <><ActivityIndicator size="large" color="#60a5fa" style={styles.loader} /><GameWall /></>}
               {modalGame && (
                 <GameFrame
                   ref={iframeRef}

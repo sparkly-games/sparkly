@@ -123,7 +123,7 @@ export default function Home() {
                 <ActivityIndicator size="small" color="#3b82f6" />
               ) : !loggedIn ? (
                 <Pressable 
-                  onPress={() => openLink('/login')} 
+                  onPress={() => openLink('/acc/login')} 
                   style={({ pressed }) => [styles.loginBtn, pressed && { opacity: 0.7 }]}
                 >
                   <Text style={styles.loginText}>LOGIN</Text>

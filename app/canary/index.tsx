@@ -20,6 +20,7 @@ import Head from 'expo-router/head';
 import { SELLING_POINTS } from '@/assets/data/selling';
 import { gameIcons as icons } from '@/assets/data/GameIcons';
 import { auth } from '@/assets/data/firebaseConfig.js';
+import { signOut } from 'firebase/auth';
 
 const shuffle = (array: string[]) => [...array].sort(() => Math.random() - 0.5);
 
@@ -122,7 +123,7 @@ export default function Home() {
                 <ActivityIndicator size="small" color="#3b82f6" />
               ) : !loggedIn ? (
                 <Pressable 
-                  onPress={() => openLink('/login')} 
+                  onPress={() => openLink('/acc/login')} 
                   style={({ pressed }) => [styles.loginBtn, pressed && { opacity: 0.7 }]}
                 >
                   <Text style={styles.loginText}>LOGIN</Text>
@@ -139,6 +140,7 @@ export default function Home() {
                     }} 
                     style={styles.profilePic} 
                     // Log the error if the image fails to bind
+                    onClick={() => signOut(auth).catch(e => console.log("Sign Out Error:", e))}
                     onError={(e) => console.log("Image Load Error:", e.nativeEvent.error)}
                   />
                 )

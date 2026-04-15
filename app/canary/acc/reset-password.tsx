@@ -149,7 +149,7 @@ export default function ResetPassword() {
                 styles.secondaryButton,
                 pressed && styles.buttonPressed,
               ]}
-              onPress={() => router.push('/login')}
+              onPress={() => router.push('/acc/login')}
               disabled={isLoading}
             >
               <Text style={styles.secondaryButtonText}>Back to login</Text>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head></head><body class="dark"><module>
+<moduleprefs title="Google.com">
+<content type="html"><!--[CDATA[
+
+
+<!DOCTYPE html-->
+
+
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/google-gl-games-schools/99@main/style.css">
+    <style>
+        canvas:focus { outline: none; }
+        html, body {
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+            user-select: none;
+            height: 100%;
+        }
+    </style>
+
+
+    <div id="unity-container" class="unity-desktop">
+        <canvas id="unity-canvas" tabindex="-1" style="cursor: default;" width="1441" height="935"></canvas>
+    </div>
+    <div id="loading-cover" style="background: url(&quot;https://cdn.jsdelivr.net/gh/google-gl-games-schools/99@main/background.jpg&quot;) center center / cover; display: none;">
+        <div id="unity-loading-bar">
+            <div id="unity-logo"><img src="https://raw.githubusercontent.com/onlinegames19/onlinegames19.github.io/87f795cc64e145b7c1abcad25c97976484da66f5/assets/assets/images/og12_logo_banner.35fae52ccfcb050bfc66ee120a0e1d39.png" style="border-radius: 50px;"></div>
+            <div id="unity-progress-bar-empty" style="">
+                <div id="unity-progress-bar-full" style="width: 100%;"></div>
+            </div>
+            <div class="spinner" style="display: none;"></div>
+        </div>
+    </div>
+    <script>
+        const buildUrl = "https://cdn.jsdelivr.net/gh/google-gl-games-schools/99@main/Build";
+        const loaderUrl = buildUrl + "/WebGLBuild.loader.js";
+        const config = {
+            dataUrl: buildUrl + "/WebGLBuild.data.unityweb",
+            frameworkUrl: buildUrl + "/WebGLBuild.framework.js.unityweb",
+            codeUrl: buildUrl + "/WebGLBuild.wasm.unityweb",
+            streamingAssetsUrl: "StreamingAssets",
+            companyName: "BrainImpulse Games",
+            productName: "Crazy Crash Landing",
+            productVersion: "1.1.2"
+        };
+
+        const container = document.querySelector("#unity-container");
+        const canvas = document.querySelector("#unity-canvas");
+        const loadingCover = document.querySelector("#loading-cover");
+        const progressBarEmpty = document.querySelector("#unity-progress-bar-empty");
+        const progressBarFull = document.querySelector("#unity-progress-bar-full");
+        const spinner = document.querySelector('.spinner');
+
+        if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+            container.className = "unity-mobile";
+        }
+
+        loadingCover.style.background = "grey";
+        loadingCover.style.display = "";
+
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
+        function FocusGame() {
+            window.focus();
+            canvas.focus();
+        }
+
+        window.addEventListener('pointerdown', FocusGame);
+        window.addEventListener('touchstart', FocusGame);
+
+        let StartUnityInstance;
+        let myGameInstance;
+        let ysdk = null; // Yandex SDK pasif
+
+        // Varsayılan değerlerle environmentData, cloudSaves, paymentsData ve playerData gibi değişkenlerin tanımlanması
+        let environmentData = {
+            language: "en",
+            domain: "default_domain",
+            deviceType: "desktop",
+            isMobile: false,
+            isDesktop: true,
+            isTablet: false,
+            isTV: false,
+            appID: "default_app_id",
+            browserLang: navigator.language || "en",
+            payload: null,
+            promptCanShow: false,
+            reviewCanShow: false,
+            platform: navigator.platform,
+            browser: (function() {
+                let userAgent = navigator.userAgent;
+                if (userAgent.includes("YaBrowser")) return "Yandex";
+                if (userAgent.includes("OPR") || userAgent.includes("Opera")) return "Opera";
+                if (userAgent.includes("Firefox")) return "Firefox";
+                if (userAgent.includes("MSIE") || userAgent.includes("Trident")) return "IE";
+                if (userAgent.includes("Edge")) return "Edge";
+                if (userAgent.includes("Chrome")) return "Chrome";
+                if (userAgent.includes("Safari")) return "Safari";
+                return "Other";
+            })()
+        };
+        
+        let cloudSaves = 'noData';
+        let paymentsData = 'none';
+        let playerData = 'noData'; // Varsayılan playerData tanımı
+        let player = null;
+        let payments = null;
+        let initGame = false;
+        let nowFullAdOpen = false;
+
+        // Eksik olabilecek tüm SDK işlevlerini varsayılan olarak tanımla
+        function GetPayments() { console.warn("GetPayments is not implemented"); return Promise.resolve("none"); }
+        function SaveCloud() { console.warn("SaveCloud is not implemented"); }
+        function LoadCloud() { console.warn("LoadCloud is not implemented"); return Promise.resolve("noData"); }
+        function InitPlayer() { console.warn("InitPlayer is not implemented"); return Promise.resolve("noData"); }
+        function FullAdShow() { console.warn("FullAdShow is not implemented"); }
+        function RewardedShow() { console.warn("RewardedShow is not implemented"); }
+        function StickyAdActivity() { console.warn("StickyAdActivity is not implemented"); }
+        function Review() { console.warn("Review is not implemented"); }
+        function PromptShow() { console.warn("PromptShow is not implemented"); }
+        function InitLeaderboards() { console.warn("InitLeaderboards is not implemented"); }
+        function GetLeaderboardScores() { console.warn("GetLeaderboardScores is not implemented"); }
+        function SetLeaderboardScores() { console.warn("SetLeaderboardScores is not implemented"); }
+        function ConsumePurchase() { console.warn("ConsumePurchase is not implemented"); }
+        function ConsumePurchases() { console.warn("ConsumePurchases is not implemented"); } // Varsayılan tanım eklendi
+
+        // Hata yakalama ile Unity başlatma işlemi
+        try {
+            const script = document.createElement("script");
+            script.src = loaderUrl;
+            script.onload = () => {
+                StartUnityInstance = function () {
+                    createUnityInstance(canvas, config, (progress) => {
+                        spinner.style.display = "none";
+                        progressBarEmpty.style.display = "";
+                        progressBarFull.style.width = `${100 * progress}%`;
+                    }).then((unityInstance) => {
+                        myGameInstance = unityInstance;
+                        loadingCover.style.display = "none";
+                    }).catch((message) => {
+                        console.error("Unity yükleme hatası:", message);
+                    });
+                };
+                StartUnityInstance();
+            };
+            document.body.appendChild(script);
+        } catch (error) {
+            console.error("Başlatma sırasında hata:", error);
+        }
+
+        function InitGame() {
+            try {
+                console.log('Init Game Success');
+                initGame = true;
+                if (nowFullAdOpen === true && myGameInstance != null) {
+                    myGameInstance.SendMessage('YandexGame', 'OpenFullAd');
+                }
+            } catch (error) {
+                console.error("InitGame sırasında hata:", error);
+            }
+        }
+
+        // Hata oluştuğunda oyuna devam etmek için tüm hataları global olarak yakalayan yapı
+        window.addEventListener("unhandledrejection", function(event) {
+            console.warn("Hata es geçildi:", event.reason);
+            event.preventDefault();
+        });
+    </script>
+
+
+
+
+
+]]&gt;</content>
+</moduleprefs></module><script src="https://cdn.jsdelivr.net/gh/google-gl-games-schools/99@main/Build/WebGLBuild.loader.js"></script>
+<script src="blob:https://497410025-atari-embeds.googleusercontent.com/b74b1129-bef6-4956-843b-f12ebbf6db5a"></script></body>
+</html>

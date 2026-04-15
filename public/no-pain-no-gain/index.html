@@ -1,0 +1,36 @@
+<!DOCTYPE html><html><head><meta name="robots" content="noindex,follow"/>
+<title>Игра Нет Боли - Нет Прогресса - Igru.net</title>
+<link rel="stylesheet" href="css/gameloader2020.css"/>
+<script src="js/gameloader2020.js"></script>
+<meta charset="UTF-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+</head>
+<body>
+<script>
+    // Pretend we are on an authorized site before the loader even runs
+    Object.defineProperty(document, 'referrer', {get: () => 'https://igru.net'});
+    window.isOnOurWeb = true;
+</script>
+<script type="text/javascript">
+	var options = {
+		author: "Igru",
+		logo: "logo.jpg",
+		gameName: "No Pain No Gain",
+		gameNameEu: "No Pain No Gain",
+		gameUrl: "45378",
+		moreLink: ("about:blank"),
+		allowFullscreen: true,
+		locale: "en_US",
+		loader: "unity2020",
+		loaderOptions: {
+			unityLoaderUrl: "Build/NoPainNoGain_RikeGames_gzip_14.loader.js",
+			unityConfigOptions: {
+				dataUrl: "Build/8bbd625ad2d809cd664ad4f7f1cee042.data",
+				frameworkUrl: "Build/001c9ce4931dfcfc07780dc633810e6a.js",
+			    codeUrl: "Build/4642eb2547a32d68333ca744743291d8.wasm",
+				streamingAssetsUrl: "StreamingAssets"
+           }
+	   },
+    };
+	GameInit.load(options);	  
+</script></body></html>

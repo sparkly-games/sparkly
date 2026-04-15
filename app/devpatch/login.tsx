@@ -19,7 +19,7 @@ import { GameWall } from '@/assets/components/GameWall';
 
 // Firebase Imports
 import { app } from '@/assets/data/firebaseConfig.js';
-import { getAuth, signInWithPopup, GoogleAuthProvider, GithubAuthProvider, signInWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, signInWithPopup, GoogleAuthProvider, GithubAuthProvider, signInWithEmailAndPassword, FacebookAuthProvider } from 'firebase/auth';
 import { Ionicons } from '@expo/vector-icons';
 
 export default function Login() {
@@ -46,7 +46,7 @@ export default function Login() {
     ]).start();
   }, []);
 
-  const handleLogin = async (providerType: 'google' | 'github' | 'email') => {
+  const handleLogin = async (providerType: 'google' | 'github' | 'email' | 'facebook') => {
     if (providerType === 'email') {
       setShowEmailModal(true);
       return;
@@ -56,7 +56,7 @@ export default function Login() {
     setErrorMessage(null);
 
     try {
-      const provider = providerType === 'google' ? new GoogleAuthProvider() : providerType === 'github' ? new GithubAuthProvider() : null;
+      const provider = providerType === 'google' ? new GoogleAuthProvider() : providerType === 'github' ? new GithubAuthProvider() : providerType === 'facebook' ? new FacebookAuthProvider() : null;
       if (!provider) {
         setErrorMessage('Unsupported provider selected.');
         return;
@@ -170,7 +170,7 @@ export default function Login() {
               <Pressable
                 style={({ pressed }) => [
                   styles.authButton,
-                  { borderColor: 'rgba(255,255,255,0.1)', flexDirection: 'row' },
+                  { borderColor: 'rgba(255,255,255,0.1)', flexDirection: 'row', backgroundColor: 'rgba(219, 68, 55, 0.8)' },
                   pressed && styles.buttonPressed
                 ]}
                 onPress={() => handleLogin('google')}
@@ -191,6 +191,19 @@ export default function Login() {
               >
                 <Ionicons name="logo-github" size={20} color="#fff" style={{ marginRight: 8 }} />
                 <Text style={styles.buttonText}>Continue with GitHub</Text>
+              </Pressable>
+
+              <Pressable
+                style={({ pressed }) => [
+                  styles.authButton,
+                  { backgroundColor: '#0f468d', borderWidth: 0, flexDirection: 'row' },
+                  pressed && styles.buttonPressed
+                ]}
+                onPress={() => handleLogin('facebook')}
+                disabled={isLoading}
+              >
+                <Ionicons name="logo-facebook" size={20} color="#fff" style={{ marginRight: 8 }} />
+                <Text style={styles.buttonText}>Continue with Facebook</Text>
               </Pressable>
             </View>
 

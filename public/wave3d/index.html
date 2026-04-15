@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Wave Road 3D</title>
+
+  <meta name="viewport"
+        content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw_1.5.18.js')
+        .then(() => console.log('SW registered'))
+        .catch(err => console.log('SW not registered', err.message));
+    }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "Game",
+    "name": "Wave Road 3D",
+    "description": "Wave Road 3D is a fast-paced reflex game that challenges your focus, timing, and precision.",
+    "creator": { "name": "gameVgames" },
+    "publisher": { "name": "GameDistribution" },
+    "genre": ["1player","2players","Kids Friendly","No Blood"]
+  }
+  </script>
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+    }
+
+    #game {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+  </style>
+
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+
+    body {
+      font-family: Inter, sans-serif;
+    }
+
+    .tesseract-splash-background-container {
+      background-image: url(https://static.gamedistribution.com/assets/ts-bg.svg);
+      background-size: cover;
+      background-position: center;
+      width: 100%;
+      height: 100%;
+    }
+
+    .tesseract-splash-container {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .tesseract-splash-game-thumbnail {
+      width: 150px;
+      height: 150px;
+      border-radius: 16px;
+      background-size: cover;
+      margin-bottom: 12px;
+    }
+
+    .tesseract-splash-title {
+      color: #3b21cc;
+      font-size: 1.6rem;
+      font-weight: 700;
+    }
+
+    .tesseract-splash-company {
+      color: #4c4c4c;
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+    }
+
+    #tesseract-splash-button {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 24px;
+      background: #3b21cc;
+      color: #fff;
+      border-radius: 999px;
+      cursor: pointer;
+      user-select: none;
+      font-weight: 600;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="gdsdk__splash"
+       style="position:fixed; inset:0; z-index:1010; background:#fff;">
+    <div class="tesseract-splash-background-container">
+      <div class="tesseract-splash-container">
+        <div class="tesseract-splash-game-thumbnail"
+             style="background-image:url('https://img.gamedistribution.com/39f3d521b1134600ad5703502ca9d247-512x512.jpg')">
+        </div>
+        <div class="tesseract-splash-title">Wave Road 3D</div>
+        <div class="tesseract-splash-company">by gameVgames</div>
+        <div id="tesseract-splash-button">
+          ▶ Play Now
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <GameFrame id="game" allow="autoplay" allowfullscreen></iframe>
+
+  <script>
+  (function () {
+    function GameLoader() {
+      this.init = function () {
+        this._gameId = "39f3d521b1134600ad5703502ca9d247";
+        this._container = document.getElementById("game");
+        this._insertGameSDK();
+      };
+
+      this._insertGameSDK = function () {
+        window.GD_OPTIONS = {
+          gameId: this._gameId,
+          onEvent: this._onEvent.bind(this)
+        };
+
+        const s = document.createElement("script");
+        s.id = "gamedistribution-jssdk";
+        s.src = "/wheelie-bike/main.min.js";
+        document.body.appendChild(s);
+      };
+
+      this._onEvent = function (event) {
+        if (event.name === "SDK_GAME_START") {
+          this._loadGame();
+        }
+      };
+
+      this._loadGame = function () {
+        document.getElementById("gdsdk__splash").style.display = "none";
+        this._container.src = "frame.html";
+
+        // START OF WORKAROUND: Force the local stub into the iFrame's scope
+        // This is necessary because the Unity game inside the iframe cannot see 
+        // the `window.gdsdk` object defined in the parent window.
+        this._container.onload = () => {
+             const iframeWindow = this._container.contentWindow;
+             if (iframeWindow && window.gdsdk) {
+                 iframeWindow.gdsdk = window.gdsdk; 
+             }
+        };
+        // END OF WORKAROUND
+      };
+    }
+
+    const loader = new GameLoader();
+    loader.init();
+
+    document.getElementById("tesseract-splash-button")
+      .addEventListener("click", () => {
+        if (window.GD_OPTIONS && window.GD_OPTIONS.onEvent) {
+          window.GD_OPTIONS.onEvent({ name: "SDK_GAME_START" });
+        }
+      });
+  })();
+  </script>
+
+</body>
+</html>

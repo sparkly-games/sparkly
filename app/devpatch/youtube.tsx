@@ -37,8 +37,12 @@ export default function App() {
   const checkTunnel = useCallback(async () => {
     try {
       // Use a simpler fetch for the heartbeat to avoid preflight issues
-      const res = await fetch(`${COBALT_URL}api/serverInfo`, {mode: 'no-cors'});
-      setServerOnline(res.ok);
+      const res = await fetch(`${COBALT_URL}`, {mode: 'no-cors'});
+      if (!res.ok && res.type !== 'opaque' || res.status !=302) {
+        throw new Error(`Server responded with status ${res.status}`);
+        setServerOnline(false);
+      }
+      setServerOnline(true);
     } catch (err) {
       setServerOnline(false);
     }

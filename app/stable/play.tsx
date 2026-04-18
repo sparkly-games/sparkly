@@ -65,7 +65,7 @@ const VER_PATCHES = [
   "5rs46hkv",
   "otg548fh",
 ]
-const VER_INFO = { date: '12/4/26', text: '8.0.0', patch: VER_PATCHES[7] };
+const VER_INFO = { date: '18/4/26', text: '8.0.3', patch: VER_PATCHES[14] };
 
 // --- SHARED SUB-COMPONENTS ---
 
@@ -79,26 +79,40 @@ const ControlIcon = memo(({ name, onPress, color = "white", size = 22, active = 
   </TouchableOpacity>
 ));
 
-const GameWrapper = memo(({ game, width, onPress, isFav, onToggleFav }: any) => (
-  <View style={{ width, padding: 6, position: 'relative' }}>
-    <Game
-      name={game.title.en}
-      imageSource={game.img}
-      broken={game.broken}
-      onPress={() => onPress(game)}
-    />
-    <TouchableOpacity 
-      style={styles.favBadge} 
-      onPress={() => onToggleFav(game.title.en)}
+const GameWrapper = memo(({ game, width, onPress, isFav, onToggleFav }: any) => {
+  const [active, setActive] = useState(false);
+
+  return (
+    <View
+      style={{
+        width,
+        padding: 6,
+        position: 'relative',
+        zIndex: active ? 999 : 1,
+      }}
     >
-      <Ionicons 
-        name={isFav ? "heart" : "heart-outline"} 
-        size={16} 
-        color={isFav ? "#ef4444" : "#fff"} 
+      <Game
+        name={game.title.en}
+        imageSource={game.img}
+        broken={game.broken}
+        issueId={game.issue}
+        onPress={() => onPress(game)}
+        onTooltipToggle={setActive}
       />
-    </TouchableOpacity>
-  </View>
-));
+
+      <TouchableOpacity 
+        style={styles.favBadge} 
+        onPress={() => onToggleFav(game.title.en)}
+      >
+        <Ionicons 
+          name={isFav ? "heart" : "heart-outline"} 
+          size={16} 
+          color={isFav ? "#ef4444" : "#fff"} 
+        />
+      </TouchableOpacity>
+    </View>
+  );
+});
 
 export default function HomeScreen() {
   const { width } = useWindowDimensions();
@@ -230,9 +244,8 @@ export default function HomeScreen() {
         <View style={{ marginBottom: 25 }}>
           <Text style={styles.sectionTitle}>Favorites ❤️</Text>
           <FlatList
-            horizontal
             data={favGamesData}
-            showsHorizontalScrollIndicator={false}
+            numColumns={columns}
             renderItem={({ item }) => (
               <GameWrapper 
                 game={item} 
@@ -250,13 +263,12 @@ export default function HomeScreen() {
         <View style={{ marginBottom: 25 }}>
           <Text style={styles.sectionTitle}>Recent Hits 🔥</Text>
           <FlatList
-            horizontal
             data={recentGamesData}
-            showsHorizontalScrollIndicator={false}
+            numColumns={columns}
             renderItem={({ item }) => (
               <GameWrapper 
                 game={item} 
-                width={140} 
+                width={175} 
                 onPress={handleSelectGame} 
                 isFav={favorites.includes(item.title.en)}
                 onToggleFav={toggleFavorite}

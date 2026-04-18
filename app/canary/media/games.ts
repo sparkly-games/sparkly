@@ -1,14 +1,14 @@
 export const gamesData = [
-  { title: { en: "Small World Cup" }, img: "ag", url: "/small-world-cup.html", popular: true },
+  { title: { en: "Small World Cup" }, img: "ag", url: "/small-world-cup.html" },
   { title: { en: "Basket Random" }, img: "ac", url: "/randoms/basket/" },
-  { title: { en: "BitLife" }, img: "6", url: "/bitlife/", popular: true },
+  { title: { en: "BitLife" }, img: "6", url: "/bitlife/" },
   { title: { en: "Block Blast" }, img: "aa", url: "/block-blast/" },
   { title: { en: "Bloons Tower Defence 5" }, img: "m", url: "/btd5.htm" },
   { title: { en: "Boxing Random" }, img: "ab", url: "/randoms/boxing/" },
-  { title: { en: "Crazy Crash Landing" }, img: "n", url: "/ccl.htm", popular: true },
+  { title: { en: "Crazy Crash Landing" }, img: "n", url: "/ccl.htm" },
   { title: { en: "Darts Pro" }, img: "f", url: "/dartspro/" },
   { title: { en: "Draw Climber" }, img: "g", url: "/draw-climber/" },
-  { title: { en: "Drive Mad" }, img: "9", url: "/drive-mad/", popular: true },
+  { title: { en: "Drive Mad" }, img: "9", url: "/drive-mad/" },
   { title: { en: "Duck Duck Clicker" }, img: "4", url: "/duck-duck-clicker/" },
   { title: { en: "Fast Runner" }, img: "t", url: "/fast-runner/" },
   { title: { en: "Flappy Bird" }, img: "h", url: "/flappy-bird/" },
@@ -22,7 +22,7 @@ export const gamesData = [
   { title: { en: "Gobble" }, img: "r", url: "/gobble/" },
   { title: { en: "Google Games Baseball" }, img: "y", url: "/baseball/" },
   { title: { en: "Google Games Cricket" }, img: "z", url: "/cricket17/" },
-  { title: { en: "GunSpin" }, img: "8", url: "/gunspin/", popular: true },
+  { title: { en: "GunSpin" }, img: "8", url: "/gunspin/" },
 
   { title: { en: "Idle Football Manager" }, img: "k", url: "/idle-football/" },
   { title: { en: "Happy Glass" }, img: "an", url: "/happyglass/" },
@@ -38,7 +38,7 @@ export const gamesData = [
 
   { title: { en: "Roll" }, img: "w", url: "/roll.html" },
   { title: { en: "Roper" }, img: "b", url: "/roper/" },
-  { title: { en: "Slice Master" }, img: "q", url: "https://game-hub.nyc3.cdn.digitaloceanspaces.com/slice-master/index.html", broken: true },
+  { title: { en: "Slice Master" }, img: "q", url: "https://game-hub.nyc3.cdn.digitaloceanspaces.com/slice-master/index.html", broken: true, issue: '60' },
 
   { title: { en: "Soccer Random" }, img: "ak", url: "/randoms/soccer/" },
   { title: { en: "Spiral Roll" }, img: "i", url: "/slice-roll/" },
@@ -47,7 +47,7 @@ export const gamesData = [
   { title: { en: "Survival Race" }, img: "d", url: "/survival-race/" },
   { title: { en: "Tap Goal" }, img: "s", url: "/tap-goal/" },
   { title: { en: "There Is No Game" }, img: "af", url: "/there-is-no-game.html" },
-  { title: { en: "Thorns and Balloons" }, img: "5", url: "/thorns-and-balloons/", popular: true },
+  { title: { en: "Thorns and Balloons" }, img: "5", url: "/thorns-and-balloons/" },
 
   { title: { en: "Tiny Fishing" }, img: "1", url: "/tiny-fishing/" },
   { title: { en: "Volley Random" }, img: "al", url: "/randoms/volley/" },
@@ -62,20 +62,20 @@ export const gamesData = [
   { title: { en: "Infiltrating the Airship" }, img: "au", url: "/stickmin/infiltratingtheairship/" },
 
   { title: { en: "Swoop" }, img: "ap", url: "/SWOOOP.html" },
-  { title: { en: "Jetpack Joyride" }, img: "aw", url: "/jetpack-joyride/", popular: true },
+  { title: { en: "Jetpack Joyride" }, img: "aw", url: "/jetpack-joyride/" },
   { title: { en: "Cut the Rope" }, img: "ay", url: "/ctr/" },
-  { title: { en: "Stickman Hook" }, img: "ax", url: "/stickman-hook.html", popular: true },
+  { title: { en: "Stickman Hook" }, img: "ax", url: "/stickman-hook.html" },
 
   { title: { en: "Breaking the Bank" }, img: "az", url: "/stickmin/breakingthebank/" },
   { title: { en: "Crossy Road" }, img: "ba", url: "/crossy-road.html" },
-  { title: { en: "Monkey Mart" }, img: "bb", url: "/monkey-mart.html", popular: true },
+  { title: { en: "Monkey Mart" }, img: "bb", url: "/monkey-mart.html" },
   { title: { en: "Draw the Hill" }, img: "bc", url: "/draw-the-hill/" },
 
   { title: { en: "OvO Dimensions" }, img: "be", url: "/ovo-dimensions.html" },
   { title: { en: "Recoil" }, img: "bf", url: "/recoil.html" },
   { title: { en: "OvO 2" }, img: "bh", url: "/ovo2.html", pc: true },
 
-  { title: { en: "Fruit Ninja" }, img: "v", url: "/fruitninja.htm", popular: true },
+  { title: { en: "Fruit Ninja" }, img: "v", url: "/fruitninja.htm" },
   { title: { en: "Geometry Dash SubZero" }, img: "j", url: "/gd-sub0.htm"},
   { title: { en: "Geometry Dash World" }, img: "av", url: "/gdworld.htm"},
   { title: { en: "Driven Wild" }, img: "ao", url: "/drivenwild/index.html" },
@@ -83,13 +83,13 @@ export const gamesData = [
   { title: { en: "Car Drawing Game" }, img: "ad", url: "/car-drawing-game/" },
   { title: { en: "Monster Tracks" }, img: "o", url: "/monster-tracks.html" },
 
-  { title: { en: "Doge Miner" }, img: "bi", url: "/DogeMiner/", popular: true },
+  { title: { en: "Doge Miner" }, img: "bi", url: "/DogeMiner/" },
   { title: { en: "Impossible Quiz" }, img: "bj", url: "/impossiblequiz/" },
   { title: { en: "Sky Race 3D" }, img: "bk", url: "/skyrace3d.html" },
 
   { title: { en: "Moto X3M" }, img: "bl", url: "/moto-x3m.html" },
-  { title: { en: "Geometry Dash Lite" }, img: "bn", url: "/gdlite/" },
-  { title: { en: "Cookie Clicker" }, img: "bo", url: "/cookieclicker/", broken: true },
+  // { title: { en: "Geometry Dash Lite" }, img: "bn", url: "/gdlite/" },
+  { title: { en: "Cookie Clicker" }, img: "bo", url: "/cookieclicker/", broken: true, issue: '59' },
   { title: { en: "Bridge Race" }, img: "bp", url: "/bridge-race/" },
   { title: { en: "Doge Miner 2" }, img: "bd", url: "/doge-miner-2/" },
 
@@ -98,5 +98,6 @@ export const gamesData = [
   { title: { en: "Angry Birds" }, img: "bs", url: "/angrybirds.htm" },
   { title: { en: "Cut The Rope: Time Travel" }, img: "bt", url: "/time-travel/index.html" },
 
-  { title: { en: "No Pain, No Gain" }, img: "bu", url: "/no-pain-no-gain/", broken: true },
+  { title: { en: "No Pain, No Gain" }, img: "bu", url: "/no-pain-no-gain/", broken: true, issue: '61' },
+  { title: { en: "Hundred Percent Golf" }, img: "bv", url: "/hundred-percent-golf/index.html" },
 ];

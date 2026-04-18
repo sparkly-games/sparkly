@@ -102,6 +102,8 @@ export default function RootLayout() {
   const syncToCloud = async (u: User) => {
     if (Platform.OS !== 'web' || branch !== 'devpatch') return;
 
+    if (true) return;
+
     try {
       const lsData: Record<string, any> = {};
       for (let i = 0; i < localStorage.length; i++) {
@@ -263,8 +265,8 @@ export default function RootLayout() {
 
   useEffect(() => {
     if (!ready) return;
-    if (maintenance && pathname !== '/maintenance') { router.replace('/maintenance'); return; }
-    const isSystemPage = ['/maintenance', '/killswitch'].includes(pathname);
+    if (maintenance && pathname !== `/${branch}/system/maintenance`) { router.replace(`/${branch}/system/maintenance`); return; }
+    const isSystemPage = pathname.startsWith('/openmsg');
     if (!isSystemPage && Platform.OS === 'web') {
       const hasCorrectPrefix = pathname.startsWith(`/${branch || 'stable'}`);
       if (!hasCorrectPrefix) {

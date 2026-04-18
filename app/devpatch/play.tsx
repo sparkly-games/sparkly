@@ -11,8 +11,9 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 // Assuming these exist in your project
 import { GlitchText } from '@/assets/components/GlitchText';
 import { Game } from '../../assets/components/Game';
-import { gamesData } from './games';
+import { gamesData } from './media/games';
 import { GameFrame } from '@/assets/components/GameFrame';
+import { GameWall } from '@/assets/components/GameWall';
 
 // --- TYPES ---
 interface GameType {
@@ -64,7 +65,7 @@ const VER_PATCHES = [
   "5rs46hkv",
   "otg548fh",
 ]
-const VER_INFO = { date: '7/4/26', text: '8.0.0', patch: VER_PATCHES[4] };
+const VER_INFO = { date: '18/4/26', text: '8.0.3', patch: VER_PATCHES[14] };
 
 // --- SHARED SUB-COMPONENTS ---
 
@@ -78,26 +79,40 @@ const ControlIcon = memo(({ name, onPress, color = "white", size = 22, active = 
   </TouchableOpacity>
 ));
 
-const GameWrapper = memo(({ game, width, onPress, isFav, onToggleFav }: any) => (
-  <View style={{ width, padding: 6, position: 'relative' }}>
-    <Game
-      name={game.title.en}
-      imageSource={game.img}
-      broken={game.broken}
-      onPress={() => onPress(game)}
-    />
-    <TouchableOpacity 
-      style={styles.favBadge} 
-      onPress={() => onToggleFav(game.title.en)}
+const GameWrapper = memo(({ game, width, onPress, isFav, onToggleFav }: any) => {
+  const [active, setActive] = useState(false);
+
+  return (
+    <View
+      style={{
+        width,
+        padding: 6,
+        position: 'relative',
+        zIndex: active ? 999 : 1,
+      }}
     >
-      <Ionicons 
-        name={isFav ? "heart" : "heart-outline"} 
-        size={16} 
-        color={isFav ? "#ef4444" : "#fff"} 
+      <Game
+        name={game.title.en}
+        imageSource={game.img}
+        broken={game.broken}
+        issueId={game.issue}
+        onPress={() => onPress(game)}
+        onTooltipToggle={setActive}
       />
-    </TouchableOpacity>
-  </View>
-));
+
+      <TouchableOpacity 
+        style={styles.favBadge} 
+        onPress={() => onToggleFav(game.title.en)}
+      >
+        <Ionicons 
+          name={isFav ? "heart" : "heart-outline"} 
+          size={16} 
+          color={isFav ? "#ef4444" : "#fff"} 
+        />
+      </TouchableOpacity>
+    </View>
+  );
+});
 
 export default function HomeScreen() {
   const { width } = useWindowDimensions();
@@ -186,12 +201,13 @@ export default function HomeScreen() {
     <View style={styles.headerContainer}>
       <View style={styles.noticeBox}>
         <GlitchText style={styles.noticeTitle}>✨ Sparkly Hub ✨</GlitchText>
-        <Text style={styles.noticeText}>{`v${VER_INFO.text} | ${VER_INFO.patch || VER_INFO.date}`}</Text>
+        <Text style={styles.noticeText}>{`v${VER_INFO.text} | ${localStorage.getItem('sparkly_branch')=== 'devpatch' ? VER_INFO.patch || VER_INFO.date : VER_INFO.date}`}</Text>
 
         <View style={styles.iconRow}>
-          <ControlIcon name="logo-youtube" onPress={() => router.push('/youtube')} />
-          <ControlIcon name="volume-high" onPress={() => Linking.openURL('/soundUtils.htm')} />
-          <ControlIcon name="tv-outline" onPress={() => router.push('/soon')} />
+          <ControlIcon name="logo-youtube" onPress={() => router.push('/media/youtube')} />
+          <ControlIcon name="logo-soundcloud" onPress={() => Linking.openURL('https://soundcloak.instatunnel.my')} />
+          <ControlIcon name="volume-high" onPress={() => Linking.openURL('/soundboard.htm')} />
+          <ControlIcon name="tv-outline" onPress={() => router.push('/system/soon')} />
           <View style={styles.vPipe} />
           <ControlIcon 
             name="desktop-outline" 
@@ -228,9 +244,8 @@ export default function HomeScreen() {
         <View style={{ marginBottom: 25 }}>
           <Text style={styles.sectionTitle}>Favorites ❤️</Text>
           <FlatList
-            horizontal
             data={favGamesData}
-            showsHorizontalScrollIndicator={false}
+            numColumns={columns}
             renderItem={({ item }) => (
               <GameWrapper 
                 game={item} 
@@ -248,13 +263,12 @@ export default function HomeScreen() {
         <View style={{ marginBottom: 25 }}>
           <Text style={styles.sectionTitle}>Recent Hits 🔥</Text>
           <FlatList
-            horizontal
             data={recentGamesData}
-            showsHorizontalScrollIndicator={false}
+            numColumns={columns}
             renderItem={({ item }) => (
               <GameWrapper 
                 game={item} 
-                width={140} 
+                width={175} 
                 onPress={handleSelectGame} 
                 isFav={favorites.includes(item.title.en)}
                 onToggleFav={toggleFavorite}
@@ -307,7 +321,7 @@ export default function HomeScreen() {
               </View>
             </View>
             <View style={{ flex: 1, backgroundColor: '#000' }}>
-              {gameLoading && <ActivityIndicator size="large" color="#60a5fa" style={styles.loader} />}
+              {gameLoading && <><ActivityIndicator size="large" color="#60a5fa" style={styles.loader} /><GameWall /></>}
               {modalGame && (
                 <GameFrame
                   ref={iframeRef}

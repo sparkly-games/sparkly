@@ -65,7 +65,7 @@ const VER_PATCHES = [
   "5rs46hkv",
   "otg548fh",
 ]
-const VER_INFO = { date: '18/4/26', text: '8.0.3', patch: VER_PATCHES[14] };
+const VER_INFO = { date: '19/4/26', text: '8.0.3', patch: VER_PATCHES[18] };
 
 // --- SHARED SUB-COMPONENTS ---
 
@@ -90,6 +90,8 @@ const GameWrapper = memo(({ game, width, onPress, isFav, onToggleFav }: any) => 
         position: 'relative',
         zIndex: active ? 999 : 1,
       }}
+      onTouchStart={() => setActive(true)}
+      onTouchEnd={() => setActive(false)}
     >
       <Game
         name={game.title.en}
@@ -207,7 +209,7 @@ export default function HomeScreen() {
           <ControlIcon name="logo-youtube" onPress={() => router.push('/media/youtube')} />
           <ControlIcon name="logo-soundcloud" onPress={() => Linking.openURL('https://soundcloak.instatunnel.my')} />
           <ControlIcon name="volume-high" onPress={() => Linking.openURL('/soundboard.htm')} />
-          <ControlIcon name="tv-outline" onPress={() => router.push('/system/soon')} />
+          <ControlIcon name="tv-outline" onPress={() => router.push('/system/soon/a9f3k2x8')} />
           <View style={styles.vPipe} />
           <ControlIcon 
             name="desktop-outline" 

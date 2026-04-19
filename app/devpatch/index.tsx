@@ -21,6 +21,7 @@ import { SELLING_POINTS } from '@/assets/data/selling';
 import { gameIcons as icons } from '@/assets/data/GameIcons';
 import { auth } from '@/assets/data/firebaseConfig.js';
 import { signOut } from 'firebase/auth';
+import { GameWall } from '@/assets/components/GameWall';
 
 const shuffle = (array: string[]) => [...array].sort(() => Math.random() - 0.5);
 
@@ -32,6 +33,7 @@ const GameItem = memo(({ iconName }: { iconName: string }) => {
 
 export default function Home() {
   const { width } = useWindowDimensions();
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   
   // Auth States
@@ -48,6 +50,8 @@ export default function Home() {
   const floatAnim = useRef(new Animated.Value(0)).current;
   const scrollAnim = useRef(new Animated.Value(0)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
+  const toastAnim = useRef(new Animated.Value(-80)).current;
+  const toastOpacity = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     // Animations
@@ -88,26 +92,66 @@ export default function Home() {
 
   const openLink = (url: string) => Linking.openURL(url);
 
+  const showToast = (message: string, type: 'success' | 'error' = 'success') => {
+    setToast({ message, type });
+
+    toastAnim.setValue(-80);
+    toastOpacity.setValue(0);
+
+    Animated.parallel([
+      Animated.timing(toastAnim, {
+        toValue: 0,
+        duration: 250,
+        useNativeDriver: true,
+      }),
+      Animated.timing(toastOpacity, {
+        toValue: 1,
+        duration: 250,
+        useNativeDriver: true,
+      }),
+    ]).start();
+
+    setTimeout(() => {
+      Animated.parallel([
+        Animated.timing(toastAnim, {
+          toValue: -80,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+        Animated.timing(toastOpacity, {
+          toValue: 0,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+      ]).start(() => setToast(null));
+    }, 2200);
+  };
+
+  const uid = auth.currentUser?.uid;
+
   return (
     <View style={styles.root}>
+      {toast && (
+        <Animated.View
+          style={[
+            styles.toast,
+            toast.type === 'success' ? styles.toastSuccess : styles.toastError,
+            {
+              opacity: toastOpacity,
+              transform: [{ translateY: toastAnim }],
+            },
+          ]}
+        >
+          <Text style={styles.toastText}>{toast.message}</Text>
+        </Animated.View>
+      )}
       <StatusBar style="light" />
 
       {/* --- BACKGROUND --- */}
       <View style={styles.backgroundGlow1} />
       <View style={styles.backgroundGlow2} />
 
-      <View style={styles.heroBackground}>
-        <Animated.View style={{ transform: [{ translateY: scrollAnim }] }}>
-          <FlatList
-            data={LOOP_GAMES}
-            keyExtractor={(item, index) => `game-${item}-${index}`}
-            renderItem={({ item }) => <GameItem iconName={item} />}
-            numColumns={isMobile ? 3 : 6}
-            scrollEnabled={false}
-          />
-        </Animated.View>
-        <View style={styles.heroFade} />
-      </View>
+      <GameWall />
 
       {/* --- HEADER --- */}
       <View style={styles.header}>
@@ -130,19 +174,27 @@ export default function Home() {
                 </Pressable>
               ) : (
                 profilePicUrl && (
-                  <Image 
-                    key={profilePicUrl} 
-                    source={{ 
-                        uri: profilePicUrl,
-                        // Cross-Origin Resource Policy fix for Google/Firebase Auth images
-                        // @ts-ignore
-                        referrerPolicy: "no-referrer" 
-                    }} 
-                    style={styles.profilePic} 
-                    // Log the error if the image fails to bind
-                    onClick={() => signOut(auth).catch(e => console.log("Sign Out Error:", e))}
-                    onError={(e) => console.log("Image Load Error:", e.nativeEvent.error)}
-                  />
+                  <Pressable 
+                    onLongPress={() => {showToast("UID copied to clipboard!", "success"); navigator.clipboard.writeText(uid)}}
+                    onPress={() => {
+                      signOut(auth)
+                        .then(() => {showToast("Signed out successfully!", "success")})
+                        .catch(() => {showToast("Couldn't sign out.", "error")})
+                    }}
+                  >
+                    <Image 
+                      key={profilePicUrl} 
+                      source={{ 
+                          uri: profilePicUrl,
+                          // Cross-Origin Resource Policy fix for Google/Firebase Auth images
+                          // @ts-ignore
+                          referrerPolicy: "no-referrer" 
+                      }} 
+                      style={styles.profilePic} 
+                      // Log the error if the image fails to bind
+                      onError={(e) => console.log("Image Load Error:", e.nativeEvent.error)}
+                    />
+                  </Pressable>
                 )
               )}
             </View>
@@ -198,7 +250,16 @@ export default function Home() {
         {/* FOOTER */}
         <View style={styles.footer}>
           <View style={styles.footerDivider} />
-          <Text style={styles.footerText}>Open Source © 2026 Sparkly Games. Keep shining.</Text>
+          <Pressable
+            onPress={() => {
+              if (typeof window !== 'undefined') {
+                window.location.href = '/policies/privacy/index.htm';
+              }
+            }}
+          >
+            <Text style={styles.privacyLink}>Privacy Policy</Text>
+          </Pressable>
+          <Text style={styles.footerText}>Made with 💖 by the Sparkly Team.</Text>
         </View>
       </ScrollView>
     </View>
@@ -244,4 +305,9 @@ const styles = StyleSheet.create({
   footerDivider: { width: 100, height: 1, backgroundColor: 'rgba(59, 130, 246, 0.2)', marginBottom: 24 },
   footerText: { color: '#475569', fontSize: 12 },
   fullWidth: { width: '90%' },
+  toast: { position: 'absolute', top: 60, alignSelf: 'center', paddingHorizontal: 16, paddingVertical: 10, borderRadius: 10, zIndex: 9999 },
+  toastSuccess: { backgroundColor: '#16a34a' },
+  toastError: { backgroundColor: '#dc2626' },
+  toastText: { color: '#fff', fontWeight: '700', fontSize: 13 },
+  privacyLink: { marginTop: 12, color: '#60a5fa', fontSize: 12, fontWeight: '700' },
 });

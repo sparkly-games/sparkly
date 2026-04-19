@@ -1,14 +1,30 @@
 import React, { useEffect, useRef, useState, useMemo, memo } from 'react';
 import { View, Text, StyleSheet, Animated, Pressable, Image, useWindowDimensions, FlatList, Platform } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { GameWall } from '@/assets/components/GameWall';
+import { auth } from '@/assets/data/firebaseConfig';
+import { admins } from '@/assets/data/admins';
 
 export default function ComingSoon() {
   const router = useRouter();
   const { width } = useWindowDimensions();
-  
+  const { projectId } = useLocalSearchParams();
+    
   const scrollAnim = useRef(new Animated.Value(0)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (Platform.OS !== 'web') return;
+
+    const user = auth.currentUser;
+
+    if (admins.includes(user?.uid)) {
+      console.log("Admin");
+      setTimeout(() => {
+        router.replace(`/system/projects/${projectId}/${user?.uid}`);
+      }, 2000);
+    }
+  }, [projectId]);
 
   useEffect(() => {
     Animated.loop(

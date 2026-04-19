@@ -199,7 +199,7 @@ export default function RootLayout() {
   useEffect(() => {
     if (!ready) return;
     if (maintenance && pathname !== `/${branch}/system/maintenance`) { router.replace(`/${branch}/system/maintenance`); return; }
-    const isSystemPage = pathname.startsWith('/openmsg');
+    const isSystemPage = pathname.startsWith('/openmsg') || pathname.startsWith('/system');
     if (!isSystemPage && Platform.OS === 'web') {
       const hasCorrectPrefix = pathname.startsWith(`/${branch || 'stable'}`);
       if (!hasCorrectPrefix) {

@@ -64,71 +64,32 @@ export default function RootLayout() {
     return obj === undefined ? null : obj;
   };
 
-  // --- INDEXEDDB EXPORT HELPER ---
-  const exportIDB = async (dbName: string) => {
-    return new Promise((resolve) => {
-      try {
-        const request = indexedDB.open(dbName);
-        request.onsuccess = async () => {
-          const db = request.result;
-          const dbData: Record<string, any> = {};
-          const storeNames = Array.from(db.objectStoreNames);
-
-          for (const storeName of storeNames) {
-            try {
-              const tx = db.transaction(storeName, "readonly");
-              const store = tx.objectStore(storeName);
-              const allRecords = await new Promise((res) => {
-                const req = store.getAll();
-                req.onsuccess = () => res(req.result);
-                req.onerror = () => res([]);
-              });
-              dbData[storeName.replace(/[.#$[\]]/g, '_')] = allRecords;
-            } catch (e) {
-              console.warn(`Export failed for store: ${storeName}`, e);
-            }
-          }
-          db.close();
-          resolve(dbData);
-        };
-        request.onerror = () => resolve(null);
-      } catch (e) {
-        resolve(null);
-      }
-    });
-  };
-
-  // --- CLOUD SYNC LOGIC (DEVPATCH ONLY) ---
+  // --- CLOUD SYNC LOGIC ---
   const syncToCloud = async (u: User) => {
-    if (Platform.OS !== 'web' || branch !== 'devpatch') return;
+    if (Platform.OS !== 'web') return;
 
-    if (true) return;
+    // if (true) return;
 
     try {
       const lsData: Record<string, any> = {};
       for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
-        if (key) {
+
+        // ✅ Only sync sparkly:* keys
+        if (key && key.startsWith('sparkly:')) {
           const val = localStorage.getItem(key);
           const safeKey = key.replace(/[.#$[\]]/g, '_');
-          try { lsData[safeKey] = JSON.parse(val || ""); } catch { lsData[safeKey] = val; }
-        }
-      }
 
-      const idbData: Record<string, any> = {};
-      if (indexedDB.databases) {
-        const dbs = await indexedDB.databases();
-        for (const dbInfo of dbs) {
-          if (dbInfo.name && !dbInfo.name.includes('UnityCache')) {
-            const exported = await exportIDB(dbInfo.name);
-            idbData[dbInfo.name.replace(/[.#$[\]]/g, '_')] = exported;
+          try {
+            lsData[safeKey] = JSON.parse(val || "");
+          } catch {
+            lsData[safeKey] = val;
           }
         }
       }
 
       await set(ref(rtdb, `users/${u.uid}/backup`), {
         localStorage: cleanData(lsData),
-        indexedDB: cleanData(idbData),
         metadata: {
           lastSync: new Date().toISOString(),
           username: u.displayName,
@@ -136,6 +97,7 @@ export default function RootLayout() {
           branch: branch
         }
       });
+
       console.log("Devpatch: Cloud sync successful.");
     } catch (e) {
       console.error("Sync Failed", e);
@@ -143,7 +105,7 @@ export default function RootLayout() {
   };
 
   const pullFromCloud = async (u: User) => {
-    if (Platform.OS !== 'web' || branch !== 'devpatch') return;
+    if (Platform.OS !== 'web') return;
 
     try {
       const dbRef = ref(rtdb);
@@ -155,46 +117,17 @@ export default function RootLayout() {
         if (cloudData.localStorage) {
           Object.keys(cloudData.localStorage).forEach((key) => {
             const val = cloudData.localStorage[key];
-            const stringVal = typeof val === 'object' ? JSON.stringify(val) : String(val);
-            localStorage.setItem(key.replace(/_/g, '.'), stringVal);
+            const stringVal = typeof val === 'object'
+              ? JSON.stringify(val)
+              : String(val);
+
+            localStorage.setItem(
+              key.replace(/_/g, '.'),
+              stringVal
+            );
           });
         }
 
-        if (cloudData.indexedDB) {
-          for (const dbNameEncoded in cloudData.indexedDB) {
-            const dbName = dbNameEncoded.replace(/_/g, '.');
-            const stores = cloudData.indexedDB[dbNameEncoded];
-            const openRequest = indexedDB.open(dbName);
-            
-            openRequest.onupgradeneeded = (event: any) => {
-              const db = event.target.result;
-              for (const storeName in stores) {
-                if (!db.objectStoreNames.contains(storeName)) {
-                  db.createObjectStore(storeName, { autoIncrement: true });
-                }
-              }
-            };
-
-            openRequest.onsuccess = (event: any) => {
-              const db = event.target.result;
-              for (const storeName in stores) {
-                try {
-                  const tx = db.transaction(storeName, "readwrite");
-                  const store = tx.objectStore(storeName);
-                  const records = stores[storeName];
-                  if (Array.isArray(records)) {
-                    records.forEach(record => {
-                        try { if (record !== null) store.put(record); } catch(e) {}
-                    });
-                  }
-                } catch (e) {
-                  console.warn(`Restore skipped for store ${storeName}`);
-                }
-              }
-              db.close();
-            };
-          }
-        }
         console.log("Devpatch: Data restored.");
         if (pathname.includes('play')) router.replace(pathname as any);
       }
@@ -206,7 +139,7 @@ export default function RootLayout() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
-      if (currentUser && branch === 'devpatch') {
+      if (currentUser) {
         await pullFromCloud(currentUser);
         await syncToCloud(currentUser);
       }
@@ -215,7 +148,7 @@ export default function RootLayout() {
   }, [branch]);
 
   useEffect(() => {
-    if (Platform.OS !== 'web' || !user || branch !== 'devpatch') return;
+    if (Platform.OS !== 'web' || !user) return;
     const intervalId = setInterval(() => {
       void syncToCloud(user);
     }, CLOUD_SYNC_INTERVAL_MS);

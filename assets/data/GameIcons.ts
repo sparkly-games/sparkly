@@ -86,5 +86,7 @@ export const gameIcons = () => {
     'bt': require("../icons/bt.jpg"),
     'bu': require("../icons/bu.jpg"),
     'bv': require("../icons/bv.png"),
+    'bw': require("../icons/bw.jpg"),
+    'bx': require("../icons/bx.jpg")
   };
 };

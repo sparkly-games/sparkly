@@ -99,5 +99,8 @@ export const gamesData = [
   { title: { en: "Cut The Rope: Time Travel" }, img: "bt", url: "/time-travel/index.html" },
 
   { title: { en: "No Pain, No Gain" }, img: "bu", url: "/no-pain-no-gain/", broken: true, issue: '61' },
+
   { title: { en: "Hundred Percent Golf" }, img: "bv", url: "/hundred-percent-golf/index.html" },
+  { title: { en: "Formula Rush" }, img: "bw", url: "/formula-rush/" },
+  { title: { en: "Rise Higher"}, img: "bx", url: "/rise-higher/" }
 ];

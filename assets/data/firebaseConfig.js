@@ -5,7 +5,7 @@ import { getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
-  authDomain: "sparxapi.firebaseapp.com",
+  authDomain: "auth.sparklyoss.lgbt.sh",
   projectId: "sparxapi",
   storageBucket: "sparxapi.firebasestorage.app",
   messagingSenderId: "291924279653",

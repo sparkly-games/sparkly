@@ -4,6 +4,7 @@
 APP_DIR="./app"
 CANARY_DIR="$APP_DIR/canary"
 STABLE_DIR="$APP_DIR/stable"
+DEVPATCH_DIR="$APP_DIR/devpatch"
 
 echo "🚀 Starting Sync: Canary -> Stable..."
 
@@ -30,4 +31,15 @@ cp -R "$CANARY_DIR/"* "$STABLE_DIR/"
 find "$STABLE_DIR" -name ".DS_Store" -depth -exec rm {} \;
 
 echo "✅ Sync Complete! Your Canary features are now Live in Stable."
+
+echo "🚀 Starting Sync: Devpatch -> Canary"
+
+rm -rf $CANARY_DIR
+mkdir -p $CANARY_DIR
+
+cp -R "$DEVPATCH_DIR/"* "$CANARY_DIR/"
+
+echo "✅ Synced Devpatch to Canary!"
+echo "📝 Make sure to run again to sync to Stable!"
+
 echo "🔔 Don't forget to restart your Expo server if changes aren't reflecting."

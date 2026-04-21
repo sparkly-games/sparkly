@@ -1,3 +1,3 @@
 export const admins = [
-  "DzFdScsVP1XVWsAlsQVaVJ1iJsw1"
+  "U4Dx9jgWm7V8sTfcpu2Omzrlkn92"
 ];

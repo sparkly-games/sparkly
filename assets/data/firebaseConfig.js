@@ -1,11 +1,11 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getAnalytics, logEvent } from 'firebase/analytics'; // JS SDK, not native
 import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
+import { getDatabase } from 'firebase/database';
 
 const firebaseConfig = {
   apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
-  authDomain: "auth.sparklyoss.lgbt.sh",
+  authDomain: "auth.sparklyoss2.lgbt.sh",
   projectId: "sparxapi",
   storageBucket: "sparxapi.firebasestorage.app",
   messagingSenderId: "291924279653",
@@ -23,7 +23,7 @@ const analytics = typeof window !== 'undefined' ? getAnalytics(app) : null;
 // Initialize Authentication
 const auth = getAuth(app);
 
-export const db = getFirestore(app); // Export this!
+export const db = getDatabase(app); // Export this!
 
 
 export { app, analytics, logEvent, auth };

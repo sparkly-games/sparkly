@@ -1,29 +1,117 @@
-import React, { useMemo } from 'react';
-import { View, Text, StyleSheet, Image, useWindowDimensions, FlatList } from 'react-native';
+import React, { useMemo, useState, useEffect } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  useWindowDimensions,
+  FlatList,
+  TouchableOpacity,
+} from 'react-native';
 import { useRouter } from 'expo-router';
-import { auth } from '@/assets/data/firebaseConfig';
+import { auth, db } from '@/assets/data/firebaseConfig';
 import { gameIcons as icons } from '@/assets/data/GameIcons';
+import { onValue, ref } from 'firebase/database';
+
+const gameIcons = icons();
+
+function getISOWeekYear(date: Date) {
+  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+
+  const dayNum = d.getUTCDay() || 7;
+  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+
+  return d.getUTCFullYear();
+}
+
+function getISOWeekNumber(date: Date) {
+  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+
+  const dayNum = d.getUTCDay() || 7;
+  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  return Math.ceil((((d.getTime() - yearStart.getTime()) / 86400000) + 1) / 7);
+}
+
+function formatISOWeek(date: Date) {
+  const year = getISOWeekYear(date);
+  const week = getISOWeekNumber(date);
+
+  return `${year}-W${String(week).padStart(2, '0')}`;
+}
+
+type GameCardProps = {
+  title: string;
+  description?: string;
+  icon: string;
+  active?: boolean;
+  clickHandler?: () => void;
+};
+
+const LeaderboardGameCard = ({
+  title,
+  description,
+  icon,
+  active,
+  clickHandler,
+}: GameCardProps) => {
+  return (
+    <TouchableOpacity
+      style={[styles.gameCard, active && { opacity: 1 }]}
+      onPress={clickHandler}
+    >
+      <Image
+        source={gameIcons[icon] ?? { uri: 'https://via.placeholder.com/72' }}
+        style={styles.gameImage}
+      />
+
+      <View style={styles.gameInfo}>
+        <Text style={styles.gameTitle}>{title}</Text>
+        <Text style={styles.gameSubtitle}>{description}</Text>
+      </View>
+    </TouchableOpacity>
+  );
+};
 
 export default function LeaderboardScreen() {
   const router = useRouter();
   const { width } = useWindowDimensions();
   const isDesktop = width >= 1024;
+
   const user = auth.currentUser;
-  const gameIcons = icons();
 
-  const LEADERBOARD = useMemo(() => [
-    { id: '1', name: 'Riley', score: 2400, avatar: user?.photoURL },
-    { id: '2', name: 'Henry', score: 2100 },
-    { id: '3', name: 'Louis', score: 1900 },
-    { id: '4', name: 'Bobby', score: 1700 },
-    { id: '5', name: 'James', score: 1500 },
-    { id: '6', name: 'Charlie', score: 1200 },
-    { id: '7', name: 'Mason', score: 1100 },
-    { id: '8', name: 'Robert', score: 1034 },
-    { id: '9', name: 'Jack', score: 967 },
-  ], []);
+  const [gameName, setGameName] = useState('Loading...');
+  const [active, setActive] = useState('1');
 
-  const RankItem = ({ item, index }) => {
+  const LEADERBOARD = useMemo(
+    () => [
+      { id: '1', name: 'Riley', score: 2400, avatar: user?.photoURL },
+      { id: '2', name: 'Henry', score: 2100 },
+      { id: '3', name: 'Louis', score: 1900 },
+      { id: '4', name: 'Bobby', score: 1700 },
+      { id: '5', name: 'James', score: 1500 },
+      { id: '6', name: 'Charlie', score: 1200 },
+      { id: '7', name: 'Mason', score: 1100 },
+      { id: '8', name: 'Robert', score: 1034 },
+      { id: '9', name: 'Jack', score: 967 },
+    ],
+    []
+  );
+
+  useEffect(() => {
+    const week = formatISOWeek(new Date());
+    const gameNameRef = ref(db, 'leaderboards/' + week + '/gameName');
+
+    const unsubscribe = onValue(gameNameRef, (snapshot) => {
+      const data = snapshot.val();
+      setGameName(data ?? 'No game');
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const RankItem = ({ item, index }: any) => {
     const isTop3 = index < 3;
 
     return (
@@ -31,7 +119,11 @@ export default function LeaderboardScreen() {
         <Text style={styles.rankIndex}>#{index + 1}</Text>
 
         <Image
-          source={item.avatar ? { uri: item.avatar } : { uri: "https://ui-avatars.com/api/?name="+item.name }}
+          source={
+            item.avatar
+              ? { uri: item.avatar }
+              : { uri: `https://ui-avatars.com/api/?name=${item.name}` }
+          }
           style={styles.avatar}
         />
 
@@ -45,54 +137,18 @@ export default function LeaderboardScreen() {
 
   return (
     <View style={styles.container}>
-      {/* LEFT SIDE */}
       <View style={[styles.mainContent, isDesktop && styles.desktopContent]}>
         <Text style={styles.title}>Weekly Leaderboard</Text>
         <Text style={styles.subtitle}>Top players this week</Text>
 
-        {/* BIG GAME CARD */}
-        <View style={[styles.gameCard, { opacity: 1 }]}>
-            <Image
-            source={gameIcons['2']}
-            style={styles.gameImage}
-            />
+        <LeaderboardGameCard
+          title={gameName}
+          icon={'2'}
+          active={active === '1'}
+          clickHandler={() => setActive('1')}
+        />
+      </View>
 
-            <View style={styles.gameInfo}>
-            <Text style={styles.gameTitle}>Ragdoll Archers</Text>
-            <Text style={styles.gameSubtitle}>
-                Compete in physics-based archery battles
-            </Text>
-            </View>
-        </View>
-        <View style={styles.gameCard}>
-            <Image
-            source={gameIcons['1']}
-            style={styles.gameImage}
-            />
-
-            <View style={styles.gameInfo}>
-            <Text style={styles.gameTitle}>Tiny Fishing</Text>
-            <Text style={styles.gameSubtitle}>
-                Build your digital fish empire
-            </Text>
-            </View>
-        </View>
-        <View style={styles.gameCard}>
-            <Image
-            source={gameIcons['9']}
-            style={styles.gameImage}
-            />
-
-            <View style={styles.gameInfo}>
-            <Text style={styles.gameTitle}>Drive Mad</Text>
-            <Text style={styles.gameSubtitle}>
-                Drive a wacky car across even wackier courses
-            </Text>
-            </View>
-        </View>
-    </View>
-
-      {/* RIGHT SIDE LEADERBOARD */}
       {isDesktop && (
         <View style={styles.wallContainer}>
           <View style={styles.leaderboardWrapper}>
@@ -102,7 +158,6 @@ export default function LeaderboardScreen() {
               renderItem={({ item, index }) => (
                 <RankItem item={item} index={index} />
               )}
-              scrollEnabled
             />
           </View>
         </View>
@@ -179,7 +234,7 @@ const styles = StyleSheet.create({
     opacity: 0.4,
   },
 
-    gameImage: {
+  gameImage: {
     width: 72,
     height: 72,
     borderRadius: 14,
@@ -209,7 +264,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 
-  // RIGHT PANEL
   wallContainer: {
     flex: 1,
     borderLeftWidth: 1,

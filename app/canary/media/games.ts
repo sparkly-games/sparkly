@@ -88,7 +88,6 @@ export const gamesData = [
   { title: { en: "Sky Race 3D" }, img: "bk", url: "/skyrace3d.html" },
 
   { title: { en: "Moto X3M" }, img: "bl", url: "/moto-x3m.html" },
-  // { title: { en: "Geometry Dash Lite" }, img: "bn", url: "/gdlite/" },
   { title: { en: "Cookie Clicker" }, img: "bo", url: "/cookieclicker/", broken: true, issue: '59' },
   { title: { en: "Bridge Race" }, img: "bp", url: "/bridge-race/" },
   { title: { en: "Doge Miner 2" }, img: "bd", url: "/doge-miner-2/" },
@@ -101,6 +100,11 @@ export const gamesData = [
   { title: { en: "No Pain, No Gain" }, img: "bu", url: "/no-pain-no-gain/", broken: true, issue: '61' },
 
   { title: { en: "Hundred Percent Golf" }, img: "bv", url: "/hundred-percent-golf/index.html" },
+
+  // 21/4/26
   { title: { en: "Formula Rush" }, img: "bw", url: "/formula-rush/" },
-  { title: { en: "Rise Higher"}, img: "bx", url: "/rise-higher/" }
+  { title: { en: "Rise Higher"}, img: "bx", url: "/rise-higher/" },
+
+  // 22/4/26
+  { title: { en: "Liquid Sort" }, img: "by", url: "/liquid-sort/" }
 ];

@@ -12,7 +12,6 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { GlitchText } from '@/assets/components/GlitchText';
 import { Game } from '../../assets/components/Game';
 import { gamesData } from './media/games';
-import { GameFrame } from '@/assets/components/GameFrame';
 import { GameWall } from '@/assets/components/GameWall';
 
 // --- TYPES ---
@@ -65,7 +64,7 @@ const VER_PATCHES = [
   "5rs46hkv",
   "otg548fh",
 ]
-const VER_INFO = { date: '21/4/26', text: '8.0.4', patch: VER_PATCHES[20] };
+const VER_INFO = { date: '23/4/26', text: '8.0.5', patch: VER_PATCHES[22] };
 
 // --- SHARED SUB-COMPONENTS ---
 
@@ -325,7 +324,7 @@ export default function HomeScreen() {
             <View style={{ flex: 1, backgroundColor: '#000' }}>
               {gameLoading && <><ActivityIndicator size="large" color="#60a5fa" style={styles.loader} /><GameWall /></>}
               {modalGame && (
-                <GameFrame
+                <iframe
                   ref={iframeRef}
                   src={modalGame.url}
                   style={{ flex: 1, border: 'none', opacity: gameLoading ? 0 : 1 }}

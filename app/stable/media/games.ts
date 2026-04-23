@@ -97,7 +97,7 @@ export const gamesData = [
   { title: { en: "Angry Birds" }, img: "bs", url: "/angrybirds.htm" },
   { title: { en: "Cut The Rope: Time Travel" }, img: "bt", url: "/time-travel/index.html" },
 
-  { title: { en: "No Pain, No Gain" }, img: "bu", url: "/no-pain-no-gain/" },
+  { title: { en: "No Pain, No Gain" }, img: "bu", url: "/npng/" },
 
   { title: { en: "Hundred Percent Golf" }, img: "bv", url: "/hundred-percent-golf/index.html" },
 

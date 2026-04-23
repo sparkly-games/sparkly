@@ -7,26 +7,40 @@ import {
   useWindowDimensions,
   FlatList,
   TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { auth, db } from '@/assets/data/firebaseConfig';
 import { gameIcons as icons } from '@/assets/data/GameIcons';
-import { onValue, ref } from 'firebase/database';
+import { get, ref } from 'firebase/database';
 
 const gameIcons = icons();
 
+const formatTimeLeft = (ms: number) => {
+  if (ms <= 0) return 'Ended';
+
+  const totalSeconds = Math.floor(ms / 1000);
+  const days = Math.floor(totalSeconds / 86400);
+  const hours = Math.floor((totalSeconds % 86400) / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  if (days > 0) return `${days}d ${hours}h`;
+  if (hours > 0) return `${hours}h ${minutes}m`;
+  if (minutes > 0) return `${minutes}m ${seconds}s`;
+
+  return `${seconds}s`;
+};
+
 function getISOWeekYear(date: Date) {
   const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-
   const dayNum = d.getUTCDay() || 7;
   d.setUTCDate(d.getUTCDate() + 4 - dayNum);
-
   return d.getUTCFullYear();
 }
 
 function getISOWeekNumber(date: Date) {
   const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-
   const dayNum = d.getUTCDay() || 7;
   d.setUTCDate(d.getUTCDate() + 4 - dayNum);
 
@@ -37,22 +51,26 @@ function getISOWeekNumber(date: Date) {
 function formatISOWeek(date: Date) {
   const year = getISOWeekYear(date);
   const week = getISOWeekNumber(date);
-
   return `${year}-W${String(week).padStart(2, '0')}`;
+}
+
+function weekToNumber(isoWeek: string) {
+  const [year, week] = isoWeek.split('-W');
+  return parseInt(year) * 100 + parseInt(week);
 }
 
 type GameCardProps = {
   title: string;
-  description?: string;
   icon: string;
+  expiry?: string;
   active?: boolean;
   clickHandler?: () => void;
 };
 
 const LeaderboardGameCard = ({
   title,
-  description,
   icon,
+  expiry,
   active,
   clickHandler,
 }: GameCardProps) => {
@@ -68,86 +86,118 @@ const LeaderboardGameCard = ({
 
       <View style={styles.gameInfo}>
         <Text style={styles.gameTitle}>{title}</Text>
-        <Text style={styles.gameSubtitle}>{description}</Text>
+        <Text style={styles.gameSubtitle}>{expiry}</Text>
       </View>
     </TouchableOpacity>
   );
 };
 
 export default function LeaderboardScreen() {
-  const router = useRouter();
   const { width } = useWindowDimensions();
   const isDesktop = width >= 1024;
 
   const user = auth.currentUser;
 
-  const [gameName, setGameName] = useState('Loading...');
-  const [active, setActive] = useState('1');
+  const [thisWeek, setThisWeek] = useState<any[]>([]);
+  const [past, setPast] = useState<any[]>([]);
+  const [future, setFuture] = useState<any[]>([]);
+
+  const currentWeek = formatISOWeek(new Date());
+  const currentNum = weekToNumber(currentWeek);
 
   const LEADERBOARD = useMemo(
     () => [
       { id: '1', name: 'Riley', score: 2400, avatar: user?.photoURL },
       { id: '2', name: 'Henry', score: 2100 },
       { id: '3', name: 'Louis', score: 1900 },
-      { id: '4', name: 'Bobby', score: 1700 },
-      { id: '5', name: 'James', score: 1500 },
-      { id: '6', name: 'Charlie', score: 1200 },
-      { id: '7', name: 'Mason', score: 1100 },
-      { id: '8', name: 'Robert', score: 1034 },
-      { id: '9', name: 'Jack', score: 967 },
     ],
     []
   );
 
   useEffect(() => {
-    const week = formatISOWeek(new Date());
-    const gameNameRef = ref(db, 'leaderboards/' + week + '/gameName');
+    const fetch = async () => {
+      try {
+        const snapshot = await get(ref(db, 'leaderboards'));
+        if (!snapshot.exists()) return;
 
-    const unsubscribe = onValue(gameNameRef, (snapshot) => {
-      const data = snapshot.val();
-      setGameName(data ?? 'No game');
-    });
+        const data = snapshot.val();
 
-    return () => unsubscribe();
+        const currentWeek = formatISOWeek(new Date());
+        const currentNum = weekToNumber(currentWeek);
+
+        const thisWeekArr: any[] = [];
+        const pastArr: any[] = [];
+        const futureArr: any[] = [];
+
+        Object.entries(data).forEach(([weekKey, weekValue]: any) => {
+          const weekNum = weekToNumber(weekKey);
+
+          Object.entries(weekValue).forEach(([id, item]: any) => {
+            const fullItem = {
+              id,
+              week: weekKey,
+              ...item,
+            };
+
+            if (weekNum === currentNum) {
+              thisWeekArr.push(fullItem);
+            } else if (weekNum < currentNum) {
+              pastArr.push(fullItem);
+            } else {
+              futureArr.push(fullItem);
+            }
+          });
+        });
+
+        setThisWeek(thisWeekArr);
+        setPast(pastArr);
+        setFuture(futureArr);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetch();
   }, []);
 
-  const RankItem = ({ item, index }: any) => {
-    const isTop3 = index < 3;
+  const renderCard = (item: any, i: number, status: 'current' | 'past' | 'future') => {
+    const expiry =
+      status === 'current'
+        ? item.expiry
+          ? `Ends in ${formatTimeLeft(new Date(item.expiry).getTime() - Date.now())}`
+          : 'Lifetime'
+        : status === 'past'
+          ? 'Ended'
+          : item.expiry
+            ? new Date(item.expiry).toLocaleString('en-GB')
+            : 'Upcoming';
 
     return (
-      <View style={[styles.rankRow, isTop3 && styles.topRank]}>
-        <Text style={styles.rankIndex}>#{index + 1}</Text>
-
-        <Image
-          source={
-            item.avatar
-              ? { uri: item.avatar }
-              : { uri: `https://ui-avatars.com/api/?name=${item.name}` }
-          }
-          style={styles.avatar}
-        />
-
-        <View style={styles.nameBlock}>
-          <Text style={styles.name}>{item.name}</Text>
-          <Text style={styles.score}>{item.score} pts</Text>
-        </View>
-      </View>
+      <LeaderboardGameCard
+        key={i}
+        title={item.gameName}
+        icon={item.gameIcon}
+        expiry={expiry}
+        active={status === 'current'}
+      />
     );
   };
 
   return (
     <View style={styles.container}>
-      <View style={[styles.mainContent, isDesktop && styles.desktopContent]}>
-        <Text style={styles.title}>Weekly Leaderboard</Text>
-        <Text style={styles.subtitle}>Top players this week</Text>
+      <ScrollView contentContainerStyle={styles.mainContent}>
+        <Text style={styles.title}>Leaderboard</Text>
+        <Text style={styles.subtitle}>The top players in the top games.</Text>
 
-        <LeaderboardGameCard
-          title={gameName}
-          icon={'2'}
-          active={active === '1'}
-          clickHandler={() => setActive('1')}
-        />
-      </View>
+        <Text style={styles.sectionTitle}>This Week</Text>
+        {thisWeek.map((item, i) => renderCard(item, i, 'current'))}
+
+        <Text style={styles.sectionTitle}>Past</Text>
+        {past.map((item, i) => renderCard(item, i, 'past'))}
+
+        <Text style={styles.sectionTitle}>Future</Text>
+        {future.map((item, i) => renderCard(item, i, 'future'))}
+      </ScrollView>
 
       {isDesktop && (
         <View style={styles.wallContainer}>
@@ -156,7 +206,21 @@ export default function LeaderboardScreen() {
               data={LEADERBOARD}
               keyExtractor={(item) => item.id}
               renderItem={({ item, index }) => (
-                <RankItem item={item} index={index} />
+                <View style={styles.rankRow}>
+                  <Text style={styles.rankIndex}>#{index + 1}</Text>
+                  <Image
+                    source={
+                      item.avatar
+                        ? { uri: item.avatar }
+                        : { uri: `https://ui-avatars.com/api/?name=${item.name}` }
+                    }
+                    style={styles.avatar}
+                  />
+                  <View>
+                    <Text style={styles.name}>{item.name}</Text>
+                    <Text style={styles.score}>{item.score} pts</Text>
+                  </View>
+                </View>
               )}
             />
           </View>
@@ -172,151 +236,86 @@ const styles = StyleSheet.create({
     backgroundColor: '#020617',
     flexDirection: 'row',
   },
-
   mainContent: {
-    flex: 1,
-    alignItems: 'center',
+    flexGrow: 1,
     padding: 20,
-    zIndex: 10,
   },
-
-  desktopContent: {
-    alignItems: 'flex-start',
-    maxWidth: '50%',
-  },
-
   title: {
     fontSize: 34,
     fontWeight: '900',
-    color: '#ffffff',
-    marginBottom: 6,
+    color: '#fff',
   },
-
   subtitle: {
     fontSize: 16,
     color: '#cbd5e1',
     marginBottom: 20,
   },
-
-  userCard: {
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: '900',
+    color: '#fff',
     marginTop: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    padding: 14,
-    borderRadius: 14,
-    backgroundColor: '#0f172a',
-    borderWidth: 1,
-    borderColor: 'rgba(59, 130, 246, 0.35)',
+    marginBottom: 10,
   },
-
-  userAvatar: {
-    width: 42,
-    height: 42,
-    borderRadius: 999,
-  },
-
   gameCard: {
-    width: '100%',
-    maxWidth: 420,
-    marginTop: 20,
     flexDirection: 'row',
-    alignItems: 'center',
     padding: 16,
     borderRadius: 18,
     backgroundColor: '#0b1224',
-    borderWidth: 1,
-    borderColor: 'rgba(59, 130, 246, 0.35)',
-    shadowColor: '#000',
-    shadowOpacity: 0.3,
-    shadowRadius: 12,
-    elevation: 5,
+    marginBottom: 10,
     opacity: 0.4,
   },
-
   gameImage: {
     width: 72,
     height: 72,
     borderRadius: 14,
-    backgroundColor: '#1e293b',
     marginRight: 14,
   },
-
   gameInfo: {
     flex: 1,
   },
-
   gameTitle: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: '900',
-    color: '#ffffff',
-    marginBottom: 4,
+    color: '#fff',
   },
-
   gameSubtitle: {
     fontSize: 13,
     color: '#94a3b8',
-    lineHeight: 18,
   },
-
-  userText: {
-    color: '#e2e8f0',
-    fontWeight: '600',
-  },
-
   wallContainer: {
     flex: 1,
     borderLeftWidth: 1,
-    borderColor: 'rgba(59, 130, 246, 0.2)',
+    borderColor: 'rgba(59,130,246,0.2)',
     backgroundColor: '#050b1a',
   },
-
   leaderboardWrapper: {
     flex: 1,
-    paddingVertical: 12,
+    padding: 12,
   },
-
   rankRow: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: 14,
     marginVertical: 6,
-    marginHorizontal: 10,
-    borderRadius: 12,
     backgroundColor: '#0f172a',
-    borderWidth: 1,
-    borderColor: 'rgba(148, 163, 184, 0.08)',
+    borderRadius: 12,
   },
-
-  topRank: {
-    borderColor: 'rgba(59, 130, 246, 0.5)',
-    backgroundColor: '#0b1224',
-  },
-
   rankIndex: {
-    width: 50,
+    width: 40,
     color: '#60a5fa',
     fontWeight: '800',
-    fontSize: 16,
   },
-
   avatar: {
     width: 38,
     height: 38,
     borderRadius: 999,
-    backgroundColor: '#1e293b',
     marginRight: 10,
   },
-
-  nameBlock: {
-    flex: 1,
-  },
-
   name: {
-    color: '#ffffff',
+    color: '#fff',
     fontWeight: '700',
   },
-
   score: {
     color: '#cbd5e1',
     fontSize: 12,

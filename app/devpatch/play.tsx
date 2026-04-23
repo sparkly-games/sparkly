@@ -12,7 +12,6 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { GlitchText } from '@/assets/components/GlitchText';
 import { Game } from '../../assets/components/Game';
 import { gamesData } from './media/games';
-import { GameFrame } from '@/assets/components/GameFrame';
 import { GameWall } from '@/assets/components/GameWall';
 
 // --- TYPES ---
@@ -325,7 +324,7 @@ export default function HomeScreen() {
             <View style={{ flex: 1, backgroundColor: '#000' }}>
               {gameLoading && <><ActivityIndicator size="large" color="#60a5fa" style={styles.loader} /><GameWall /></>}
               {modalGame && (
-                <GameFrame
+                <iframe
                   ref={iframeRef}
                   src={modalGame.url}
                   style={{ flex: 1, border: 'none', opacity: gameLoading ? 0 : 1 }}

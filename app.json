@@ -47,9 +47,6 @@
     "extra": {
       "router": {
         "origin": "https://sparkly.creepers.sbs"
-      },
-      "eas": {
-        "projectId": "8a0beb52-a483-4626-a787-cdd117da5b04"
       }
     }
   }

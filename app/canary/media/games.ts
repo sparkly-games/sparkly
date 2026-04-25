@@ -109,5 +109,9 @@ export const gamesData = [
   { title: { en: "Liquid Sort" }, img: "by", url: "/liquid-sort/" },
 
   // 23/4/26
-  { title: { en: "Stack" }, img: "bz", url: "/stack/" }
+  { title: { en: "Stack" }, img: "bz", url: "/stack/" }, 
+
+  // 24/4/26
+  { title: { en: "Battle Racing Stars" }, img: "ca", url: "/battle-racing-stars/" },
+
 ];

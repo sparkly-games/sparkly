@@ -64,7 +64,7 @@ const VER_PATCHES = [
   "5rs46hkv",
   "otg548fh",
 ]
-const VER_INFO = { date: '23/4/26', text: '8.0.5', patch: VER_PATCHES[22] };
+const VER_INFO = { date: '25/4/26', text: '8.1.0', patch: VER_PATCHES[0] };
 
 // --- SHARED SUB-COMPONENTS ---
 
@@ -346,7 +346,7 @@ const styles = StyleSheet.create({
   headerContainer: { marginBottom: 10 },
   
   // Notice / Hero
-  noticeBox: { padding: 30, borderRadius: 32, backgroundColor: '#0f172a', borderWeight: 1, borderColor: '#1e293b', marginBottom: 24, shadowColor: '#000', shadowOpacity: 0.3, shadowRadius: 20 },
+  noticeBox: { padding: 30, borderRadius: 32, backgroundColor: '#0f172a', borderWidth: 1, borderColor: '#1e293b', marginBottom: 24, shadowColor: '#000', shadowOpacity: 0.3, shadowRadius: 20 },
   noticeTitle: { fontSize: 36, fontWeight: '900', textAlign: 'center', letterSpacing: -1, color: '#60a5fa' },
   noticeText: { color: '#64748b', textAlign: 'center', marginTop: 4, fontWeight: '600', fontSize: 12 },
   iconRow: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 12, marginTop: 24 },

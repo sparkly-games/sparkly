@@ -112,6 +112,6 @@ export const gamesData = [
   { title: { en: "Stack" }, img: "bz", url: "/stack/" }, 
 
   // 24/4/26
-  { title: { en: "Battle Star Racing" }, img: "ca", url: "/battle-star-racing/" },
+  { title: { en: "Battle Racing Stars" }, img: "ca", url: "/battle-racing-stars/" },
 
 ];

@@ -18,6 +18,7 @@ import {
   User
 } from 'firebase/auth';
 import { getDatabase, ref, set, get, child } from 'firebase/database';
+import { admins } from '@/assets/data/admins';
 
 const auth = getAuth(app);
 const rtdb = getDatabase(app);
@@ -29,6 +30,7 @@ type BranchKey = 'stable' | 'canary' | 'devpatch' | 'admin';
 
 const BRANCHES: Record<BranchKey, {
   label: string;
+  disabled?: boolean;
   icon: string;
   color: string;
   description: string;
@@ -69,12 +71,13 @@ const BRANCHES: Record<BranchKey, {
   admin: {
     label: 'Admin Preview',
     icon: '🚧',
+    disabled: true,
     color: '#f75555',
     description: `
       Used exclusively for upcoming features.
 
       * Must be logged in as admin.
-      * Not currently stable.
+      * Not currently available.
     `,
   },
 };
@@ -202,6 +205,7 @@ export default function RootLayout() {
     });
     return () => unsubscribe();
   }, [branch]);
+  const uid = auth.currentUser?.uid;
 
   useEffect(() => {
     if (Platform.OS !== 'web' || !user) return;
@@ -348,22 +352,27 @@ export default function RootLayout() {
           {showPicker && (
             <View style={styles.menu}>
               {Object.entries(BRANCHES).map(([key, data]) => {
+                if ( admins.includes(uid) ){
+                  data.disabled = false
+                }
                 const isActive = branch === key;
 
                 return (
-                  <View key={key} style={[styles.menuItem, isActive && styles.activeItem]}>
+                  <View key={key} style={[styles.menuItem, isActive && styles.activeItem, data.disabled && { opacity: 0.7 }]}>
                     <Pressable
                       onPress={() => toggleBranch(key as BranchKey)}
                       style={{ flex: 1 }}
+                      disabled={data.disabled}
                     >
                       <Text style={[styles.menuText, { color: data.color }]}>
-                        {data.icon} {data.label} {isActive && '✓'}
+                        {isActive ? '●' : '○'} {data.icon} {data.label}
                       </Text>
                     </Pressable>
 
                     <ControlIcon
                       name="information-circle-outline"
                       size={16}
+                      disabled={data.disabled}
                       onPress={() => showToast(data.description, data.color)}
                     />
                   </View>
@@ -388,8 +397,8 @@ export default function RootLayout() {
   );
 }
 
-const ControlIcon = ({ name, onPress, color = "white", size = 18, style = {} }: any) => (
-  <TouchableOpacity onPress={onPress} activeOpacity={0.7} style={[styles.iconBtn, style]}>
+const ControlIcon = ({ name, onPress, color = "white", size = 18, style = {}, disabled = false }: any) => (
+  <TouchableOpacity onPress={onPress} activeOpacity={0.7} style={[styles.iconBtn, style]} disabled={disabled}>
     <Ionicons name={name} size={size} color={color} />
   </TouchableOpacity>
 );

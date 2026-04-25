@@ -103,7 +103,7 @@ export default function NotFoundScreen() {
 
       setTimeout(() => {
         router.replace(`/${newBranch}${clean === '/' ? '' : clean}`);
-      }, 0);
+      }, 500);
     }
   }, [uid, status]);
 
@@ -125,7 +125,7 @@ export default function NotFoundScreen() {
     return (
       <View style={styles.container}>
         <Text style={styles.blockText}>
-          Unauthorised access. Redirecting...
+          You aint admin ✌️
         </Text>
       </View>
     );

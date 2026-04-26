@@ -18,7 +18,8 @@ const firebaseConfig = {
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
 
 // Initialize Analytics safely for Web
-const analytics = typeof window !== 'undefined' ? getAnalytics(app) : null;
+let analytics = typeof window !== 'undefined' ? getAnalytics(app) : null;
+analytics = process.env.EXPO_PUBLIC_USE_ANALYTICS === 'true' ? analytics : null;
 
 // Initialize Authentication
 const auth = getAuth(app);

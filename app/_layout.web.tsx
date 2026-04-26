@@ -323,7 +323,9 @@ export default function RootLayout() {
       <Head>
         <title>{`${BRANCHES[branch].icon} Sparkly Games`}</title>
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5114925324085905" crossOrigin="anonymous" />
-        <script src="https://sparkly.statuspage.io/embed/script.js" defer />
+        {process.env.EXPO_PUBLIC_USE_STATUSPAGE === 'true' && 
+          <script src={process.env.EXPO_PUBLIC_STATUSPAGE_URL} defer />
+        }
         <meta name="description" content="With Sparkly, get ready to game into the future like never before!" />
         <meta property="og:image" content="/og-preview.png" />
         <meta name="theme-color" content={getBranchColor()} />

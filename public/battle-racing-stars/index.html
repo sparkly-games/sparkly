@@ -164,6 +164,29 @@
    <div class="buttons-background">
    </div>
   </div> <!-- -->
+	<script>
+		window.gdsdk = {
+			AdType: ['Interstitial'],
+
+			onEvent: function (cb) {
+				this._cb = cb;
+			},
+
+			showAd: function () {
+				return Promise.resolve();
+			},
+
+			preloadAd: function () {
+				return Promise.resolve();
+			}
+		};
+
+		// prevent overwrite by SDK if it tries to replace it later
+		Object.defineProperty(window, "gdsdk", {
+			configurable: false,
+			writable: false
+		});
+	</script>
   <script id="engine-loader" type="text/javascript" src="dmloader.js"></script>
   <script id="engine-setup" type="text/javascript">
 		// From here you can configure game startup parameters via the CUSTOM_PARAMETERS object,

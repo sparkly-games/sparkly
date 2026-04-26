@@ -117,5 +117,5 @@ export const gamesData = [
   { title: { en: "Battle Racing Stars" }, img: "ca", url: "/battle-racing-stars/" },
 
   // 26/4/26
-  { title: { en: "99 Balls" }, img: "bu", url: "/ninety-nine-balls/" },
+  { title: { en: "99 Balls" }, img: "cb", url: "/ninety-nine-balls/" },
 ];

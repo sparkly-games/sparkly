@@ -97,9 +97,10 @@ export const gamesData = [
   { title: { en: "Angry Birds" }, img: "bs", url: "/angrybirds.htm" },
   { title: { en: "Cut The Rope: Time Travel" }, img: "bt", url: "/time-travel/index.html" },
 
-  { title: { en: "No Pain, No Gain" }, img: "bu", url: "/npng/" },
-
   { title: { en: "Hundred Percent Golf" }, img: "bv", url: "/hundred-percent-golf/index.html" },
+
+  // ALL ABOVE ARE UNKNOWN RELEASE DATES
+  // START DATING AS OF NOW
 
   // 21/4/26
   { title: { en: "Formula Rush" }, img: "bw", url: "/formula-rush/" },
@@ -110,8 +111,11 @@ export const gamesData = [
 
   // 23/4/26
   { title: { en: "Stack" }, img: "bz", url: "/stack/" }, 
+  { title: { en: "No Pain, No Gain" }, img: "bu", url: "/npng/" },
 
   // 24/4/26
   { title: { en: "Battle Racing Stars" }, img: "ca", url: "/battle-racing-stars/" },
 
+  // 26/4/26
+  { title: { en: "99 Balls" }, img: "cb", url: "/ninety-nine-balls/" },
 ];

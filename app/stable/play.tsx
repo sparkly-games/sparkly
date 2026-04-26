@@ -64,7 +64,7 @@ const VER_PATCHES = [
   "5rs46hkv",
   "otg548fh",
 ]
-const VER_INFO = { date: '25/4/26', text: '8.1.0', patch: VER_PATCHES[0] };
+const VER_INFO = { date: '26/4/26', text: '8.1.0', patch: VER_PATCHES[1] };
 
 // --- SHARED SUB-COMPONENTS ---
 
@@ -201,7 +201,7 @@ export default function HomeScreen() {
   const Header = () => (
     <View style={styles.headerContainer}>
       <View style={styles.noticeBox}>
-        <GlitchText style={styles.noticeTitle}>✨ Sparkly Hub ✨</GlitchText>
+        <GlitchText style={styles.noticeTitle}>🎮</GlitchText>
         <Text style={styles.noticeText}>{`v${VER_INFO.text} | ${localStorage.getItem('sparkly_branch')=== 'devpatch' ? VER_INFO.patch || VER_INFO.date : VER_INFO.date}`}</Text>
 
         <View style={styles.iconRow}>
@@ -285,9 +285,6 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <Head>
-        <title>Sparkly Hub | {modalGame ? modalGame.title.en : 'Arcade'}</title>
-      </Head>
 
       <FlatList
         data={filteredGames}

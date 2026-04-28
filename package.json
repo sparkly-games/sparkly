@@ -38,6 +38,7 @@
     "expo-web-browser": "~15.0.10",
     "firebase": "^12.8.0",
     "hls.js": "^1.6.16",
+    "katex": "^0.16.45",
     "lucide-react-native": "^1.8.0",
     "octokit": "^5.0.5",
     "react": "19.1.0",

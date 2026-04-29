@@ -1,30 +1,48 @@
 ---
 name: Game Idea
-about: Suggest a new game to add.
-title: "GR - [...]"
-labels: 'enhancement'
+about: Suggest a new game to add to the project
+title: "GR - "
+labels: enhancement
 assignees: rilwag2612
-type: "Feature"
+type: Feature
 ---
 
-## [Game Name]
+## 🎮 Game Name
 
-### Gameplay
+<!-- Enter the name of the game here -->
 
-Describe gameplay.
+---
 
-### Where to find?
-<!--
-Check all applicable fields with the following syntax:
+## 🕹️ Gameplay
 
-[ ] - Unticked
-[x] - Ticked
+Describe how the game works.
 
-You can also delete unused fields.
--->
+- Core mechanics:
+- Objective:
+- Controls (if relevant):
+- Any unique features:
 
-[ ] [Apple App Store](https://apps.apple.com/gb/app/[appname]/id[9-digit-id])
+---
 
-[ ] [Google Play Store](https://play.google.com/store/apps/details?id=[app-package-name]&hl=en_GB)
+## 📍 Where to find it?
 
-[ ] [Website](https://example.com)
+Check all that apply:
+
+- [ ] Apple App Store  
+  https://apps.apple.com/gb/app/[appname]/id[9-digit-id]
+
+- [ ] Google Play Store  
+  https://play.google.com/store/apps/details?id=[app-package-name]&hl=en_GB
+
+- [ ] Website  
+  https://example.com
+
+---
+
+## 📎 Extra Notes
+
+Anything else useful (optional):
+
+- Why this game is worth adding
+- Similar games
+- Special requirements or dependencies

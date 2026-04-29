@@ -62,7 +62,7 @@ const BRANCHES: Record<BranchKey, {
   devpatch: {
     label: 'Devpatch',
     icon: '🛠️',
-    disabled: true,
+//  disabled: true,
     color: '#a855f7',
     description: `
       Hotfixes and dev testing.
@@ -330,6 +330,9 @@ export default function RootLayout() {
         {process.env.EXPO_PUBLIC_USE_STATUSPAGE === 'true' && 
           <script src={process.env.EXPO_PUBLIC_STATUSPAGE_URL} defer />
         }
+        <script async
+          src="https://js.stripe.com/v3/buy-button.js">
+        </script>
         <meta name="description" content="With Sparkly, get ready to game into the future like never before!" />
         <meta property="og:image" content="/og-preview.png" />
         <meta name="theme-color" content={getBranchColor()} />

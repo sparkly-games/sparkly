@@ -33,6 +33,16 @@ const GameItem = memo(({ iconName }: { iconName: string }) => {
 
 export default function Home() {
   const { width } = useWindowDimensions();
+  const LOGOS = [
+    "https://web.dev/static/how-to-use-baseline/image/newly_480.png",
+    "/favicon.ico",
+    "https://firebase.google.com/favicon.ico"
+  ];
+  const LOGO_WIDTH = 80;
+  const LOGO_GAP = 20;
+  const TOTAL_WIDTH = (LOGO_WIDTH + LOGO_GAP) * LOGOS.length;
+  const LOOP_LOGOS = [...LOGOS, ...LOGOS, ...LOGOS, ...LOGOS, ...LOGOS];
+
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   
@@ -44,9 +54,7 @@ export default function Home() {
   const isMobile = width < 768;
   const isTablet = width >= 768 && width < 1024;
 
-  const HERO_GAMES = useMemo(() => shuffle(Object.keys(icons())), []);
-  const LOOP_GAMES = useMemo(() => [...HERO_GAMES, ...HERO_GAMES], [HERO_GAMES]);
-
+  const logoScroll = useRef(new Animated.Value(0)).current;
   const floatAnim = useRef(new Animated.Value(0)).current;
   const scrollAnim = useRef(new Animated.Value(0)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -66,6 +74,14 @@ export default function Home() {
       Animated.timing(scrollAnim, {
         toValue: -1200,
         duration: 35000,
+        useNativeDriver: true,
+      })
+    ).start();
+
+    Animated.loop(
+      Animated.timing(logoScroll, {
+        toValue: -TOTAL_WIDTH,
+        duration: 20000,
         useNativeDriver: true,
       })
     ).start();
@@ -91,6 +107,25 @@ export default function Home() {
   }, []);
 
   const openLink = (url: string) => Linking.openURL(url);
+
+  const heroFloat = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(heroFloat, {
+          toValue: -6,
+          duration: 2200,
+          useNativeDriver: true,
+        }),
+        Animated.timing(heroFloat, {
+          toValue: 0,
+          duration: 2200,
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+  }, []);
 
   const showToast = (message: string, type: 'success' | 'error' = 'success') => {
     setToast({ message, type });
@@ -203,39 +238,43 @@ export default function Home() {
       </View>
 
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
-        <View style={styles.hero}>
+        <Animated.View style={[styles.hero, { transform: [{ translateY: heroFloat }] }]}>
           <Animated.View style={[styles.versionBadge, { transform: [{ translateY: floatAnim }] }]}>
             <View style={styles.pingDot} />
             <Text style={styles.badgeText}>v7 is live!</Text>
           </Animated.View>
-
+          <Text style={styles.statusLine}>⚡ LIVE GAME HUB • NO BLOCKS • FAST LOAD</Text>
           <Text style={[styles.title, isMobile && styles.titleMobile]}>
-            <Text style={styles.gradientText}>Game Here</Text>
-            {'\n'}Anytime, Anywhere
+            <Text style={styles.gradientText}>Play Anything</Text>
+            {'\n'}No Limits.
           </Text>
 
+          <View style={styles.trendingBar}>
+            <Text style={styles.trendingText}>🔥 Trending: Drive Mad, No Pain No Gain</Text>
+          </View>
+
           <Text style={styles.subtitle}>
-            Dive into the ultimate collection of unblocked web games.{'\n'}
-            No ads, no downloads—just instant fun.
+            Built for school breaks, boredom, and chaos.{'\n'}
+            No installs. No restrictions. Just press play.
           </Text>
 
           <Pressable
             style={({ pressed }) => [
               styles.primaryButton,
               isMobile && styles.fullWidth,
-              pressed && { opacity: 0.8, transform: [{ scale: 0.98 }] },
+              pressed && { transform: [{ scale: 0.96 }], shadowOpacity: 0.4 }
             ]}
             onPress={() => router.push('/play')}
           >
             <Text style={styles.primaryText}>Play Now →</Text>
           </Pressable>
-        </View>
+        </Animated.View>
 
         {/* FEATURES GRID */}
         <Animated.View style={[styles.featuresContainer, { opacity: fadeAnim }]}>
           <View style={styles.featuresGrid}>
             {SELLING_POINTS.map((point, index) => (
-              <View key={index} style={[styles.card, { width: isMobile ? '100%' : '30%' }]}>
+              <View key={index} style={[ styles.card, { width: isMobile ? '100%' : '30%' }, hoveredIndex === index && { transform: [{ scale: 1.04 }] }]} onMouseEnter={() => setHoveredIndex(index)} onMouseLeave={() => setHoveredIndex(null)} >
                 <View style={styles.cardGlow} />
                 <View style={styles.iconCircle}>
                   <Text style={styles.emoji}>{point.emoji}</Text>
@@ -269,12 +308,12 @@ export default function Home() {
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: '#020617' },
   scroll: { paddingTop: 140, paddingBottom: 60 },
-  backgroundGlow1: { position: 'absolute', top: -200, left: -150, width: 500, height: 500, borderRadius: 250, backgroundColor: 'rgba(37, 99, 235, 0.15)', ...(Platform.OS === 'web' && { filter: 'blur(120px)' }) },
-  backgroundGlow2: { position: 'absolute', bottom: -200, right: -150, width: 500, height: 500, borderRadius: 250, backgroundColor: 'rgba(59, 130, 246, 0.1)', ...(Platform.OS === 'web' && { filter: 'blur(120px)' }) },
+  backgroundGlow1: { position: 'absolute', top: -200, left: -150, width: 500, height: 500, borderRadius: 250, backgroundColor: 'rgba(236, 72, 153, 0.18)', ...(Platform.OS === 'web' && { filter: 'blur(140px)' }) },
+  backgroundGlow2: { position: 'absolute', bottom: -200, right: -150, width: 500, height: 500, borderRadius: 250, backgroundColor: 'rgba(99, 102, 241, 0.25)', ...(Platform.OS === 'web' && { filter: 'blur(140px)' }) }, 
   heroBackground: { position: 'absolute', inset: 0, overflow: 'hidden', opacity: 0.4, zIndex: -1 },
   heroGame: { width: 140, height: 85, borderRadius: 12, margin: 8, backgroundColor: '#1e293b' },
   heroFade: { position: 'absolute', inset: 0, backgroundColor: 'rgba(2, 6, 23, 0.85)' },
-  header: { position: Platform.OS === 'web' ? 'fixed' : 'absolute', top: 0, left: 0, right: 0, zIndex: 100, backgroundColor: 'rgba(2, 6, 23, 0.7)', borderBottomWidth: 1, borderColor: 'rgba(59, 130, 246, 0.1)', ...(Platform.OS === 'web' && { backdropFilter: 'blur(12px)' }) },
+  header: { position: Platform.OS === 'web' ? 'fixed' : 'absolute', top: 0, left: 0, right: 0, zIndex: 100, backgroundColor: 'rgba(2, 6, 23, 0.85)', borderBottomWidth: 1, borderColor: 'rgba(59, 130, 246, 0.15)', ...(Platform.OS === 'web' && { backdropFilter: 'blur(16px)' }) }, 
   headerInner: { maxWidth: 1200, alignSelf: 'center', width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 24, paddingVertical: 14 },
   brand: { flexDirection: 'row', alignItems: 'center' },
   logo: { width: 28, height: 28, marginRight: 10 },
@@ -288,26 +327,29 @@ const styles = StyleSheet.create({
   versionBadge: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 99, backgroundColor: 'rgba(59, 130, 246, 0.1)', borderWidth: 1, borderColor: 'rgba(59, 130, 246, 0.2)', marginBottom: 24 },
   pingDot: { width: 6, height: 6, borderRadius: 3, backgroundColor: '#3b82f6', marginRight: 8 },
   badgeText: { color: '#93c5fd', fontSize: 11, fontWeight: '800' },
-  title: { fontSize: 72, fontWeight: '900', color: '#fff', textAlign: 'center', lineHeight: 78, letterSpacing: -2, marginBottom: 20 },
-  titleMobile: { fontSize: 42, lineHeight: 46 },
-  subtitle: { fontSize: 18, color: '#94a3b8', textAlign: 'center', maxWidth: 550, lineHeight: 26, marginBottom: 40 },
-  primaryButton: { backgroundColor: '#2563eb', paddingHorizontal: 40, paddingVertical: 18, borderRadius: 16 },
-  primaryText: { color: '#fff', fontSize: 17, fontWeight: '900' },
+  title: { fontSize: 78, fontWeight: '900', color: '#fff', textAlign: 'center', lineHeight: 82, letterSpacing: -2.5, marginBottom: 20 },
+  titleMobile: { fontSize: 46, lineHeight: 50 }, 
+  subtitle: { fontSize: 16, color: '#94a3b8', textAlign: 'center', maxWidth: 520, lineHeight: 24, opacity: 0.85, margin: 10 }, 
+  primaryButton: { backgroundColor: '#2563eb', paddingHorizontal: 48, paddingVertical: 18, borderRadius: 999, shadowColor: '#2563eb', shadowOpacity: 0.8, shadowRadius: 25, elevation: 12, borderWidth: 1, borderColor: 'rgba(255,255,255,0.15)' }, 
+  primaryText: { color: '#fff', fontSize: 18, fontWeight: '900', letterSpacing: 0.5 },
   featuresContainer: { marginTop: 80, width: '100%', alignItems: 'center' },
   featuresGrid: { maxWidth: 1200, width: '100%', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', paddingHorizontal: 10 },
-  card: { backgroundColor: 'rgba(30, 41, 59, 0.3)', borderRadius: 24, padding: 28, borderWidth: 1, borderColor: 'rgba(59, 130, 246, 0.08)', margin: 8, overflow: 'hidden' },
-  cardGlow: { position: 'absolute', top: -40, right: -40, width: 100, height: 100, borderRadius: 50, backgroundColor: 'rgba(37, 99, 235, 0.05)', ...(Platform.OS === 'web' && { filter: 'blur(30px)' }) },
   iconCircle: { width: 48, height: 48, borderRadius: 12, backgroundColor: 'rgba(37, 99, 235, 0.1)', justifyContent: 'center', alignItems: 'center', marginBottom: 16 },
   emoji: { fontSize: 20 },
-  cardTitle: { fontSize: 20, fontWeight: '800', color: '#fff', marginBottom: 8 },
-  cardText: { fontSize: 14, color: '#94a3b8', lineHeight: 20 },
   footer: { marginTop: 100, alignItems: 'center', paddingBottom: 40 },
   footerDivider: { width: 100, height: 1, backgroundColor: 'rgba(59, 130, 246, 0.2)', marginBottom: 24 },
-  footerText: { color: '#475569', fontSize: 12 },
+  footerText: { color: '#64748b', fontSize: 12, opacity: 0.7 },
   fullWidth: { width: '90%' },
   toast: { position: 'absolute', top: 60, alignSelf: 'center', paddingHorizontal: 16, paddingVertical: 10, borderRadius: 10, zIndex: 9999 },
   toastSuccess: { backgroundColor: '#16a34a' },
   toastError: { backgroundColor: '#dc2626' },
   toastText: { color: '#fff', fontWeight: '700', fontSize: 13 },
   privacyLink: { marginTop: 12, color: '#60a5fa', fontSize: 12, fontWeight: '700' },
+  card: { backgroundColor: 'rgba(15, 23, 42, 0.85)', borderRadius: 28, padding: 28, borderWidth: 1, borderColor: 'rgba(99, 102, 241, 0.18)', margin: 10, overflow: 'hidden', shadowColor: '#000', shadowOpacity: 0.5, shadowRadius: 20, elevation: 10 }, 
+  cardTitle: { fontSize: 22, fontWeight: '900', color: '#fff', marginBottom: 10 },
+  cardText: { fontSize: 15, color: '#94a3b8', lineHeight: 22 }, 
+  cardGlow: { position: 'absolute', top: -60, right: -60, width: 140, height: 140, borderRadius: 70, backgroundColor: 'rgba(236, 72, 153, 0.08)' },
+  statusLine: { color: '#22c55e', fontWeight: '800', fontSize: 12, letterSpacing: 2, marginBottom: 18, opacity: 0.9 },
+  trendingBar: { marginTop: 20, paddingHorizontal: 14, paddingVertical: 10, borderRadius: 12, backgroundColor: 'rgba(99, 102, 241, 0.12)' },
+  trendingText: { color: '#c7d2fe', fontSize: 12, fontWeight: '700' },
 });

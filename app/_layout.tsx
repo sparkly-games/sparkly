@@ -71,7 +71,7 @@ const BRANCHES: Record<BranchKey, {
       * Recieves updates most often.
       * Function is not guaranteed.
     `,
-    proOnly: true,
+//  proOnly: true,
   },
   admin: {
     label: 'Admin Preview',

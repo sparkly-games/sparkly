@@ -95,7 +95,6 @@ export default function ApplyScreen() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          username: 'Job Applications Bot',
           embeds: [
             {
               title: `New Application: ${job.title}`,

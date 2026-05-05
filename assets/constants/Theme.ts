@@ -89,13 +89,16 @@ const styles = StyleSheet.create({
 
   // HERO
   hero: {
-    padding: 28,
+    padding: 28, 
+    borderTopColor: 'rgba(255,255,255,0.12)',
     borderRadius: 28,
     backgroundColor: C.surface,
     borderWidth: 1,
     borderColor: C.border,
     marginBottom: 20,
     alignItems: 'center',
+    overflow: 'hidden',
+    position: 'relative'
   },
   heroBadge: {
     backgroundColor: C.hot + '20',
@@ -104,7 +107,7 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     borderWidth: 1,
     borderColor: C.hot + '60',
-    marginBottom: 14,
+    marginBottom: 14
   },
   heroBadgeText: {
     color: C.hot,
@@ -248,6 +251,34 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 10,
     marginBottom: 14,
+  }, 
+  sectionHeader: {
+    width: '100%',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  heroBgGlow: {
+    position: 'absolute',
+    top: -80,
+    left: '50%',
+
+    width: 320,
+    height: 320,
+
+    marginLeft: -160,
+
+    borderRadius: 999,
+    backgroundColor: 'rgba(99,102,241,0.12)',
+  },
+
+  heroGrid: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+
+    opacity: 0.04,
   },
   sectionTitle: {
     color: C.text,
@@ -364,6 +395,40 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
     borderWidth: 1,
     borderColor: C.hot + '50',
+  },
+  titleWrap: {
+    position: 'relative',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+
+  heroGlow: {
+    position: 'absolute',
+    width: 220,
+    height: 60,
+    backgroundColor: 'rgba(255,255,255,0.05)',
+    borderRadius: 999,
+    opacity: 0.8,
+  },
+  sectionLabel: {
+    fontSize: 10,
+    fontWeight: '800',
+    letterSpacing: 3,
+    textTransform: 'uppercase',
+
+    color: '#7dd3fc',
+    opacity: 0.7,
+
+    marginBottom: 12,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+
+    backgroundColor: 'rgba(125,211,252,0.08)',
+    borderWidth: 1,
+    borderColor: 'rgba(125,211,252,0.18)',
+    borderRadius: 999,
+
+    textAlign: 'center',
   },
   modalTrendText: {
     color: C.hot,

@@ -15,7 +15,8 @@ import { GameWall } from '@/assets/components/GameWall';
 
 import { styles, C, GENRE_FILTERS, VIBES } from '@/assets/constants/Theme';
 import { FilterPill } from '@/assets/components/FilterPill';
-import { HorizontalRow, ControlIcon, SectionHeader, GameWrapper, StatChip } from '@/assets/components/Wrappers';
+import { HorizontalRow, ControlIcon, SectionHeader, GameWrapper, StatChip, LoadingIndicator, ModalBar, GameModal, FilteredGamesDisplay } from '@/assets/components/Wrappers';
+import { Header } from '@/assets/components/Header';
 
 // --- TYPES ---
 interface GameType {
@@ -66,6 +67,7 @@ export default function HomeScreen() {
   const [searchFocused, setSearchFocused] = useState(false);
   const [favsCollapsed, setFavsCollapsed] = useState(false);
   const [recentCollapsed, setRecentCollapsed] = useState(false);
+  const [trendingCollapsed, setTrendingCollapsed] = useState(false);
 
   // PERSISTENCE
   useEffect(() => {
@@ -142,36 +144,17 @@ export default function HomeScreen() {
   const ListHeader = useMemo(() => (
     <View style={styles.headerContainer}>
       {/* HERO */}
-      <View style={styles.hero}>
-        <View style={styles.heroBadge}>
-          <Text style={styles.heroBadgeText}>LIVE</Text>
-        </View>
-        <GlitchText style={styles.heroTitle}>SPARKLY</GlitchText>
-        <Text style={styles.heroVibe}>{vibe}</Text>
-
-        <View style={styles.statsRow}>
-          <StatChip value={gamesData.length} label="games" />
-          <View style={styles.statDivider} />
-          <StatChip value={favorites.length} label="saved" />
-          <View style={styles.statDivider} />
-          <StatChip value={recent.length} label="played" />
-        </View>
-
-        {/* NAV ICONS */}
-        <View style={styles.navRow}>
-          <ControlIcon name="logo-youtube" onPress={() => router.push('/media/youtube')} label="Videos" />
-          <ControlIcon name="logo-soundcloud" onPress={() => Linking.openURL('https://soundcloak.instatunnel.my')} label="Music" />
-          <ControlIcon name="volume-high" onPress={() => Linking.openURL('/soundboard.htm')} label="Sounds" />
-          <ControlIcon name="tv-outline" onPress={() => router.push('/system/soon/a9f3k2x8')} label="TV" />
-          <View style={styles.vPipe} />
-          <ControlIcon name="desktop-outline" active={showPC} color="#60a5fa" onPress={() => setShowPC(p => !p)} label="PC" />
-          <ControlIcon name="skull-outline" active={showHorror} color={C.hot} onPress={() => setShowHorror(p => !p)} label="Horror" />
-        </View>
-
-        <Text style={styles.verText}>
-          {`v${VER_INFO.text} · ${typeof window !== 'undefined' && localStorage.getItem('sparkly_branch') === 'devpatch' ? VER_INFO.patch : VER_INFO.date}`}
-        </Text>
-      </View>
+      <Header 
+        vibe={vibe}
+        gamesData={gamesData}
+        favorites={favorites}
+        recent={recent}
+        showPC={showPC}
+        showHorror={showHorror}
+        setShowPC={setShowPC}
+        setShowHorror={setShowHorror}
+        VER_INFO={VER_INFO}
+      />
 
       {/* SEARCH */}
       <View style={[styles.searchRow, searchFocused && styles.searchRowFocused]}>
@@ -211,13 +194,19 @@ export default function HomeScreen() {
       {/* TRENDING */}
       {trendingGames.length > 0 && (
         <View style={styles.section}>
-          <SectionHeader title="🔥 Trending Now" />
-          <HorizontalRow
-            games={trendingGames}
-            onPress={handleSelectGame}
-            favorites={favorites}
-            onToggleFav={toggleFavorite}
+          <SectionHeader 
+            title="🔥 Trending Now"
+            collapsed={trendingCollapsed}
+            onToggle={() => setTrendingCollapsed(p => !p)}
           />
+          {!trendingCollapsed && (
+            <HorizontalRow
+              games={trendingGames}
+              onPress={handleSelectGame}
+              favorites={favorites}
+              onToggleFav={toggleFavorite}
+            />
+          )}
         </View>
       )}
 
@@ -267,97 +256,29 @@ export default function HomeScreen() {
         count={filteredGames.length}
       />
     </View>
-  ), [query, searchFocused, activeGenre, favGamesData, recentGamesData, trendingGames, favorites, recent, showPC, showHorror, filteredGames, favsCollapsed, recentCollapsed]);
+  ), [query, searchFocused, trendingCollapsed, activeGenre, favGamesData, recentGamesData, trendingGames, favorites, recent, showPC, showHorror, filteredGames, favsCollapsed, recentCollapsed]);
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={filteredGames}
-        keyExtractor={item => item.title.en}
-        numColumns={columns}
-        key={columns}
-        ListHeaderComponent={() => ListHeader}
-        renderItem={({ item }) => (
-          <GameWrapper
-            game={item}
-            width={itemWidth}
-            onPress={handleSelectGame}
-            isFav={favorites.includes(item.title.en)}
-            onToggleFav={toggleFavorite}
-          />
-        )}
-        contentContainerStyle={styles.listPadding}
-        ListEmptyComponent={
-          <View style={styles.emptyState}>
-            <Text style={styles.emptyIcon}>🔍</Text>
-            <Text style={styles.emptyTitle}>No games found</Text>
-            <Text style={styles.emptySubtitle}>Try a different search or filter</Text>
-          </View>
-        }
+      <FilteredGamesDisplay
+        filteredGames={filteredGames}
+        columns={columns}
+        ListHeader={ListHeader}
+        itemWidth={itemWidth}
+        handleSelectGame={handleSelectGame}
+        favorites={favorites}
+        toggleFavorite={toggleFavorite}
       />
 
-      {/* GAME MODAL */}
-      <Modal visible={!!modalGame} transparent animationType="slide">
-        <View style={styles.modalBg}>
-          <View style={styles.modalContent}>
-            {/* TOP BAR */}
-            <View style={styles.modalBar}>
-              <TouchableOpacity onPress={closeGame} style={styles.closeBtn} activeOpacity={0.8}>
-                <Ionicons name="chevron-down" size={24} color={C.text} />
-              </TouchableOpacity>
-
-              <View style={styles.modalMeta}>
-                <Text style={styles.modalTitle} numberOfLines={1}>{modalGame?.title.en}</Text>
-                {modalGame?.popular && (
-                  <View style={styles.modalTrendChip}>
-                    <Text style={styles.modalTrendText}>🔥 trending</Text>
-                  </View>
-                )}
-              </View>
-
-              <View style={styles.modalActions}>
-                <TouchableOpacity
-                  style={[styles.modalIconBtn, favorites.includes(modalGame?.title.en || '') && styles.modalIconActive]}
-                  onPress={() => toggleFavorite(modalGame?.title.en || '')}
-                  activeOpacity={0.7}
-                >
-                  <Ionicons
-                    name={favorites.includes(modalGame?.title.en || '') ? 'heart' : 'heart-outline'}
-                    size={20}
-                    color={favorites.includes(modalGame?.title.en || '') ? C.hot : C.textDim}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.modalIconBtn} onPress={() => setGameLoading(true)} activeOpacity={0.7}>
-                  <Ionicons name="refresh" size={20} color={C.textDim} />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.modalIconBtn} onPress={() => iframeRef.current?.requestFullscreen()} activeOpacity={0.7}>
-                  <Ionicons name="expand" size={20} color={C.textDim} />
-                </TouchableOpacity>
-              </View>
-            </View>
-
-            {/* GAME FRAME */}
-            <View style={{ flex: 1, backgroundColor: '#000' }}>
-              {gameLoading && (
-                <View style={styles.loaderContainer}>
-                  <ActivityIndicator size="large" color={C.accent} />
-                  <Text style={styles.loaderText}>loading {modalGame?.title.en}...</Text>
-                  <GameWall />
-                </View>
-              )}
-              {modalGame && (
-                <iframe
-                  ref={iframeRef}
-                  src={modalGame.url}
-                  style={{ width: '100%', height: '100%', border: 'none', opacity: gameLoading ? 0 : 1, transition: 'opacity 0.3s ease' }}
-                  onLoad={() => setGameLoading(false)}
-                  sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock"
-                />
-              )}
-            </View>
-          </View>
-        </View>
-      </Modal>
+      <GameModal 
+        modalGame={modalGame}
+        closeGame={closeGame}
+        favorites={favorites}
+        iframeRef={iframeRef}
+        toggleFavorite={toggleFavorite}
+        setGameLoading={setGameLoading}
+        gameLoading={gameLoading}
+      />
     </View>
   );
 }

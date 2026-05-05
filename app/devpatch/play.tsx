@@ -46,7 +46,7 @@ const VER_PATCHES = [
   "53qx9jfl", "g213gtyp", "exrkqldd", "5gc3ymeh", "oumntxws",
   "5rs46hkv", "otg548fh",
 ];
-const VER_INFO = { date: '3/5/26', text: '8.1.3', patch: VER_PATCHES[9] };
+const VER_INFO = { date: '5/5/26', text: '8.1.3', patch: VER_PATCHES[9] };
 
 // --- MAIN SCREEN ---
 export default function HomeScreen() {

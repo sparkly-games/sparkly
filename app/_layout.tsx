@@ -20,6 +20,7 @@ import {
 import { getDatabase, ref, set, get, child } from 'firebase/database';
 import { admins } from '@/assets/data/admins';
 import { Crown } from 'lucide-react-native';
+import RecruitBanner from '@/assets/components/RecruitBanner';
 
 const auth = getAuth(app);
 const rtdb = getDatabase(app);
@@ -70,7 +71,7 @@ const BRANCHES: Record<BranchKey, {
       * Recieves updates most often.
       * Function is not guaranteed.
     `,
-    proOnly: true,
+//  proOnly: true,
   },
   admin: {
     label: 'Admin Preview',
@@ -338,6 +339,10 @@ export default function RootLayout() {
         <meta name="theme-color" content={getBranchColor()} />
       </Head>
 
+      <View style={styles.banner}>
+        <RecruitBanner text={"Looking for UI designers!"} onPress={() => {router.push("/acc/apply/jobs")}} />
+      </View>
+
       {Platform.OS === 'web' && !isShutdown && !maintenance && (
         <View style={styles.floatingContainer}>
 
@@ -421,12 +426,17 @@ const styles = StyleSheet.create({
   trigger: {
     backgroundColor: '#111',
     flexDirection: 'row',
+    marginBottom: 32,
     alignItems: 'center',
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    padding: 12,
     borderRadius: 8,
     borderWidth: 1,
     borderColor: '#333'
+  },
+
+  banner: {
+    position: 'sticky',
+    top: '100%'
   },
 
   statusDot: { width: 8, height: 8, borderRadius: 4, marginRight: 8 },

@@ -10,6 +10,7 @@ import { BazingaProvider } from '@/assets/context/BazingaContext';
 import { app, analytics } from '@/assets/data/firebaseConfig.js';
 import { getRemoteConfig, fetchAndActivate, getValue, RemoteConfig } from 'firebase/remote-config';
 import { logEvent } from 'firebase/analytics';
+import ENV_VARS from '@/assets/data/env';
 
 import {
   getAuth,
@@ -328,8 +329,8 @@ export default function RootLayout() {
       <Head>
         <title>{`${BRANCHES[branch].icon} Sparkly Games`}</title>
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5114925324085905" crossOrigin="anonymous" />
-        {process.env.EXPO_PUBLIC_USE_STATUSPAGE === 'true' && 
-          <script src={process.env.EXPO_PUBLIC_STATUSPAGE_URL} defer />
+        {ENV_VARS.USE_STATUSPAGE === 'true' && 
+          <script src={ENV_VARS.STATUSPAGE_URL} defer />
         }
         <script async
           src="https://js.stripe.com/v3/buy-button.js">

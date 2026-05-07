@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import MathView from "@/assets/components/MathView";
+import ENV_VARS from '@/assets/data/env';
 import {
   View,
   Text,
@@ -42,7 +43,7 @@ export default function SparxSolverLab12() {
       setError(null);
 
       const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent?key=${process.env.EXPO_PUBLIC_GOOGLE_AI_KEY}`,
+        `https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent?key=${ENV_VARS.GOOGLE_AI_KEY}`,
         {
           method: "POST",
           headers: {

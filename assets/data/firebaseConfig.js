@@ -1,10 +1,11 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
+import ENV_VARS from '@/assets/data/env';
 import { getAnalytics, logEvent } from 'firebase/analytics'; // JS SDK, not native
 import { getAuth } from 'firebase/auth';
 import { getDatabase } from 'firebase/database';
 
 const firebaseConfig = {
-  apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
+  apiKey: ENV_VARS.FIREBASE_API_KEY,
   authDomain: "auth.sparxmaths.lgbt.sh",
   projectId: "sparxapi",
   storageBucket: "sparxapi.firebasestorage.app",
@@ -19,7 +20,7 @@ const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
 
 // Initialize Analytics safely for Web
 let analytics = typeof window !== 'undefined' ? getAnalytics(app) : null;
-analytics = process.env.EXPO_PUBLIC_USE_ANALYTICS === 'true' ? analytics : null;
+analytics = ENV_VARS.USE_ANALYTICS === 'true' ? analytics : null;
 
 // Initialize Authentication
 const auth = getAuth(app);

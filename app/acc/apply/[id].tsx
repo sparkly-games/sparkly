@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState, memo } from 'react';
+import React, { useEffect, useRef, useState, memo } from 'react'; 
+import ENV_VARS from '@/assets/data/env';
 import {
   View,
   Text,
@@ -62,7 +63,7 @@ export default function ApplyScreen() {
 
   const job = JOBS.find((j) => j.id === id);
 
-  const WEBHOOK = process.env.EXPO_PUBLIC_JOB_WEBHOOK;
+  const WEBHOOK = ENV_VARS.JOB_WEBHOOK;
 
   const [form, setForm] = useState({
     name: '',

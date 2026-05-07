@@ -92,6 +92,8 @@ const styles = StyleSheet.create({
     padding: 28, 
     borderTopColor: 'rgba(255,255,255,0.12)',
     borderRadius: 28,
+    position: 'sticky',
+    top: 16,
     backgroundColor: C.surface,
     borderWidth: 1,
     borderColor: C.border,
@@ -133,6 +135,7 @@ const styles = StyleSheet.create({
   statsRow: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     marginTop: 20,
     marginBottom: 20,
     gap: 8,

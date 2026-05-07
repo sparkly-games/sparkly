@@ -1,23 +1,16 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { View, Text, TouchableOpacity, TextInput, ScrollView } from 'react-native';
-
+import { View, Text, TouchableOpacity, TextInput, ScrollView, Linking } from 'react-native';
 import { useRouter } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { gamesData } from '@/assets/constants/games';
-
 import { styles, C, GENRE_FILTERS, VIBES } from '@/assets/constants/Theme';
 import { FilterPill } from '@/assets/components/FilterPill';
 import { HorizontalRow, SectionHeader, GameModal, FilteredGamesDisplay } from '@/assets/components/Wrappers';
-
 import { Header } from '@/assets/components/Header';
-
 import * as hooks from '@/assets/hooks';
-
-// --- TYPES ---
+import { StatChip, ControlIcon } from '@/assets/components/Wrappers';
 
 interface GameType { title: { en: string }; img: string; url: string; popular?: boolean; horror?: boolean; broken?: boolean; pc?: boolean; genre?: string; }
-
-// --- CONSTANTS ---
 
 const VER_PATCHES = [
   '3xclrdun', '9xg4w9y5', '0p5ttso7', 'g16fpq2h', '1xf6zts0', 'iw74pgdl',
@@ -32,8 +25,6 @@ const VER_INFO = {
   text: '8.1.4',
   patch: VER_PATCHES[10],
 };
-
-// --- SCREEN ---
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -53,21 +44,34 @@ export default function HomeScreen() {
   const handleCloseGame = useCallback(() => { router.setParams({ play: '' }); closeGame(); }, [router, closeGame]);
   const favGamesData = useMemo(() => favorites.map( name => gamesData.find( g => g.title.en === name ) ).filter(Boolean) as GameType[], [favorites] );
   const recentGamesData = useMemo(() => recent.map( name => gamesData.find( g => g.title.en === name ) ).filter(Boolean) as GameType[], [recent] );
+  const trendingGames = useMemo(() => gamesData.filter(g => g.popular).slice(0, 12), []);
 
-  const trendingGames = useMemo(
-    () =>
-      gamesData
-        .filter(g => g.popular)
-        .slice(0, 12),
-    []
-  );
-
-  // --- HEADER ---
-
-  const ListHeader = useMemo(
-    () => (
+  const ListHeader = useMemo(() => (
+    <>
       <View style={styles.headerContainer}>
-        <Header {...{ vibe, gamesData, favorites, recent, showPC, showHorror, setShowPC, setShowHorror, VER_INFO }} />
+        <View style={[styles.sectionHeader]}>
+          <Text style={styles.sectionLabel}>MEDIA</Text>
+          <View style={styles.navRow}>
+            <ControlIcon name="logo-youtube" onPress={() => router.push('/media/youtube')} label="Videos" />
+            <ControlIcon name="logo-soundcloud" onPress={() => Linking.openURL('https://soundcloak.instatunnel.my')} label="Music" />
+            <ControlIcon name="volume-high" onPress={() => Linking.openURL('/soundboard.htm')} label="Sounds" />
+            <ControlIcon name="tv-outline" onPress={() => router.push('/system/soon/a9f3k2x8')} label="TV" />
+          </View>
+        </View>
+        <View style={styles.statsRow}>
+          <StatChip value={gamesData.length} label="games" />
+          <View style={styles.statDivider} />
+          <StatChip value={favorites.length} label="saved" />
+          <View style={styles.statDivider} />
+          <StatChip value={recent.length} label="played" />
+        </View>
+        <View style={[styles.sectionHeader]}>
+          <Text style={styles.sectionLabel}>FILTERS</Text>
+          <View style={styles.navRow}>
+            <ControlIcon name="desktop-outline" active={showPC} color="#60a5fa" onPress={() => { setShowPC(p => !p); console.log("showPC:", showPC); }} label="PC" />
+            <ControlIcon name="skull-outline" active={showHorror} color={C.hot} onPress={() => { setShowHorror(p => !p); console.log("showHorror:", showHorror); }} label="Horror" />
+          </View>
+        </View>
         <View style={[ styles.searchRow, searchFocused && styles.searchRowFocused ]} >
           <View style={[ styles.searchBox, searchFocused && styles.searchBoxFocused ]} >
             <Ionicons name="search" size={18} color={ searchFocused ? C.accentLt : C.muted } style={{ marginLeft: 14 }} />
@@ -85,80 +89,25 @@ export default function HomeScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* GENRES */}
-
         <ScrollView horizontal showsHorizontalScrollIndicator={ false } style={styles.pillsScroll} contentContainerStyle={ styles.pillsContent } >
           {GENRE_FILTERS.map(item => (
             <FilterPill key={item.id} item={item} active={ activeGenre === item.id } onPress={setActiveGenre} />
           ))}
         </ScrollView>
 
-        {/* TRENDING */}
-
         {trendingGames.length > 0 && (
           <View style={styles.section}>
-            <SectionHeader
-              title="🔥 Trending Now"
-              collapsed={
-                trendingCollapsed
-              }
-              onToggle={() =>
-                setTrendingCollapsed(
-                  prev => !prev
-                )
-              }
-            />
-
-            {!trendingCollapsed && (
-              <HorizontalRow
-                games={trendingGames}
-                onPress={
-                  handleSelectGame
-                }
-                favorites={favorites}
-                onToggleFav={
-                  toggleFavorite
-                }
-              />
-            )}
+            <SectionHeader title="🔥 Trending Now" collapsed={ trendingCollapsed } onToggle={ () => setTrendingCollapsed( prev => !prev ) } />
+            {!trendingCollapsed && ( <HorizontalRow games={trendingGames} onPress={ handleSelectGame } favorites={favorites} onToggleFav={ toggleFavorite } /> )}
           </View>
         )}
-
-        {/* FAVORITES */}
 
         {favGamesData.length > 0 && (
           <View style={styles.section}>
-            <SectionHeader
-              title="❤️ Your Favorites"
-              count={
-                favGamesData.length
-              }
-              collapsed={
-                favsCollapsed
-              }
-              onToggle={() =>
-                setFavsCollapsed(
-                  prev => !prev
-                )
-              }
-            />
-
-            {!favsCollapsed && (
-              <HorizontalRow
-                games={favGamesData}
-                onPress={
-                  handleSelectGame
-                }
-                favorites={favorites}
-                onToggleFav={
-                  toggleFavorite
-                }
-              />
-            )}
+            <SectionHeader title="❤️ Your Favorites" count={ favGamesData.length } collapsed={ favsCollapsed } onToggle={ () => setFavsCollapsed( prev => !prev ) } />
+            {!favsCollapsed && ( <HorizontalRow games={favGamesData} onPress={ handleSelectGame } favorites={favorites} onToggleFav={ toggleFavorite } /> )}
           </View>
         )}
-
-        {/* RECENT */}
 
         {recentGamesData.length > 0 && (
           <View style={styles.section}>
@@ -170,15 +119,12 @@ export default function HomeScreen() {
         )}
         <SectionHeader title="🎮 Library" count={filteredGames.length} />
       </View>
-    ),
-
-    [ vibe, favorites, recent, showPC, showHorror, query, searchFocused, activeGenre, filteredGames, favGamesData, recentGamesData, trendingGames, favsCollapsed, recentCollapsed, trendingCollapsed, handleSelectGame, toggleFavorite ]
-  );
-
-  // --- RENDER ---
+    </>
+  ), [ vibe, favorites, recent, showPC, showHorror, query, searchFocused, activeGenre, filteredGames, favGamesData, recentGamesData, trendingGames, favsCollapsed, recentCollapsed, trendingCollapsed, handleSelectGame, toggleFavorite ] );
 
   return (
     <View style={styles.container}>
+      <Header {...{ vibe, gamesData, favorites, recent, showPC, showHorror, setShowPC, setShowHorror, VER_INFO }} />
       <FilteredGamesDisplay {...{ filteredGames, columns, itemWidth , ListHeader, favorites, toggleFavorite, handleSelectGame }} />
       <GameModal closeGame={handleCloseGame} {...{ modalGame, favorites, iframeRef, toggleFavorite, setGameLoading, gameLoading }} />
     </View>

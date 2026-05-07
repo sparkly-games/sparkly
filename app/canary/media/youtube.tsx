@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import ENV_VARS from '@/assets/data/env';
 import {
   StyleSheet,
   Text,
@@ -26,8 +27,8 @@ interface YTVideoItem {
   };
 }
 
-const YT_API_KEY = process.env.EXPO_PUBLIC_YT_API_KEY || '';
-const COBALT_URL = (process.env.EXPO_PUBLIC_COBALT_URL || '').replace(/\/$/, '');
+const YT_API_KEY = ENV_VARS.YT_API_KEY || '';
+const COBALT_URL = (ENV_VARS.COBALT_URL || '').replace(/\/$/, '');
 
 const NUM_COLUMNS = 4;
 const ITEM_WIDTH = width / NUM_COLUMNS;

@@ -1,12 +1,14 @@
 import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Linking, useWindowDimensions } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { ControlIcon } from '@/assets/components/Wrappers';
 import Head from 'expo-router/head';
 import { router } from 'expo-router';
 import { GlitchText } from '@/assets/components/GlitchText';
 import { GameWall } from '@/assets/components/GameWall';
 
 export default function MaintenanceScreen() {
+  const [showGame, setShowGame] = React.useState(false);
   const { width } = useWindowDimensions();
   const isDesktop = width >= 1024;
 
@@ -24,9 +26,13 @@ export default function MaintenanceScreen() {
     }
   }, []);
 
+  const playBitlife = () => {
+    setShowGame(p => !p);
+  }
+
   return (
     <View style={[styles.container, isDesktop && styles.desktopContainer]}>
-      <GameWall useAbsolute/>
+      <GameWall />
       <Head>
         <title>Sparkly Games | Maintenance</title>
         <link rel="icon" href="/favicon.ico" />
@@ -49,6 +55,7 @@ export default function MaintenanceScreen() {
 
           <View style={styles.iconRow}>
             <ControlIcon name="refresh" onPress={refresh} />
+            <ControlIcon name="game-controller" onPress={playBitlife} />
             <ControlIcon
               name="logo-github"
               onPress={() => Linking.openURL('https://github.com/sparkly-games')}
@@ -57,15 +64,17 @@ export default function MaintenanceScreen() {
 
         </View>
       </View>
+      {showGame && (
+        <View style={{ marginTop: 40, alignItems: 'center' }}>
+          <iframe
+            title="BitLife"
+            src="/bitlife"
+            style={{ width: '100%', height: 500, border: 'none', borderRadius: 12 }}
+          />
+        </View>
+      )}
     </View>
-  );
-}
-
-const ControlIcon = ({ name, onPress }) => (
-  <TouchableOpacity onPress={onPress} style={styles.iconBtn} activeOpacity={0.7}>
-    <Ionicons name={name} size={22} color="white" />
-  </TouchableOpacity>
-);
+  );}
 
 const styles = StyleSheet.create({
   container: {

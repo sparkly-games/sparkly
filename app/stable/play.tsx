@@ -1,284 +1,132 @@
-import React, { useEffect, useState, useMemo, useRef, useCallback, memo } from 'react';
-import {
-  View, Text, FlatList, TouchableOpacity, TextInput,
-  useWindowDimensions, Linking, Modal, Platform,
-  ActivityIndicator, Animated, ScrollView
-} from 'react-native';
-import { useRouter, useLocalSearchParams } from 'expo-router';
-import Head from 'expo-router/head';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
+import { View, Text, TouchableOpacity, TextInput, ScrollView, Linking } from 'react-native';
+import { useRouter } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
-
-import { GlitchText } from '@/assets/components/GlitchText';
-import { Game } from '../../assets/components/Game';
-import { gamesData } from '../../assets/constants/games';
-import { GameWall } from '@/assets/components/GameWall';
-
+import { gamesData } from '@/assets/constants/games';
 import { styles, C, GENRE_FILTERS, VIBES } from '@/assets/constants/Theme';
 import { FilterPill } from '@/assets/components/FilterPill';
-import { HorizontalRow, ControlIcon, SectionHeader, GameWrapper, StatChip, LoadingIndicator, ModalBar, GameModal, FilteredGamesDisplay } from '@/assets/components/Wrappers';
+import { HorizontalRow, SectionHeader, GameModal, FilteredGamesDisplay } from '@/assets/components/Wrappers';
 import { Header } from '@/assets/components/Header';
+import * as hooks from '@/assets/hooks';
+import { StatChip, ControlIcon } from '@/assets/components/Wrappers';
 
-// --- TYPES ---
-interface GameType {
-  title: { en: string };
-  img: string;
-  url: string;
-  popular?: boolean;
-  horror?: boolean;
-  broken?: boolean;
-  pc?: boolean;
-  genre?: string;
-}
-
-// --- CONSTANTS ---
-const STORAGE_KEYS = {
-  FAVS: 'sparkly:favs',
-  RECENT: 'sparkly:recent',
-  FILTERS: 'sparkly:filters',
-};
+interface GameType { title: { en: string }; img: string; url: string; popular?: boolean; horror?: boolean; broken?: boolean; pc?: boolean; genre?: string; }
 
 const VER_PATCHES = [
-  "3xclrdun", "9xg4w9y5", "0p5ttso7", "g16fpq2h", "1xf6zts0",
-  "iw74pgdl", "uq8xvm3i", "lkqiftyy", "rr8ihcet", "jl9q9q04",
-  "pebrgtjq", "wpvym99n", "zdf6ts8x", "n69ldwh4", "30flq6w1",
-  "sbte79gq", "ss1ksqlb", "o00wep4v", "pb6cv93n", "o1p01qc1",
-  "tqop6gez", "wfbgx7ez", "nkmptxv0", "z6k98i0w", "xjwj48ud",
-  "53qx9jfl", "g213gtyp", "exrkqldd", "5gc3ymeh", "oumntxws",
-  "5rs46hkv", "otg548fh",
+  '3xclrdun', '9xg4w9y5', '0p5ttso7', 'g16fpq2h', '1xf6zts0', 'iw74pgdl',
+  'uq8xvm3i', 'lkqiftyy', 'rr8ihcet', 'jl9q9q04', 'pebrgtjq', 'wpvym99n', 
+  '30flq6w1', 'sbte79gq', 'ss1ksqlb', 'o00wep4v', 'pb6cv93n', 'o1p01qc1', 
+  'tqop6gez', 'wfbgx7ez', 'nkmptxv0', 'z6k98i0w', 'xjwj48ud', '53qx9jfl', 
+  'g213gtyp', 'exrkqldd', '5gc3ymeh', 'oumntxws', '5rs46hkv', 'otg548fh'
 ];
-const VER_INFO = { date: '5/5/26', text: '8.1.3', patch: VER_PATCHES[9] };
 
-// --- MAIN SCREEN ---
+const VER_INFO = {
+  date: '7/5/26',
+  text: '8.1.4',
+  patch: VER_PATCHES[10],
+};
+
 export default function HomeScreen() {
-  const { width } = useWindowDimensions();
   const router = useRouter();
   const iframeRef = useRef<HTMLIFrameElement>(null);
-
-  // STATE
   const [query, setQuery] = useState('');
-  const [recent, setRecent] = useState<string[]>([]);
-  const [favorites, setFavorites] = useState<string[]>([]);
-  const [showHorror, setShowHorror] = useState(false);
-  const [showPC, setShowPC] = useState(false);
-  const [modalGame, setModalGame] = useState<GameType | null>(null);
-  const [gameLoading, setGameLoading] = useState(true);
-  const [activeGenre, setActiveGenre] = useState('all');
-  const [vibe] = useState(() => VIBES[Math.floor(Math.random() * VIBES.length)]);
   const [searchFocused, setSearchFocused] = useState(false);
-  const [favsCollapsed, setFavsCollapsed] = useState(false);
-  const [recentCollapsed, setRecentCollapsed] = useState(false);
-  const [trendingCollapsed, setTrendingCollapsed] = useState(false);
+  const [vibe] = useState(() => VIBES[ Math.floor( Math.random() * VIBES.length ) ]);
+  const { favorites, toggleFavorite } = hooks.useFavorites();
+  const { recent, addRecentGame } = hooks.useRecentGames();
+  const { showPC, showHorror, activeGenre, setShowPC, setShowHorror, setActiveGenre } = hooks.useGameFilters();
+  const { columns, itemWidth } = hooks.useResponsiveColumns();
+  const { modalGame, gameLoading, openGame, closeGame, setGameLoading } = hooks.useGameModal();
+  const { favsCollapsed, recentCollapsed, trendingCollapsed, setFavsCollapsed, setRecentCollapsed, setTrendingCollapsed } = hooks.useCollapsedSections();
+  const debouncedQuery = hooks.useDebounce(query, 180);
+  const filteredGames = hooks.useFilteredGames({ games: gamesData, query: debouncedQuery, showPC, showHorror, activeGenre });
+  const handleSelectGame = useCallback((game: GameType) => { addRecentGame(game.title.en); router.setParams({ play: game.title.en }); openGame(game); }, [ addRecentGame, router, openGame ]);
+  const handleCloseGame = useCallback(() => { router.setParams({ play: '' }); closeGame(); }, [router, closeGame]);
+  const favGamesData = useMemo(() => favorites.map( name => gamesData.find( g => g.title.en === name ) ).filter(Boolean) as GameType[], [favorites] );
+  const recentGamesData = useMemo(() => recent.map( name => gamesData.find( g => g.title.en === name ) ).filter(Boolean) as GameType[], [recent] );
+  const trendingGames = useMemo(() => gamesData.filter(g => g.popular).slice(0, 12), []);
 
-  // PERSISTENCE
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    try {
-      setRecent(JSON.parse(localStorage.getItem(STORAGE_KEYS.RECENT) || '[]'));
-      setFavorites(JSON.parse(localStorage.getItem(STORAGE_KEYS.FAVS) || '[]'));
-      const f = JSON.parse(localStorage.getItem(STORAGE_KEYS.FILTERS) || '{}');
-      setShowPC(f.showPC ?? false);
-      setShowHorror(f.showHorror ?? false);
-    } catch (e) { console.error('Load error', e); }
-  }, []);
-
-  useEffect(() => {
-    if (typeof window !== 'undefined')
-      localStorage.setItem(STORAGE_KEYS.FILTERS, JSON.stringify({ showPC, showHorror }));
-  }, [showPC, showHorror]);
-
-  // HANDLERS
-  const toggleFavorite = useCallback((title: string) => {
-    setFavorites(prev => {
-      const next = prev.includes(title) ? prev.filter(t => t !== title) : [title, ...prev];
-      localStorage.setItem(STORAGE_KEYS.FAVS, JSON.stringify(next));
-      return next;
-    });
-  }, []);
-
-  const handleSelectGame = useCallback((game: GameType) => {
-    const updated = [game.title.en, ...recent.filter(r => r !== game.title.en)].slice(0, 15);
-    setRecent(updated);
-    localStorage.setItem(STORAGE_KEYS.RECENT, JSON.stringify(updated));
-    router.setParams({ play: game.title.en });
-    setModalGame(game);
-    setGameLoading(true);
-  }, [recent, router]);
-
-  const closeGame = useCallback(() => {
-    router.setParams({ play: '' });
-    setModalGame(null);
-  }, [router]);
-
-  // COMPUTED
-  const columns = useMemo(() => {
-    if (width < 480) return 2;
-    if (width < 768) return 4;
-    if (width < 1100) return 6;
-    if (width < 1400) return 8;
-    return 10;
-  }, [width]);
-
-  const itemWidth = useMemo(() => (width - 32) / columns, [width, columns]);
-
-  const filteredGames = useMemo(() => {
-    return gamesData
-      .filter(g => (showHorror || !g.horror) && (showPC || !g.pc))
-      .filter(g => activeGenre === 'all' || g.genre === activeGenre)
-      .filter(g => g.title.en.toLowerCase().includes(query.toLowerCase()))
-      .sort((a, b) => a.title.en.localeCompare(b.title.en));
-  }, [query, showHorror, showPC, activeGenre]);
-
-  const favGamesData = useMemo(() =>
-    favorites.map(n => gamesData.find(g => g.title.en === n)).filter(Boolean) as GameType[],
-    [favorites]);
-
-  const recentGamesData = useMemo(() =>
-    recent.map(n => gamesData.find(g => g.title.en === n)).filter(Boolean) as GameType[],
-    [recent]);
-
-  const trendingGames = useMemo(() =>
-    gamesData.filter(g => g.popular).slice(0, 12),
-    []);
-
-  // HEADER (memoised to avoid remount on every render)
   const ListHeader = useMemo(() => (
-    <View style={styles.headerContainer}>
-      {/* HERO */}
-      <Header 
-        vibe={vibe}
-        gamesData={gamesData}
-        favorites={favorites}
-        recent={recent}
-        showPC={showPC}
-        showHorror={showHorror}
-        setShowPC={setShowPC}
-        setShowHorror={setShowHorror}
-        VER_INFO={VER_INFO}
-      />
-
-      {/* SEARCH */}
-      <View style={[styles.searchRow, searchFocused && styles.searchRowFocused]}>
-        <View style={[styles.searchBox, searchFocused && styles.searchBoxFocused]}>
-          <Ionicons name="search" size={18} color={searchFocused ? C.accentLt : C.muted} style={{ marginLeft: 14 }} />
-          <TextInput
-            value={query}
-            onChangeText={setQuery}
-            onFocus={() => setSearchFocused(true)}
-            onBlur={() => setSearchFocused(false)}
-            placeholder="search games..."
-            placeholderTextColor={C.muted}
-            style={styles.searchInput}
-          />
-          {query.length > 0 && (
-            <TouchableOpacity onPress={() => setQuery('')} style={{ paddingRight: 14 }}>
-              <Ionicons name="close-circle" size={18} color={C.muted} />
-            </TouchableOpacity>
-          )}
+    <>
+      <View style={styles.headerContainer}>
+        <View style={[styles.sectionHeader]}>
+          <Text style={styles.sectionLabel}>MEDIA</Text>
+          <View style={styles.navRow}>
+            <ControlIcon name="logo-youtube" onPress={() => router.push('/media/youtube')} label="Videos" />
+            <ControlIcon name="logo-soundcloud" onPress={() => Linking.openURL('https://soundcloak.instatunnel.my')} label="Music" />
+            <ControlIcon name="volume-high" onPress={() => Linking.openURL('/soundboard.htm')} label="Sounds" />
+            <ControlIcon name="tv-outline" onPress={() => router.push('/system/soon/a9f3k2x8')} label="TV" />
+          </View>
         </View>
-        <TouchableOpacity
-          style={styles.randomBtn}
-          onPress={() => handleSelectGame(filteredGames[Math.floor(Math.random() * filteredGames.length)])}
-          activeOpacity={0.8}
-        >
-          <Text style={{ fontSize: 22 }}>🎲</Text>
-        </TouchableOpacity>
+        <View style={styles.statsRow}>
+          <StatChip value={gamesData.length} label="games" />
+          <View style={styles.statDivider} />
+          <StatChip value={favorites.length} label="saved" />
+          <View style={styles.statDivider} />
+          <StatChip value={recent.length} label="played" />
+        </View>
+        <View style={[styles.sectionHeader]}>
+          <Text style={styles.sectionLabel}>FILTERS</Text>
+          <View style={styles.navRow}>
+            <ControlIcon name="desktop-outline" active={showPC} color="#60a5fa" onPress={() => { setShowPC(p => !p); console.log("showPC:", showPC); }} label="PC" />
+            <ControlIcon name="skull-outline" active={showHorror} color={C.hot} onPress={() => { setShowHorror(p => !p); console.log("showHorror:", showHorror); }} label="Horror" />
+          </View>
+        </View>
+        <View style={[ styles.searchRow, searchFocused && styles.searchRowFocused ]} >
+          <View style={[ styles.searchBox, searchFocused && styles.searchBoxFocused ]} >
+            <Ionicons name="search" size={18} color={ searchFocused ? C.accentLt : C.muted } style={{ marginLeft: 14 }} />
+            <TextInput value={query} onChangeText={setQuery} onFocus={() => setSearchFocused(true) } onBlur={() => setSearchFocused(false) } placeholder="search games..." placeholderTextColor={ C.muted } style={styles.searchInput} />
+
+            {query.length > 0 && (
+              <TouchableOpacity onPress={() => setQuery('') } style={{ paddingRight: 14 }} >
+                <Ionicons name="close-circle" size={18} color={C.muted} />
+              </TouchableOpacity>
+            )}
+          </View>
+
+          <TouchableOpacity style={styles.randomBtn} activeOpacity={0.8} onPress={() => { const random = filteredGames[ Math.floor( Math.random() * filteredGames.length ) ]; if (random) { handleSelectGame(random); }}} >
+            <Text style={{ fontSize: 22 }} > 🎲 </Text>
+          </TouchableOpacity>
+        </View>
+
+        <ScrollView horizontal showsHorizontalScrollIndicator={ false } style={styles.pillsScroll} contentContainerStyle={ styles.pillsContent } >
+          {GENRE_FILTERS.map(item => (
+            <FilterPill key={item.id} item={item} active={ activeGenre === item.id } onPress={setActiveGenre} />
+          ))}
+        </ScrollView>
+
+        {trendingGames.length > 0 && (
+          <View style={styles.section}>
+            <SectionHeader title="🔥 Trending Now" collapsed={ trendingCollapsed } onToggle={ () => setTrendingCollapsed( prev => !prev ) } />
+            {!trendingCollapsed && ( <HorizontalRow games={trendingGames} onPress={ handleSelectGame } favorites={favorites} onToggleFav={ toggleFavorite } /> )}
+          </View>
+        )}
+
+        {favGamesData.length > 0 && (
+          <View style={styles.section}>
+            <SectionHeader title="❤️ Your Favorites" count={ favGamesData.length } collapsed={ favsCollapsed } onToggle={ () => setFavsCollapsed( prev => !prev ) } />
+            {!favsCollapsed && ( <HorizontalRow games={favGamesData} onPress={ handleSelectGame } favorites={favorites} onToggleFav={ toggleFavorite } /> )}
+          </View>
+        )}
+
+        {recentGamesData.length > 0 && (
+          <View style={styles.section}>
+            <SectionHeader title="⚡ Recently Played" count={ recentGamesData.length } collapsed={ recentCollapsed } onToggle={() => setRecentCollapsed( prev => !prev )} />
+            {!recentCollapsed && (
+              <HorizontalRow games={recentGamesData} onPress={ handleSelectGame } favorites={favorites} onToggleFav={ toggleFavorite } />
+            )}
+          </View>
+        )}
+        <SectionHeader title="🎮 Library" count={filteredGames.length} />
       </View>
-
-      {/* GENRE PILLS */}
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.pillsScroll} contentContainerStyle={styles.pillsContent}>
-        {GENRE_FILTERS.map(item => (
-          <FilterPill key={item.id} item={item} active={activeGenre === item.id} onPress={setActiveGenre} />
-        ))}
-      </ScrollView>
-
-      {/* TRENDING */}
-      {trendingGames.length > 0 && (
-        <View style={styles.section}>
-          <SectionHeader 
-            title="🔥 Trending Now"
-            collapsed={trendingCollapsed}
-            onToggle={() => setTrendingCollapsed(p => !p)}
-          />
-          {!trendingCollapsed && (
-            <HorizontalRow
-              games={trendingGames}
-              onPress={handleSelectGame}
-              favorites={favorites}
-              onToggleFav={toggleFavorite}
-            />
-          )}
-        </View>
-      )}
-
-      {/* FAVORITES */}
-      {favGamesData.length > 0 && (
-        <View style={styles.section}>
-          <SectionHeader
-            title="❤️ Your Favorites"
-            count={favGamesData.length}
-            collapsed={favsCollapsed}
-            onToggle={() => setFavsCollapsed(p => !p)}
-          />
-          {!favsCollapsed && (
-            <HorizontalRow
-              games={favGamesData}
-              onPress={handleSelectGame}
-              favorites={favorites}
-              onToggleFav={toggleFavorite}
-            />
-          )}
-        </View>
-      )}
-
-      {/* RECENT */}
-      {recentGamesData.length > 0 && (
-        <View style={styles.section}>
-          <SectionHeader
-            title="⚡ Recently Played"
-            count={recentGamesData.length}
-            collapsed={recentCollapsed}
-            onToggle={() => setRecentCollapsed(p => !p)}
-          />
-          {!recentCollapsed && (
-            <HorizontalRow
-              games={recentGamesData}
-              onPress={handleSelectGame}
-              favorites={favorites}
-              onToggleFav={toggleFavorite}
-            />
-          )}
-        </View>
-      )}
-
-      {/* LIBRARY HEADER */}
-      <SectionHeader
-        title="🎮 Library"
-        count={filteredGames.length}
-      />
-    </View>
-  ), [query, searchFocused, trendingCollapsed, activeGenre, favGamesData, recentGamesData, trendingGames, favorites, recent, showPC, showHorror, filteredGames, favsCollapsed, recentCollapsed]);
+    </>
+  ), [ vibe, favorites, recent, showPC, showHorror, query, searchFocused, activeGenre, filteredGames, favGamesData, recentGamesData, trendingGames, favsCollapsed, recentCollapsed, trendingCollapsed, handleSelectGame, toggleFavorite ] );
 
   return (
     <View style={styles.container}>
-      <FilteredGamesDisplay
-        filteredGames={filteredGames}
-        columns={columns}
-        ListHeader={ListHeader}
-        itemWidth={itemWidth}
-        handleSelectGame={handleSelectGame}
-        favorites={favorites}
-        toggleFavorite={toggleFavorite}
-      />
-
-      <GameModal 
-        modalGame={modalGame}
-        closeGame={closeGame}
-        favorites={favorites}
-        iframeRef={iframeRef}
-        toggleFavorite={toggleFavorite}
-        setGameLoading={setGameLoading}
-        gameLoading={gameLoading}
-      />
+      <Header {...{ vibe, gamesData, favorites, recent, showPC, showHorror, setShowPC, setShowHorror, VER_INFO }} />
+      <FilteredGamesDisplay {...{ filteredGames, columns, itemWidth , ListHeader, favorites, toggleFavorite, handleSelectGame }} />
+      <GameModal closeGame={handleCloseGame} {...{ modalGame, favorites, iframeRef, toggleFavorite, setGameLoading, gameLoading }} />
     </View>
   );
 }

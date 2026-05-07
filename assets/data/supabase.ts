@@ -1,8 +1,9 @@
 import { createClient } from '@supabase/supabase-js';
 import { getAuth } from 'firebase/auth';
+import ENV_VARS from '@/assets/data/env';
 
-const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
+const supabaseUrl = ENV_VARS.SUPABASE_URL;
+const supabaseAnonKey = ENV_VARS.SUPABASE_ANON_KEY;
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   global: {

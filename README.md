@@ -5,112 +5,77 @@
 <h1 align="center">Sparkly Games</h1>
 
 <p align="center">
-  Spice up your day with a bit of sparkle!
+  <strong>Spice up your day with a bit of sparkle!</strong>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/github/license/sparkly-games/sparkly?style=flat-square&color=blue">
+  <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square">
+  <img src="https://img.shields.io/github/last-commit/sparkly-games/sparkly?style=flat-square">
+  <img src="https://img.shields.io/badge/built%20with-Expo-000020?style=flat-square&logo=expo">
 </p>
 
 ---
 
-## ⚠️ Disclaimer
-
-This project is created for **educational and technical exploration purposes only**.
-
-It is not intended to bypass networking systems or encourage academic misconduct.
-
----
-
 ## 📘 Overview
+Sparkly is a high-performance web bundle built using **React Native + Expo**. By leveraging static web exports, Sparkly delivers a native-feeling experience on the web with lightning-fast load times.
 
-Sparkly is built using **React Native + Expo** and exported as a static web bundle.  
-This keeps a single codebase for web while maintaining fast load times and simple deployment on Vercel, Netlify, Render, and more.
+### ✨ Key Features
+* 📱 **Universal Codebase:** Written in React Native for seamless scaling.
+* ⚡ **Static Export:** Optimized via `expo export` for deployment on Vercel/Netlify.
+* 🛡️ **Type Safe:** Full TypeScript implementation.
+* 🎨 **Smooth UI:** Polished animations and responsive layouts.
 
 ---
 
 ## 🛠️ Tech Stack
-
-- **Framework:** React Native (via Expo)
-- **Rendering:** Expo Web Static Export (`expo export`)
-- **Languages:** TypeScript
-- **Package Manager:** npm
+| Tool | Usage |
+| :--- | :--- |
+| **Framework** | [Expo](https://expo.dev/) (React Native) |
+| **Deployment** | Static Web Export |
+| **Language** | TypeScript |
+| **Package Manager** | npm |
 
 ---
 
 ## 🚀 Getting Started
 
-To run the project locally:
+### Prerequisites
+* Node.js (LTS)
+* npm or yarn
 
+### Installation
 ```bash
-git clone https://github.com/sparkly-games/sparkly.git
-cd sparkly
-npm install
-npm start
-````
+# Clone and enter the repo
+git clone https://github.com/sparkly-games/sparkly.git && cd sparkly
 
-> This starts the Expo development server, allowing you to preview the app in the browser.
+# Install dependencies
+npm install
+
+# Configure environment
+cp .env.example .env
+
+# Start the development server
+npm start
+```
 
 ---
 
 ## 🤝 Contributing
+We welcome contributions! Please follow these steps:
 
-We love improvements! To contribute:
+1. **Fork** the project.
+2. **Branch**: `git checkout -b feature/AmazingFeature`
+3. **Commit**: `git commit -m 'Add some AmazingFeature'`
+4. **Push**: `git push origin feature/AmazingFeature`
+5. **Open a Pull Request**
 
-### 1. Fork the repository
-
-Click “Fork” on GitHub to create your own copy.
-
-### 2. Create a feature branch
-
-```bash
-git checkout -b feature/your-cool-feature
-```
-
-### 3. Commit your changes
-
-```bash
-git commit -m "Add my cool feature"
-```
-
-### 4. Push the branch
-
-```bash
-git push origin feature/your-cool-feature
-```
-
-### 5. Open a Pull Request
-
-Make sure your PR includes:
-
-* A clear description of the change
-* Screenshots if it affects UI
-* A link to any related issue
-
-We’ll review PRs as quickly as possible.
+> [!IMPORTANT]
+> Ensure your PR includes screenshots for UI changes and do **not** commit your `.env` file.
 
 ---
 
-## 🐛 Issues & Bug Reports
+## 📜 License & Disclaimer
+**Disclaimer:** This project is for **educational and technical exploration purposes only**. 
 
-If you find a bug:
-
-1. Check if it’s already reported in **Issues**
-2. If not, create a new issue and include:
-
-   * A clear description of the problem
-   * Steps to reproduce
-   * Browser/OS info
-   * Screenshots (if relevant)
-
-Feature requests are welcome too.
-
----
-
-## 📜 License
-
-This project is licensed under the Mozilla Public License 2.0 (**MPL-2.0**).
-
----
-
-## 💬 Support / Contact
-
-If you have questions, suggestions, or just want to say hi, feel free to open an issue or reach out through the [Discussions](https://github.com/orgs/sparkly-games/discussions).
-
-We may not always be able to respond quickly, but we’ll do our best to review and reply when possible.
+Distributed under the **MPL-2.0 License**. See `LICENSE` for more information.

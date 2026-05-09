@@ -100,7 +100,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     alignItems: 'center',
     overflow: 'hidden',
-    position: 'relative'
   },
   heroBadge: {
     backgroundColor: C.hot + '20',
@@ -118,19 +117,20 @@ const styles = StyleSheet.create({
     letterSpacing: 2,
   },
   heroTitle: {
-    fontSize: 72,
+    fontSize: 48,
     fontWeight: '900',
     color: C.accentLt,
     letterSpacing: -1,
     textAlign: 'center',
   },
+  // Example: Apply random color to the text shadow for a "glow"
   heroVibe: {
     color: C.mutedLt,
     fontSize: 13,
     fontWeight: '500',
-    textAlign: 'center',
-    marginTop: 6,
-    fontStyle: 'italic',
+    textShadowColor: Object.values(C)[Math.random() * Object.values(C).length >> 0],
+    textShadowOffset: { width: 5, height: 5 },
+    textShadowRadius: 10,
   },
   statsRow: {
     flexDirection: 'row',
@@ -192,6 +192,7 @@ const styles = StyleSheet.create({
   verText: {
     color: C.muted,
     fontSize: 11,
+    fontFamily: 'monospace',
     fontWeight: '500',
     marginTop: 16,
     letterSpacing: 0.5,
@@ -310,7 +311,13 @@ const styles = StyleSheet.create({
     backgroundColor: C.card,
     borderWidth: 1,
     borderColor: C.border,
-    position: 'relative',
+    position: 'relative', 
+    borderTopWidth: 1.5,
+    borderTopColor: 'rgba(255, 255, 255, 0.1)', // Subtle rim light
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.5,
+    shadowRadius: 20,
   },
   trendingBadge: {
     position: 'absolute',

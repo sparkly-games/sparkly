@@ -77,7 +77,7 @@ export const gameIcons = () => {
     'bj': require("@/assets/images/icons/bj.jpg"),
     'bk': require("@/assets/images/icons/bk.jpg"),
     'bl': require("@/assets/images/icons/bl.jpg"),
-    'bn': require("@/assets/images/icons/bn.png"),
+    'bm': require("@/assets/images/icons/bm.png"),
     'bo': require("@/assets/images/icons/bo.png"),
     'bp': require("@/assets/images/icons/bp.jpg"),
     'bq': require("@/assets/images/icons/bq.jpg"),

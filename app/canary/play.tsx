@@ -21,8 +21,8 @@ const VER_PATCHES = [
 ];
 
 const VER_INFO = {
-  date: '7/5/26',
-  text: '8.1.4',
+  date: '8/5/26',
+  text: '8.1.5',
   patch: VER_PATCHES[10],
 };
 
@@ -53,7 +53,7 @@ export default function HomeScreen() {
           <Text style={styles.sectionLabel}>MEDIA</Text>
           <View style={styles.navRow}>
             <ControlIcon name="logo-youtube" onPress={() => router.push('/media/youtube')} label="Videos" />
-            <ControlIcon name="logo-soundcloud" onPress={() => Linking.openURL('https://soundcloak.instatunnel.my')} label="Music" />
+            <ControlIcon name="logo-soundcloud" onPress={() => Linking.openURL('https://sc3.maid.zone')} label="Music" />
             <ControlIcon name="volume-high" onPress={() => Linking.openURL('/soundboard.htm')} label="Sounds" />
             <ControlIcon name="tv-outline" onPress={() => router.push('/system/soon/a9f3k2x8')} label="TV" />
           </View>

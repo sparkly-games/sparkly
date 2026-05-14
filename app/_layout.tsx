@@ -317,6 +317,31 @@ export default function RootLayout() {
     setBranch(newBranch);
     setShowPicker(false);
   };
+  
+  useEffect(() => {
+    if (Platform.OS !== 'web') return;
+
+    try {
+      const existing = localStorage.getItem('sparkly:filters');
+
+      const parsed = existing ? JSON.parse(existing) : {};
+
+      localStorage.setItem(
+        'sparkly:filters',
+        JSON.stringify({
+          ...parsed,
+          activeGenre: 'all',
+        })
+      );
+    } catch {
+      localStorage.setItem(
+        'sparkly:filters',
+        JSON.stringify({
+          activeGenre: 'all',
+        })
+      );
+    }
+  }, []);
 
   const getBranchColor = () => BRANCHES[branch].color;
 
@@ -339,11 +364,11 @@ export default function RootLayout() {
         <meta property="og:image" content="/og-preview.png" />
         <meta name="theme-color" content={getBranchColor()} />
       </Head>
-
-      <View style={styles.banner}>
-        <RecruitBanner text={"Looking for UI designers!"} onPress={() => {router.push("/acc/apply/jobs")}} />
-      </View>
-
+      { /*
+        <View style={styles.banner}>
+          <RecruitBanner text={"Looking for UI designers!"} onPress={() => {router.push("/acc/apply/jobs")}} />
+        </View>
+      */ }
       {Platform.OS === 'web' && !isShutdown && !maintenance && (
         <View style={styles.floatingContainer}>
 

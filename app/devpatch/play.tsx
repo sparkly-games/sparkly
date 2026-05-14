@@ -21,8 +21,8 @@ const VER_PATCHES = [
 ];
 
 const VER_INFO = {
-  date: '7/5/26',
-  text: '8.1.4',
+  date: '8/5/26',
+  text: '8.1.5',
   patch: VER_PATCHES[10],
 };
 
@@ -53,7 +53,7 @@ export default function HomeScreen() {
           <Text style={styles.sectionLabel}>MEDIA</Text>
           <View style={styles.navRow}>
             <ControlIcon name="logo-youtube" onPress={() => router.push('/media/youtube')} label="Videos" />
-            <ControlIcon name="logo-soundcloud" onPress={() => Linking.openURL('https://soundcloak.instatunnel.my')} label="Music" />
+            <ControlIcon name="logo-soundcloud" onPress={() => Linking.openURL('https://sc3.maid.zone')} label="Music" />
             <ControlIcon name="volume-high" onPress={() => Linking.openURL('/soundboard.htm')} label="Sounds" />
             <ControlIcon name="tv-outline" onPress={() => router.push('/system/soon/a9f3k2x8')} label="TV" />
           </View>
@@ -97,27 +97,27 @@ export default function HomeScreen() {
 
         {trendingGames.length > 0 && (
           <View style={styles.section}>
-            <SectionHeader title="🔥 Trending Now" collapsed={ trendingCollapsed } onToggle={ () => setTrendingCollapsed( prev => !prev ) } />
+            <SectionHeader title="🔥 Trending Now" collapsed={trendingCollapsed} onToggle={() => setTrendingCollapsed(prev => !prev)} titleStyle={{ color: C.gold }} />
             {!trendingCollapsed && ( <HorizontalRow games={trendingGames} onPress={ handleSelectGame } favorites={favorites} onToggleFav={ toggleFavorite } /> )}
           </View>
         )}
 
         {favGamesData.length > 0 && (
           <View style={styles.section}>
-            <SectionHeader title="❤️ Your Favorites" count={ favGamesData.length } collapsed={ favsCollapsed } onToggle={ () => setFavsCollapsed( prev => !prev ) } />
+            <SectionHeader title="❤️ Your Favorites" count={favGamesData.length} collapsed={favsCollapsed} onToggle={() => setFavsCollapsed(prev => !prev)} titleStyle={{ color: C.hot }} />
             {!favsCollapsed && ( <HorizontalRow games={favGamesData} onPress={ handleSelectGame } favorites={favorites} onToggleFav={ toggleFavorite } /> )}
           </View>
         )}
 
         {recentGamesData.length > 0 && (
           <View style={styles.section}>
-            <SectionHeader title="⚡ Recently Played" count={ recentGamesData.length } collapsed={ recentCollapsed } onToggle={() => setRecentCollapsed( prev => !prev )} />
+            <SectionHeader title="⚡ Recently Played" count={recentGamesData.length} collapsed={recentCollapsed} onToggle={() => setRecentCollapsed(prev => !prev)} titleStyle={{ color: C.green }} />
             {!recentCollapsed && (
               <HorizontalRow games={recentGamesData} onPress={ handleSelectGame } favorites={favorites} onToggleFav={ toggleFavorite } />
             )}
           </View>
         )}
-        <SectionHeader title="🎮 Library" count={filteredGames.length} />
+        <SectionHeader title="🎮 Library" count={filteredGames.length} titleStyle={{ color: C.gold }} />
       </View>
     </>
   ), [ vibe, favorites, recent, showPC, showHorror, query, searchFocused, activeGenre, filteredGames, favGamesData, recentGamesData, trendingGames, favsCollapsed, recentCollapsed, trendingCollapsed, handleSelectGame, toggleFavorite ] );

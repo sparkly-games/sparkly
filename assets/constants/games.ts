@@ -87,4 +87,5 @@ export const gamesData = [
   { title: { en: "Five Nights at Freddy's 2" }, img: "ah", url: "/fnaf/FNAF2/", genre: "survival", horror: true },
   { title: { en: "Five Nights at Freddy's 3" }, img: "ai", url: "/fnaf/FNAF3/", genre: "survival", horror: true },
   { title: { en: "Five Nights at Epstein's" }, img: "br", url: "/fnae.html", genre: "survival", horror: true },
+  { title: { en: "Web Retro" }, img: "bm", url: "/webretro/", genre: "action" },
 ];

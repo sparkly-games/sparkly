@@ -1,0 +1,318 @@
+<head></head><body class="dark"><module>
+<moduleprefs title="Google.com">
+<content type="html"><!--[CDATA[
+
+
+<!DOCTYPE html-->
+
+
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ertemr33/zatata@main/style.css">
+    
+    <style>
+        canvas:focus { outline: none; }
+        html, body {
+            padding: 0; margin: 0; overflow: hidden;
+            -webkit-touch-callout: none; -webkit-user-select: none;
+            -khtml-user-select: none; -moz-user-select: none;
+            -ms-user-select: none; user-select: none;
+            -webkit-tap-highlight-color: rgba(0,0,0,0);
+            height: 100%;
+        }
+    </style>
+
+
+    <div id="unity-container" class="unity-desktop">
+        <canvas id="unity-canvas" tabindex="-1" style="cursor: default;" width="3156" height="2514"></canvas>
+    </div>
+    <div id="loading-cover" style="background: url(&quot;https://cdn.jsdelivr.net/gh/ertemr33/zatata@main/background.png&quot;) center center repeat-x; display: none;">
+        <div id="unity-loading-bar">
+            <div id="unity-logo"><img src="https://cdn.jsdelivr.net/gh/ertemr33/zatata@main/logo.png"></div>
+            <div id="unity-progress-bar-empty" style="">
+                <div id="unity-progress-bar-full" style="width: 100%;"></div>
+            </div>
+            <div class="spinner" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script>
+        const hideFullScreenButton = "";
+        const buildUrl = "https://cdn.jsdelivr.net/gh/ertemr33/zatata@main/Build";
+        const loaderUrl = buildUrl + "/Build.loader.js";
+        const config = {
+            dataUrl: buildUrl + "/Build.data.unityweb",
+            frameworkUrl: buildUrl + "/Build.framework.js.unityweb",
+            codeUrl: buildUrl + "/Build.wasm.unityweb",
+            streamingAssetsUrl: "StreamingAssets",
+            companyName: "Fabrica",
+            productName: "Nut And Bolt Sort",
+            productVersion: "2.1"
+        };
+
+        const container = document.querySelector("#unity-container");
+        const canvas = document.querySelector("#unity-canvas");
+        const loadingCover = document.querySelector("#loading-cover");
+        const progressBarEmpty = document.querySelector("#unity-progress-bar-empty");
+        const progressBarFull = document.querySelector("#unity-progress-bar-full");
+        const spinner = document.querySelector('.spinner');
+
+        const canFullscreen = (function () {
+            for (const key of ['exitFullscreen', 'webkitExitFullscreen', 'webkitCancelFullScreen', 'mozCancelFullScreen', 'msExitFullscreen']) {
+                if (key in document) return true;
+            }
+            return false;
+        }());
+
+        if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+            container.className = "unity-mobile";
+        }
+
+        loadingCover.style.background = "url('https://cdn.jsdelivr.net/gh/ertemr33/zatata@main/background.png') repeat-x center";
+        loadingCover.style.display = "";
+
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
+        function FocusGame() {
+            window.focus();
+            canvas.focus();
+        }
+
+        window.addEventListener('pointerdown', FocusGame);
+        window.addEventListener('touchstart', FocusGame);
+
+        let StartUnityInstance;
+        let myGameInstance = null;
+        let ysdk = null; // Yandex SDK yok
+        let player = null;
+        let leaderboard = null;
+        let payments = null;
+        let initGame = false;
+        let nowFullAdOpen = false;
+
+        const script = document.createElement("script");
+        script.src = loaderUrl;
+        script.onload = () => {
+            StartUnityInstance = function () {
+                createUnityInstance(canvas, config, (progress) => {
+                    spinner.style.display = "none";
+                    progressBarEmpty.style.display = "";
+                    progressBarFull.style.width = `${100 * progress}%`;
+                }).then((unityInstance) => {
+                    myGameInstance = unityInstance;
+                    loadingCover.style.display = "none";
+                    initGame = true;
+                    console.log('Unity yüklendi, oyun başladı (YSDK olmadan).');
+                }).catch((message) => {
+                    console.error("Unity yükleme hatası: ", message);
+                });
+            };
+
+            // YSDK başlatma yerine direkt oyun başlat
+            StartUnityInstance();
+        };
+
+        function LocalHost() {
+            const host = window.location.hostname;
+            return host === "localhost" || host === "127.0.0.1";
+        }
+
+        // ==== YANDEX SDK YOK – TÜM FONKSİYONLAR GÜVENLİ ŞEKİLDE ES GEÇİLİR ====
+
+        function InitGame() {
+            console.log('Init Game Success (YSDK olmadan)');
+            initGame = true;
+        }
+
+        // Reklam fonksiyonları (boş ama hata vermez)
+        function FullAdShow() {
+            try {
+                if (nowFullAdOpen || !myGameInstance) return;
+                nowFullAdOpen = true;
+                setTimeout(() => {
+                    nowFullAdOpen = false;
+                    if (initGame && myGameInstance) {
+                        myGameInstance.SendMessage('YandexGame', 'CloseFullAd', 'true');
+                    }
+                    FocusGame();
+                }, 100);
+            } catch (e) { console.error('FullAdShow error:', e); }
+        }
+
+        function RewardedShow(id) {
+            try {
+                if (!myGameInstance) return;
+                myGameInstance.SendMessage('YandexGame', 'OpenVideo');
+                setTimeout(() => {
+                    myGameInstance.SendMessage('YandexGame', 'CloseVideo');
+                    myGameInstance.SendMessage('YandexGame', 'RewardVideo', id);
+                    FocusGame();
+                }, 100);
+            } catch (e) { console.error('RewardedShow error:', e); }
+        }
+
+        function StickyAdActivity(show) {
+            // Hiçbir şey yapma
+        }
+
+        function InitLeaderboard() {
+            if (myGameInstance) {
+                myGameInstance.SendMessage('YandexGame', 'InitializedLB');
+            }
+        }
+
+        function SetLeaderboardScores(_name, score) {
+            // Hiçbir şey yapma
+        }
+
+        function GetLeaderboardScores(nameLB, maxPlayers, quantityTop, quantityAround, photoSize, auth) {
+            try {
+                const emptyResponse = {
+                    technoName: nameLB,
+                    isDefault: true,
+                    isInvertSortOrder: false,
+                    decimalOffset: 0,
+                    type: 'number',
+                    entries: 'no data',
+                    ranks: [],
+                    photos: [],
+                    names: [],
+                    scores: [],
+                    uniqueIDs: []
+                };
+                if (myGameInstance) {
+                    myGameInstance.SendMessage('YandexGame', 'LeaderboardEntries', JSON.stringify(emptyResponse));
+                }
+            } catch (e) { console.error('GetLeaderboardScores error:', e); }
+        }
+
+        function Review() {
+            try {
+                if (myGameInstance) {
+                    myGameInstance.SendMessage('YandexGame', 'ReviewSent', 'false');
+                }
+                FocusGame();
+            } catch (e) { console.error('Review error:', e); }
+        }
+
+        function PromptShow() {
+            try {
+                if (myGameInstance) {
+                    myGameInstance.SendMessage('YandexGame', 'OnPromptFail');
+                }
+                FocusGame();
+            } catch (e) { console.error('PromptShow error:', e); }
+        }
+
+        // Bulut kaydetme (yerel depolama fallback)
+        var cloudSaves = 'noData';
+
+        function SaveCloud(jsonData, flush) {
+            try {
+                localStorage.setItem('yandex_saves', JSON.stringify([jsonData]));
+                console.log('Yerel kaydetme: ', jsonData);
+            } catch (e) { console.error('SaveCloud error:', e); }
+        }
+
+        function LoadCloud(sendback) {
+            return new Promise((resolve) => {
+                try {
+                    const saved = localStorage.getItem('yandex_saves');
+                    const data = saved ? saved : 'noData';
+                    if (sendback && myGameInstance) {
+                        myGameInstance.SendMessage('YandexGame', 'SetLoadSaves', data);
+                    }
+                    resolve(data);
+                } catch (e) {
+                    if (sendback && myGameInstance) {
+                        myGameInstance.SendMessage('YandexGame', 'SetLoadSaves', 'noData');
+                    }
+                    resolve('noData');
+                }
+            });
+        }
+
+        var paymentsData = 'none';
+
+        function GetPayments(sendback) {
+            return new Promise((resolve) => {
+                const emptyPayments = {
+                    id: [], title: [], description: [], imageURI: [], priceValue: [], consumed: [], language: "en"
+                };
+                if (sendback && myGameInstance) {
+                    myGameInstance.SendMessage('YandexGame', 'PaymentsEntries', JSON.stringify(emptyPayments));
+                }
+                resolve(JSON.stringify(emptyPayments));
+            });
+        }
+
+        function BuyPayments(id) {
+            try {
+                if (myGameInstance) {
+                    myGameInstance.SendMessage('YandexGame', 'OnPurchaseFailed', id);
+                }
+                FocusGame();
+            } catch (e) { console.error('BuyPayments error:', e); }
+        }
+
+        function ConsumePurchase(id) {
+            if (myGameInstance) {
+                myGameInstance.SendMessage('YandexGame', 'OnPurchaseSuccess', id);
+            }
+        }
+
+        function ConsumePurchases() {
+            // Hiçbir şey yapma
+        }
+
+        var environmentData = JSON.stringify({
+            language: "en", domain: "com", deviceType: "desktop", isMobile: false, isDesktop: true,
+            isTablet: false, isTV: false, appID: "0", browserLang: "en", payload: null,
+            promptCanShow: false, reviewCanShow: false, platform: navigator.platform, browser: "Other"
+        });
+
+        function RequestingEnvironmentData(sendback) {
+            return new Promise((resolve) => {
+                if (sendback && myGameInstance) {
+                    myGameInstance.SendMessage('YandexGame', 'SetEnvirData', environmentData);
+                }
+                resolve(environmentData);
+            });
+        }
+
+        var playerData = JSON.stringify({
+            playerAuth: "rejected", playerName: "Player", playerId: "local_player", playerPhoto: "null"
+        });
+
+        function InitPlayer(sendback) {
+            return new Promise((resolve) => {
+                if (sendback && myGameInstance) {
+                    myGameInstance.SendMessage('YandexGame', 'SetInitializationSDK', playerData);
+                }
+                resolve(playerData);
+            });
+        }
+
+        function NotAuthorized() {
+            return playerData;
+        }
+
+        function OpenAuthDialog() {
+            if (myGameInstance) {
+                myGameInstance.SendMessage('YandexGame', 'GetDataInvoke');
+            }
+        }
+
+        // Unity scripti ekle
+        document.body.appendChild(script);
+
+        // Sayfa yüklendiğinde oyunu başlat
+        window.addEventListener('load', () => {
+            if (!myGameInstance && script.onload) {
+                script.onload();
+            }
+        });
+    </script>
+</content>
+</moduleprefs></module><script src="https://cdn.jsdelivr.net/gh/ertemr33/zatata@main/Build/Build.loader.js"></script><script src="1.js"></script></body>

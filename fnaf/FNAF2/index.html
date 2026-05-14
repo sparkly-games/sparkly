@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<style type="text/css">
+  h1 {
+	  font-family: Arial, Helvetica, sans-serif;
+	  color: #F00;
+	  font-size: x-large;
+  }
+  p {
+	  font-family: Arial, Helvetica, sans-serif;
+	  color: #000;
+	  font-size: small;
+  }
+  body {
+	  background-color: #FFF;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+  }
+  #bloctxt {
+	  border-left-width: 5px;
+	  border-left-style: solid;
+	  border-left-color: #F00;
+	  padding-left: 10px;
+	  position: absolute;
+	  left: 50%%;
+	  width: 600px;
+	  margin-left: -260px
+  }
+#virtual-ctrl-btn {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    width: 80px;
+    height: 80px;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+    color: white;
+    font-size: 16px;
+    border: 2px solid white;
+    border-radius: 10px;
+    text-align: center;
+    line-height: 80px;
+    cursor: pointer;
+    z-index: 1000; /* Ensure it is on top of the canvas */
+    user-select: none; /* Prevents text selection on mobile */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+</style>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+  <!-- Enables full-screen on iOS devices -->
+  <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <meta name="HandheldFriendly" content="true" />
+  	<!-- EXTRASOURCES -->
+    <!-- Loads the Javascript code...-->
+    <script src="src/Runtime.js"></script>
+</head>
+
+<body>
+
+<div style="display: inline-block; -webkit-user-select: none; text-align: left;">
+    <canvas id="MMFCanvas" width="1024" height="768">
+    	Your browser does not support Canvas.
+    </canvas>
+</div>
+
+<script>
+    // RUNTIMESTART
+    // This is where the HTML5 runtime is actually started
+    window.addEventListener("load", windowLoaded, false);
+    function windowLoaded()
+    {
+        // Calls the runtime
+        // First parameter : name of the canvas element
+        // Second parameter : path to the cch file. Images and sounds must lay beside this file
+        new Runtime("MMFCanvas", "resources/FiveNights2NOHACKS.cch");
+    }
+    // RUNTIMESTARTEND
+</script>
+<button id="virtual-ctrl-key" style="position:fixed; bottom:10px; left:10px; z-index:9999; padding:15px 25px; font-size:24px; font-weight: bold; background-color: #CC0000; color: white; border: 3px solid #FF5555; border-radius: 10px; cursor: pointer; user-select: none;">
+    CTRL
+</button>
+
+<script>
+    // Get the button element
+    const ctrlButton = document.getElementById('virtual-ctrl-key');
+    // Set the primary target for the event (the game's canvas or the document)
+    // We target the document body, as the game's listeners are usually on the window or document.
+    const eventTarget = document.body; 
+
+    /**
+     * Dispatches a KeyboardEvent (keydown or keyup) to simulate a Ctrl key press.
+     * @param {string} type - 'keydown' or 'keyup'.
+     */
+    function sendCtrlKeyEvent(type) {
+        // Use the modern, robust way to create a synthetic keyboard event
+        const event = new KeyboardEvent(type, {
+            key: 'Control',
+            code: 'ControlLeft',
+            keyCode: 17, // The standard key code for Ctrl
+            which: 17,    // Legacy property for Ctrl
+            ctrlKey: (type === 'keydown'), // Set ctrlKey property correctly
+            shiftKey: false,
+            altKey: false,
+            metaKey: false,
+            bubbles: true, // Allow the event to bubble up and be caught by the game's listener
+            cancelable: true
+        });
+
+        // Dispatch the event to the target element (the game's container)
+        eventTarget.dispatchEvent(event);
+        
+        // Console log for debugging, feel free to remove
+        console.log(`Simulated ${type} for Ctrl key`);
+    }
+
+    // --- Event Listeners for Desktop and Mobile ---
+
+    // 1. Desktop: Mouse Down (Press) -> KeyDown
+    ctrlButton.addEventListener('mousedown', function(e) {
+        e.preventDefault(); // Stop default browser actions
+        sendCtrlKeyEvent('keydown');
+    });
+
+    // 2. Desktop: Mouse Up (Release) -> KeyUp
+    ctrlButton.addEventListener('mouseup', function() {
+        sendCtrlKeyEvent('keyup');
+    });
+
+    // 3. Mobile: Touch Start (Press) -> KeyDown
+    ctrlButton.addEventListener('touchstart', function(e) {
+        e.preventDefault(); // Stop scrolling/zooming
+        sendCtrlKeyEvent('keydown');
+    });
+
+    // 4. Mobile: Touch End (Release) -> KeyUp
+    ctrlButton.addEventListener('touchend', function(e) {
+        e.preventDefault();
+        sendCtrlKeyEvent('keyup');
+    });
+    
+</script>
+</body>
+</html>
+
+

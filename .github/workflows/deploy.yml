@@ -14,6 +14,22 @@ jobs:
           node-version: 20
           cache: 'npm'
 
+      - name: Create .env file
+        uses: SpicyPizza/create-envfile@v2.0
+        with:
+          # This maps your GitHub Secrets to the keys in the .env file
+          envkey_EXPO_PUBLIC_FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+          envkey_EXPO_PUBLIC_USE_ANALYTICS: true
+          envkey_EXPO_PUBLIC_USE_STATUSPAGE: true
+          envkey_EXPO_PUBLIC_STATUSPAGE_URL: https://sparkly.statuspage.io/embed/script.js
+          envkey_EXPO_PUBLIC_JOB_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          envkey_EXPO_PUBLIC_GOOGLE_AI_KEY: ${{ secrets.GOOGLE_AI_KEY }}
+          envkey_EXPO_PUBLIC_YT_API_KEY: ${{ secrets.YT_API_KEY }}
+          envkey_EXPO_PUBLIC_COBALT_URL: https://cobalt-backend.canine.tools/
+          
+          file_name: .env
+          fail_on_empty: true
+
       - name: Install and Build
         run: |
           npm install

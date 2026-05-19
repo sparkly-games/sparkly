@@ -1,18 +1,21 @@
-import React, { useRef, useState, useMemo, useCallback } from 'react';
+import React, {
+  useRef,
+  useState,
+  useMemo,
+  useCallback,
+  useEffect,
+} from 'react';
 import {
   Text,
   StyleSheet,
   TouchableOpacity,
   View,
   Animated,
-  Platform,
   ImageSourcePropType,
-  Touchable,
+  Linking,
 } from 'react-native';
 import { Octokit } from 'octokit';
-import { gameIcons } from '@/assets/data/GameIcons';
-import { BookKey } from 'lucide-react-native';
-import { Linking } from 'react-native';
+import ENV_VARS from '../data/env';
 
 const PLACEHOLDER: ImageSourcePropType = {
   uri: 'https://placehold.co/200?text=?',
@@ -20,15 +23,7 @@ const PLACEHOLDER: ImageSourcePropType = {
 
 const octokit = new Octokit();
 
-export function Game({
-  name,
-  imageSource,
-  onPress,
-  ban = false,
-  broken = false,
-  issueId,
-  onTooltipToggle,
-}: {
+type Props = {
   name: string;
   imageSource: string;
   onPress: () => void;
@@ -36,49 +31,82 @@ export function Game({
   broken?: boolean;
   issueId?: string;
   onTooltipToggle?: (visible: boolean) => void;
-}) {
-  const icons = gameIcons();
+};
 
+export const Game = React.memo(function Game({
+  name,
+  imageSource,
+  onPress,
+  ban = false,
+  broken = false,
+  issueId,
+  onTooltipToggle,
+}: Props) {
   const [errorText, setErrorText] = useState<string | null>(null);
   const [showTooltip, setShowTooltip] = useState(false);
 
   const tooltipOpacity = useRef(new Animated.Value(0)).current;
   const tooltipTranslate = useRef(new Animated.Value(6)).current;
 
+  const hover = useRef(new Animated.Value(1)).current;
+  const fade = useRef(new Animated.Value(0)).current;
+
+  const baseIcon = useMemo<ImageSourcePropType>(() => {
+    return {
+      uri: `https://res.cloudinary.com/${ENV_VARS.CLOUDINARY_CLOUD_NAME}/image/upload/f_auto,q_auto/v1779133665/${imageSource}`,
+    };
+  }, [imageSource]);
+
+  const [img, setImg] = useState<ImageSourcePropType>(baseIcon);
+
+  useEffect(() => {
+    setImg(baseIcon);
+  }, [baseIcon]);
+
+  const showTooltipAnimated = useCallback(() => {
+    setShowTooltip(true);
+    onTooltipToggle?.(true);
+
+    tooltipOpacity.setValue(0);
+    tooltipTranslate.setValue(6);
+
+    Animated.parallel([
+      Animated.timing(tooltipOpacity, {
+        toValue: 1,
+        duration: 180,
+        useNativeDriver: true,
+      }),
+      Animated.timing(tooltipTranslate, {
+        toValue: 0,
+        duration: 180,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [onTooltipToggle, tooltipOpacity, tooltipTranslate]);
+
   const fetchErrorDetails = useCallback(async () => {
     if (!issueId) return;
+
+    if (errorText) {
+      showTooltipAnimated();
+      return;
+    }
 
     try {
       const { data } = await octokit.request(
         'GET /repos/sparkly-games/sparkly/issues/{issue_number}',
-        { issue_number: issueId }
+        {
+          issue_number: issueId,
+        }
       );
 
       setErrorText(data.body || 'No details provided.');
-      setShowTooltip(true);
-      onTooltipToggle?.(true);
-
-      tooltipOpacity.setValue(0);
-      tooltipTranslate.setValue(6);
-
-      Animated.parallel([
-        Animated.timing(tooltipOpacity, {
-          toValue: 1,
-          duration: 180,
-          useNativeDriver: true,
-        }),
-        Animated.timing(tooltipTranslate, {
-          toValue: 0,
-          duration: 180,
-          useNativeDriver: true,
-        }),
-      ]).start();
+      showTooltipAnimated();
     } catch {
       setErrorText('Failed to fetch issue details.');
-      setShowTooltip(true);
-      onTooltipToggle?.(true);
+      showTooltipAnimated();
     }
-  }, [issueId]);
+  }, [issueId, errorText, showTooltipAnimated]);
 
   const hideTooltip = useCallback(() => {
     Animated.parallel([
@@ -94,40 +122,29 @@ export function Game({
       }),
     ]).start(() => {
       setShowTooltip(false);
-      setErrorText(null);
       onTooltipToggle?.(false);
     });
-  }, []);
+  }, [onTooltipToggle, tooltipOpacity, tooltipTranslate]);
 
-  const baseIcon = useMemo(() => {
-    const icon = icons[imageSource];
-    return typeof icon === 'string'
-      ? { uri: icon }
-      : icon || PLACEHOLDER;
-  }, [icons, imageSource]);
-
-  const hover = useRef(new Animated.Value(1)).current;
-  const fade = useRef(new Animated.Value(0)).current;
-
-  const [img, setImg] = useState<ImageSourcePropType>(baseIcon);
-
-  if (img !== baseIcon) setImg(baseIcon);
-
-  const pressAnim = useCallback((to: number) => {
-    Animated.spring(hover, {
-      toValue: to,
-      useNativeDriver: true,
-    }).start();
-  }, []);
+  const pressAnim = useCallback(
+    (to: number) => {
+      Animated.spring(hover, {
+        toValue: to,
+        useNativeDriver: true,
+      }).start();
+    },
+    [hover]
+  );
 
   const handleLoad = useCallback(() => {
     fade.setValue(0);
+
     Animated.timing(fade, {
       toValue: 1,
       duration: 300,
       useNativeDriver: true,
     }).start();
-  }, []);
+  }, [fade]);
 
   const handleError = useCallback(() => {
     setImg(PLACEHOLDER);
@@ -156,9 +173,13 @@ export function Game({
             {broken && (
               <View style={styles.broken}>
                 <TouchableOpacity
+                  hitSlop={8}
                   onPress={() => {
-                    if (showTooltip) hideTooltip();
-                    else fetchErrorDetails();
+                    if (showTooltip) {
+                      hideTooltip();
+                    } else {
+                      fetchErrorDetails();
+                    }
                   }}
                 >
                   <Text style={styles.brokenText}>⚠</Text>
@@ -194,14 +215,24 @@ export function Game({
           <Text style={styles.tooltipText} numberOfLines={6}>
             {errorText}
           </Text>
-          <Text style={styles.tooltipLink} onPress={() => { Linking.openURL(`https://github.com/sparkly-games/sparkly/issues/${issueId}`) }}>
-            Open in GitHub
-          </Text>
+
+          {!!issueId && (
+            <Text
+              style={styles.tooltipLink}
+              onPress={() => {
+                Linking.openURL(
+                  `https://github.com/sparkly-games/sparkly/issues/${issueId}`
+                );
+              }}
+            >
+              Open in GitHub
+            </Text>
+          )}
         </Animated.View>
       )}
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -222,13 +253,21 @@ const styles = StyleSheet.create({
     width: '100%',
     aspectRatio: 1,
     borderRadius: 16,
-    backgroundColor: '#000',
+    backgroundColor: '#111',
     overflow: 'hidden',
   },
 
-  image: { width: '100%', height: '100%' },
+  image: {
+    width: '100%',
+    height: '100%',
+  },
 
-  textBox: { marginTop: 10, height: 20, justifyContent: 'center', width: '100%' },
+  textBox: {
+    marginTop: 10,
+    height: 20,
+    justifyContent: 'center',
+    width: '100%',
+  },
 
   title: {
     color: '#fff',
@@ -241,34 +280,42 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 6,
     right: 6,
-    backgroundColor: 'rgba(239,68,68,0.9)',
-    borderRadius: 6,
-    paddingHorizontal: 6,
+    backgroundColor: 'rgba(239,68,68,0.92)',
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
   },
 
-  brokenText: { color: '#fff', fontSize: 30 },
+  brokenText: {
+    color: '#fff',
+    fontSize: 22,
+    fontWeight: '700',
+  },
 
   tooltip: {
     position: 'absolute',
-    right: -190,
-    top: -10,
-    width: 180,
-    backgroundColor: 'rgba(70, 0, 0, 0.95)',
-    borderRadius: 10,
+    right: 0,
+    top: '105%',
+    width: 190,
+    backgroundColor: 'rgba(70,0,0,0.96)',
+    borderRadius: 12,
     padding: 10,
     zIndex: 999,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.08)',
   },
 
   tooltipText: {
     color: '#ffffff',
     fontSize: 11,
+    lineHeight: 16,
   },
 
   tooltipLink: {
     color: '#ff6b6b',
-    margin: 5,
+    marginTop: 8,
     fontSize: 11,
-    textAlign: 'auto',
+    textAlign: 'left',
     fontWeight: '600',
   },
 
@@ -279,7 +326,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 
-  lockText: { fontSize: 32 },
+  lockText: {
+    fontSize: 32,
+  },
 
-  bannedOpacity: { opacity: 0.4 },
+  bannedOpacity: {
+    opacity: 0.4,
+  },
 });

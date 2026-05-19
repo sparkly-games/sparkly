@@ -11,17 +11,12 @@ import {
   Platform,
 } from 'react-native';
 import { useRouter } from 'expo-router';
-import { gameIcons as icons } from '@/assets/data/GameIcons';
 import { auth } from '@/assets/data/firebaseConfig';
 import { admins } from '@/assets/data/admins';
+import ENV_VARS from '@/assets/data/env';
+import { GameWall } from '@/assets/components/GameWall';
 
 /* ------------------ Memo Game Item ------------------ */
-
-const GameItem = memo(({ iconName }: { iconName: string }) => {
-  const source = icons()[iconName];
-  if (!source) return null;
-  return <Image source={source} style={styles.wallGame} />;
-});
 
 /* ------------------ Screen ------------------ */
 
@@ -35,18 +30,6 @@ export default function NotFoundScreen() {
 
   const scrollAnim = useRef(new Animated.Value(0)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
-
-  /* ------------------ Game data ------------------ */
-
-  const HERO_GAMES = useMemo(
-    () => Object.keys(icons()).sort(() => Math.random() - 0.5),
-    []
-  );
-
-  const LOOP_GAMES = useMemo(
-    () => [...HERO_GAMES, ...HERO_GAMES, ...HERO_GAMES, ...HERO_GAMES],
-    [HERO_GAMES]
-  );
 
   /* ------------------ Animations ------------------ */
 
@@ -183,25 +166,7 @@ export default function NotFoundScreen() {
 
       {/* GAME WALL */}
       {isDesktop && (
-        <View style={styles.wallContainer}>
-          <Animated.View
-            style={{
-              transform: [{ translateY: scrollAnim }],
-              opacity: 0.12,
-            }}
-          >
-            <FlatList
-              data={LOOP_GAMES}
-              keyExtractor={(item, index) => `wall-${index}`}
-              renderItem={({ item }) => <GameItem iconName={item} />}
-              numColumns={5}
-              scrollEnabled={false}
-              removeClippedSubviews={Platform.OS !== 'web'}
-            />
-          </Animated.View>
-
-          <View style={styles.wallOverlay} />
-        </View>
+        <GameWall />
       )}
     </View>
   );

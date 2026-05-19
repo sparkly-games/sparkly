@@ -1,9 +1,10 @@
 import React, { memo, useEffect, useMemo, useRef } from 'react';
 import { View, Image, FlatList, Animated, useWindowDimensions, Platform, StyleSheet } from 'react-native';
 import { gameIcons as icons } from '@/assets/data/GameIcons';
+import ENV_VARS from '../data/env';
 
 const GameItem = memo(({ iconName }: { iconName: string }) => {
-  const source = icons()[iconName];
+  const source = `https://res.cloudinary.com/${ENV_VARS.CLOUDINARY_CLOUD_NAME}/image/upload/v1779133665/${iconName}`;
   if (!source) return null;
   return <Image source={source} style={styles.wallGame} />;
 });
@@ -14,7 +15,7 @@ export function GameWall() {
   const scrollAnim = useRef(new Animated.Value(0)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
-  const HERO_GAMES = useMemo(() => Object.keys(icons()).sort(() => Math.random() - 0.5), []);
+  const HERO_GAMES = useMemo(() => Object.keys(icons).sort(() => Math.random() - 0.5), []);
   const LOOP_GAMES = useMemo(
     () => [...HERO_GAMES, ...HERO_GAMES, ...HERO_GAMES],
     [HERO_GAMES]

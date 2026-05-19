@@ -49,3 +49,8 @@ android/app/src/main/assets/sparxapi.db
 
 # Certificates
 *.pem
+
+export/
+dist/
+
+.tmp/

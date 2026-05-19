@@ -1,14 +1,7 @@
 import React, { useEffect, useRef, useState, useMemo, memo } from 'react';
 import { View, Text, StyleSheet, Animated, Pressable, Image, useWindowDimensions, FlatList, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
-import { gameIcons as icons } from '@/assets/data/GameIcons'; //
-
-// Memoized Game Item for performance
-const GameItem = memo(({ iconName }) => {
-  const source = icons()[iconName];
-  if (!source) return null;
-  return <Image source={source} style={styles.wallGame} />;
-});
+import { GameWall } from '@/assets/components/GameWall';
 
 export default function NotFoundScreen() {
   const router = useRouter();
@@ -18,11 +11,7 @@ export default function NotFoundScreen() {
   // Animation Values
   const scrollAnim = useRef(new Animated.Value(0)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
-
-  // Data for the wall
-  const HERO_GAMES = useMemo(() => Object.keys(icons()).sort(() => Math.random() - 0.5), []);
-  const LOOP_GAMES = useMemo(() => [...HERO_GAMES, ...HERO_GAMES, ...HERO_GAMES, ...HERO_GAMES, ...HERO_GAMES, ...HERO_GAMES, ...HERO_GAMES], [HERO_GAMES]);
-
+  
   useEffect(() => {
     // Background Loop Animation[cite: 1]
     Animated.loop(
@@ -56,19 +45,7 @@ export default function NotFoundScreen() {
 
       {/* --- GAME WALL SECTION --- */}
       {isDesktop && (
-        <View style={styles.wallContainer}>
-          <Animated.View style={{ transform: [{ translateY: scrollAnim }], opacity: 0.12 }}>
-            <FlatList
-              data={LOOP_GAMES}
-              keyExtractor={(item, index) => `wall-${index}`}
-              renderItem={({ item }) => <GameItem iconName={item} />}
-              numColumns={5}
-              scrollEnabled={false}
-              removeClippedSubviews={Platform.OS !== 'web'}
-            />
-          </Animated.View>
-          <View style={styles.wallOverlay} />
-        </View>
+        <GameWall />
       )}
     </View>
   );

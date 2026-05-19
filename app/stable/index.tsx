@@ -18,18 +18,9 @@ import { router } from 'expo-router';
 import Head from 'expo-router/head';
 
 import { SELLING_POINTS } from '@/assets/data/selling';
-import { gameIcons as icons } from '@/assets/data/GameIcons';
 import { auth } from '@/assets/data/firebaseConfig.js';
 import { signOut } from 'firebase/auth';
 import { GameWall } from '@/assets/components/GameWall';
-
-const shuffle = (array: string[]) => [...array].sort(() => Math.random() - 0.5);
-
-const GameItem = memo(({ iconName }: { iconName: string }) => {
-  const source = icons()[iconName];
-  if (!source) return null;
-  return <Image source={source} style={styles.heroGame} />;
-});
 
 export default function Home() {
   const { width } = useWindowDimensions();

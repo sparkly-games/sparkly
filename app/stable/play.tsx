@@ -97,27 +97,27 @@ export default function HomeScreen() {
 
         {trendingGames.length > 0 && (
           <View style={styles.section}>
-            <SectionHeader title="🔥 Trending Now" collapsed={ trendingCollapsed } onToggle={ () => setTrendingCollapsed( prev => !prev ) } />
+            <SectionHeader title="🔥 Trending Now" collapsed={trendingCollapsed} onToggle={() => setTrendingCollapsed(prev => !prev)} titleStyle={{ color: C.gold }} />
             {!trendingCollapsed && ( <HorizontalRow games={trendingGames} onPress={ handleSelectGame } favorites={favorites} onToggleFav={ toggleFavorite } /> )}
           </View>
         )}
 
         {favGamesData.length > 0 && (
           <View style={styles.section}>
-            <SectionHeader title="❤️ Your Favorites" count={ favGamesData.length } collapsed={ favsCollapsed } onToggle={ () => setFavsCollapsed( prev => !prev ) } />
+            <SectionHeader title="❤️ Your Favorites" count={favGamesData.length} collapsed={favsCollapsed} onToggle={() => setFavsCollapsed(prev => !prev)} titleStyle={{ color: C.hot }} />
             {!favsCollapsed && ( <HorizontalRow games={favGamesData} onPress={ handleSelectGame } favorites={favorites} onToggleFav={ toggleFavorite } /> )}
           </View>
         )}
 
         {recentGamesData.length > 0 && (
           <View style={styles.section}>
-            <SectionHeader title="⚡ Recently Played" count={ recentGamesData.length } collapsed={ recentCollapsed } onToggle={() => setRecentCollapsed( prev => !prev )} />
+            <SectionHeader title="⚡ Recently Played" count={recentGamesData.length} collapsed={recentCollapsed} onToggle={() => setRecentCollapsed(prev => !prev)} titleStyle={{ color: C.green }} />
             {!recentCollapsed && (
               <HorizontalRow games={recentGamesData} onPress={ handleSelectGame } favorites={favorites} onToggleFav={ toggleFavorite } />
             )}
           </View>
         )}
-        <SectionHeader title="🎮 Library" count={filteredGames.length} />
+        <SectionHeader title="🎮 Library" count={filteredGames.length} titleStyle={{ color: C.gold }} />
       </View>
     </>
   ), [ vibe, favorites, recent, showPC, showHorror, query, searchFocused, activeGenre, filteredGames, favGamesData, recentGamesData, trendingGames, favsCollapsed, recentCollapsed, trendingCollapsed, handleSelectGame, toggleFavorite ] );

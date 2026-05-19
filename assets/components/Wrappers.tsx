@@ -231,6 +231,7 @@ const GameModal = ({modalGame, closeGame, favorites, iframeRef, toggleFavorite, 
                       src={modalGame.url}
                       style={{ width: '100%', height: '100%', border: 'none', opacity: gameLoading ? 0 : 1, transition: 'opacity 0.3s ease' }}
                       onLoad={() => setGameLoading(false)}
+                      loading='lazy'
                       sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock"
                     />
                   )}

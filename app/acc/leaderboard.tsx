@@ -14,7 +14,7 @@ import { auth, db } from '@/assets/data/firebaseConfig';
 import { gameIcons as icons } from '@/assets/data/GameIcons';
 import { get, ref } from 'firebase/database';
 
-const gameIcons = icons();
+const gameIcons = icons;
 
 const formatTimeLeft = (ms: number) => {
   if (ms <= 0) return 'Ended';

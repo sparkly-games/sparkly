@@ -5,20 +5,28 @@
 <h1 align="center">Sparkly Games</h1>
 
 <p align="center">
-  <strong>Spice up your day with a bit of sparkle!</strong>
+  <strong>Fast, static-first browser gaming powered by Expo.</strong>
+</p>
+
+<p align="center">
+  <a href="data:text/html,<h1>No Demo Available</h1><p>Please try again later</p>">
+    <img src="https://img.shields.io/badge/Live%20Demo-Visit%20Site-ff69b4?style=for-the-badge">
+  </a>
 </p>
 
 <p align="center">
   <img src="https://img.shields.io/github/license/sparkly-games/sparkly?style=flat-square&color=blue">
   <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square">
-  <img src="https://img.shields.io/github/last-commit/sparkly-games/sparkly?style=flat-square">
+  <img src="https://img.shields.io/github/stars/sparkly-games/sparkly?style=flat-square">
+  <img src="https://img.shields.io/github/repo-size/sparkly-games/sparkly?style=flat-square">
+  <img src="https://img.shields.io/github/commit-activity/m/sparkly-games/sparkly?style=flat-square">
   <img src="https://img.shields.io/badge/built%20with-Expo-000020?style=flat-square&logo=expo">
 </p>
 
 ---
 
 ## 📘 Overview
-Sparkly is a high-performance web bundle built using **React Native + Expo**. By leveraging static web exports, Sparkly delivers a native-feeling experience on the web with lightning-fast load times.
+Sparkly is a static-first browser gaming platform powered by **React Native + Expo**. By leveraging static web exports, Sparkly delivers a native-feeling experience on the web with lightning-fast load times.
 
 ### ✨ Key Features
 * 📱 **Universal Codebase:** Written in React Native for seamless scaling.
@@ -61,6 +69,27 @@ npm start
 
 ---
 
+## 🌍 Deployment
+
+```bash
+npx expo export --platform web
+```
+
+Output is generated in:
+
+```text
+dist/
+```
+
+Can be deployed to:
+- Vercel
+- Netlify
+- Cloudflare Pages
+- Static hosting
+
+---
+
+
 ## 🤝 Contributing
 We welcome contributions! Please follow these steps:
 
@@ -76,6 +105,6 @@ We welcome contributions! Please follow these steps:
 ---
 
 ## 📜 License & Disclaimer
-**Disclaimer:** This project is for **educational and technical exploration purposes only**. 
+**Disclaimer:** Sparkly is an open web gaming platform built for experimentation, performance, and accessibility. **Users** are responsible for complying with **local network** and usage **policies**. **Proceed at your own risk.**
 
 Distributed under the **MPL-2.0 License**. See `LICENSE` for more information.

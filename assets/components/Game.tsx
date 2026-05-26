@@ -29,16 +29,22 @@ type Props = {
   onPress: () => void;
   ban?: boolean;
   broken?: boolean;
+  fixed?: boolean;
   issueId?: string;
+  untested?: boolean;
+  leaving?: boolean;
   onTooltipToggle?: (visible: boolean) => void;
 };
 
 export const Game = React.memo(function Game({
   name,
   imageSource,
+  fixed = false,
   onPress,
+  leaving = false,
   ban = false,
   broken = false,
+  untested = false,
   issueId,
   onTooltipToggle,
 }: Props) {
@@ -186,6 +192,53 @@ export const Game = React.memo(function Game({
                 </TouchableOpacity>
               </View>
             )}
+            {fixed && (
+              <View style={styles.fixed}>
+                <TouchableOpacity
+                  hitSlop={8}
+                  onPress={() => {
+                    if (showTooltip) {
+                      hideTooltip();
+                    } else {
+                      fetchErrorDetails();
+                    }
+                  }}
+                >
+                  <Text style={styles.fixedText}>✓</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+            {untested && (
+              <View style={styles.untested}>
+                <TouchableOpacity
+                  hitSlop={8}
+                  onPress={() => {
+                    if (showTooltip) {
+                      hideTooltip();
+                    } else {
+                      fetchErrorDetails();
+                    }
+                  }}
+                >
+                  <Text style={styles.untestedText}>?</Text>
+                </TouchableOpacity>
+              </View>
+            )}{leaving && (
+              <View style={styles.removal}>
+                <TouchableOpacity
+                  hitSlop={8}
+                  onPress={() => {
+                    if (showTooltip) {
+                      hideTooltip();
+                    } else {
+                      fetchErrorDetails();
+                    }
+                  }}
+                >
+                  <Text style={styles.removalText}>🚧</Text>
+                </TouchableOpacity>
+              </View>
+            )}
           </View>
 
           <View style={styles.textBox}>
@@ -279,7 +332,7 @@ const styles = StyleSheet.create({
   broken: {
     position: 'absolute',
     top: 6,
-    right: 6,
+    left: 6,
     backgroundColor: 'rgba(239,68,68,0.92)',
     borderRadius: 8,
     paddingHorizontal: 8,
@@ -287,6 +340,54 @@ const styles = StyleSheet.create({
   },
 
   brokenText: {
+    color: '#fff',
+    fontSize: 22,
+    fontWeight: '700',
+  },
+
+  untested: {
+    position: 'absolute',
+    top: 6,
+    left: 6,
+    backgroundColor: 'rgba(255, 225, 0, 0.96)',
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+  },
+
+  fixed: {
+    position: 'absolute',
+    top: 6,
+    left: 6,
+    backgroundColor: 'rgba(0, 80, 177, 0.92)',
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+  },
+
+  fixedText: {
+    color: '#fff',
+    fontSize: 22,
+    fontWeight: '700',
+  },
+
+  untestedText: {
+    color: '#5f5f5f',
+    fontSize: 22,
+    fontWeight: '700',
+  },
+
+  removal: {
+    position: 'absolute',
+    bottom: 6,
+    left: 6,
+    backgroundColor: 'rgba(0, 255, 106, 0.92)',
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+  },
+
+  removalText: {
     color: '#fff',
     fontSize: 22,
     fontWeight: '700',

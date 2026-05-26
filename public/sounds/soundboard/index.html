@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Meme Soundboard</title>
+
+<style>
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: system-ui, sans-serif;
+    background: linear-gradient(135deg, #ff4ecd, #6c63ff, #00f2ff);
+    background-size: 400% 400%;
+    animation: bg 10s ease infinite;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+  }
+
+  @keyframes bg {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .board {
+    width: min(900px, 95%);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 14px;
+    padding: 20px;
+  }
+
+  .title {
+    grid-column: 1 / -1;
+    text-align: center;
+    font-size: 26px;
+    font-weight: 800;
+    text-shadow: 0 0 20px #fff;
+  }
+
+  button {
+    height: 90px;
+    border-radius: 18px;
+    border: none;
+    background: rgba(255,255,255,0.18);
+    backdrop-filter: blur(10px);
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(255,255,255,0.4);
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
+
+  button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 30px white;
+  }
+
+  button:active {
+    transform: scale(0.95);
+  }
+
+  chaos {
+    grid-column: 1 / -1;
+    background: linear-gradient(45deg, #ff0000, #ff7300, #ffeb00, #00f2ff, #6c63ff);
+    background-size: 400% 400%;
+    animation: chaos-bg 5s ease infinite;
+    color: white;
+    font-size: 18px;
+    font-weight: 800;
+    border-radius: 18px;
+    border: none;
+    padding: 14px;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(255,255,255,0.4);
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
+
+  .controls {
+    grid-column: 1 / -1;
+    background: rgba(0,0,0,0.25);
+    border-radius: 16px;
+    padding: 14px;
+    box-shadow: 0 0 20px rgba(255,255,255,0.3);
+  }
+
+  .controls label {
+    font-weight: 700;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .controls input {
+    width: 100%;
+  }
+
+  .speed {
+    text-align: center;
+    margin-top: 6px;
+    font-weight: 700;
+  }
+</style>
+</head>
+<body>
+
+<div class="board">
+  <div class="title">✨ Soundboard ✨</div>
+  <chaos onclick="chaosMode()">CHAOS MODE</chaos>
+  <chaos onclick="stopAll()">STOP ALL ⛔</chaos>
+
+  <button onclick="play('bruh')">Bruh</button>
+  <button onclick="play('amogus')">Amogus</button>
+  <button onclick="play('bazinga')">Bazinga</button>
+  <button onclick="play('oof')">Oof</button>
+  <button onclick="play('crickets')">Crickets</button>
+  <button onclick="play('bingo')">BINGO!</button>
+  <button onclick="play('applepay')">Apple Pay</button>
+  <button onclick="play('kirk-funk')">Kirk Funk</button>
+  <button onclick="play('mtlppe')">Metal Pipe</button>
+  <button onclick="play('sad')">sad</button>
+  <button onclick="play('lingin')">YO FONE LINGIN</button>
+  <button onclick="play('joincall')">Join Call</button>
+  <button onclick="play('fah')">FAHH</button>
+  <button onclick="play('discord')">Discord ring</button>
+  <button onclick="play('boom')">Vine Boom</button>
+  <button onclick="play('llap')">🖖</button>
+  <button onclick="play('ladodododostarfish')">ladodododo starfish</button>
+  <button onclick="play('nuclearFart')">Nuclear Fart</button>
+  <button onclick="play('iq')">Used to know</button>
+  <button onclick="play('india')">🇮🇳</button>
+  <button onclick="play('getOut')">GET OUT</button>
+  <button onclick="play('dududu')">Surprise</button>
+  <button onclick="play('bluetooth')">Bluetooth</button>
+  <button onclick="play('charlie-kirk')">charlie kirk</button>
+  <button onclick="play('sixtySeven')">67</button>
+  <button onclick="play('hangingtree')">Hanging Tree</button>
+
+  <div class="controls">
+
+    <label for="speed">Playback Speed</label>
+    <input
+      id="speed"
+      type="range"
+      min="0.5"
+      max="2.5"
+      step="0.1"
+      value="1"
+      oninput="updateSpeed(this.value)"
+    />
+    <div class="speed"><span id="speedValue">1.0×</span></div>
+    <label for="bass">Bass Boost</label>
+    <input
+      id="bass"
+      type="range"
+      min="0"
+      max="60" 
+      step="1"
+      value="0"
+      oninput="updateBass(this.value)"
+    />
+    <div class="speed"><span id="bassValue">0 dB</span></div>
+    <label for="delay">Delay</label>
+    <input
+      id="delay"
+      type="range"
+      min="0"
+      max="45"
+      step="1"
+      value="0"
+      oninput="updateDelay(this.value)"
+    />
+    <div class="speed"><span id="delayValue">0s</span></div>
+  </div>
+</div>
+
+<script>
+    // BASE64 MP3 CLIPS
+  const sounds = {
+    getOut: "/sounds/get-out.mp3",
+    'charlie-kirk': "/sounds/charlie-kirk.mp3",
+    india: "/sounds/india.mp3",
+    nuclearFart: "/sounds/nuclear-fart-1.mp3",
+    iq: "/sounds/used-to-know-bass-boosted.mp3",
+    ladodododostarfish: "/sounds/ladodododostarfish.mp3",
+    llap: "/sounds/live-long-and-prosper.mp3",
+    dududu: "/sounds/surprise.mp3",
+    'kirk-funk': "/sounds/kirk-funk.mp3",
+    bluetooth: "/sounds/bluetooth.mp3",
+    sixtySeven: "/sounds/67.mp3",
+    bruh: "/sounds/bruh.mp3",
+    hangingtree: "/sounds/hanging-tree.mp3",
+    amogus: "/sounds/amogus.mp3",
+    bazinga: "/sounds/bazinga.mp3",
+    sad: "/sounds/sad.mp3",
+    mtlppe: "/sounds/metal-pipe.mp3",
+    lingin: "/sounds/lingin.mp3",
+    joincall: "/sounds/joincall.mp3",
+    fah: "/sounds/fah.mp3",
+    discord: "/sounds/discord.mp3",
+    boom: "/sounds/boom.mp3",
+    applepay: "/sounds/applepay.mp3",
+    oof: "/sounds/oof.mp3",
+    crickets: "/sounds/crickets.mp3",
+    bingo: "/sounds/bingo.wav",
+  };
+
+  function chaosMode(duration = 20000) {
+      initAudio();
+
+      // Prevent stacking chaos modes
+      if (chaosInterval) clearInterval(chaosInterval);
+
+      const keys = Object.keys(sounds);
+      const start = Date.now();
+
+      chaosInterval = setInterval(() => {
+
+        // Stop after duration
+        if (Date.now() - start > duration) {
+          clearInterval(chaosInterval);
+          chaosInterval = null;
+          return;
+        }
+
+        // Random sound
+        const randomKey =
+          keys[Math.floor(Math.random() * keys.length)];
+
+        // Random settings
+        playbackSpeed = Math.random() * 2 + 0.5;
+        delayTime = Math.random() * 0.8;
+        bassLevel = Math.random() * 25;
+
+        // Update UI
+        document.getElementById("speed").value = playbackSpeed;
+        document.getElementById("bass").value = bassLevel;
+        document.getElementById("delay").value = delayTime;
+
+        document.getElementById("speedValue").textContent =
+          playbackSpeed.toFixed(1) + "×";
+
+        document.getElementById("bassValue").textContent =
+          bassLevel.toFixed(0) + " dB";
+
+        document.getElementById("delayValue").textContent =
+          delayTime.toFixed(2) + "s";
+
+        // Apply bass
+        if (bassNode) {
+          bassNode.gain.setTargetAtTime(
+            bassLevel,
+            audioCtx.currentTime,
+            0.01
+          );
+        }
+
+        // Play sound
+        play(randomKey);
+
+      }, 50);
+    }
+
+    function stopAll() {
+
+        // Stop chaos mode
+        if (chaosInterval) {
+          clearInterval(chaosInterval);
+          chaosInterval = null;
+        }
+
+        // Stop all sounds
+        activeSources.forEach(source => {
+          try {
+            source.stop();
+          } catch { }
+        });
+
+        activeSources = [];
+      }
+  
+  // --- STATE VARIABLES ---
+  let playbackSpeed = 1;
+  let bassLevel = 0;
+  let delayTime = 0;
+  let audioCtx = null;
+  let bassNode = null;
+  let activeSources = [];
+  let chaosInterval = null;
+
+  // --- INITIALIZATION ---
+  function initAudio() {
+    // Browsers require audio to start after a user click
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      
+      // Setup the Bass Filter (Global)
+      bassNode = audioCtx.createBiquadFilter();
+      bassNode.type = "lowshelf";
+      bassNode.frequency.value = 200; // Target frequencies below 200Hz
+      bassNode.gain.value = bassLevel;
+      
+      // Final connection to speakers
+      bassNode.connect(audioCtx.destination);
+    }
+  }
+
+  // --- UI CONTROLS ---
+  function updateSpeed(value) {
+    playbackSpeed = parseFloat(value);
+    document.getElementById("speedValue").textContent = playbackSpeed.toFixed(1) + "×";
+  }
+
+  function updateBass(value) {
+    bassLevel = parseFloat(value);
+    document.getElementById("bassValue").textContent = bassLevel + " dB";
+    // Update the existing filter in real-time
+    if (bassNode) {
+      bassNode.gain.setTargetAtTime(bassLevel, audioCtx.currentTime, 0.01);
+    }
+  }
+
+  function updateDelay(value) {
+    delayTime = parseFloat(value);
+    document.getElementById("delayValue").textContent = delayTime + "s";
+  }
+
+  // --- CORE PLAYBACK LOGIC ---
+  async function play(soundKey) {
+    initAudio();
+    if (audioCtx.state === 'suspended') await audioCtx.resume();
+
+    try {
+      const response = await fetch(sounds[soundKey]);
+      const arrayBuffer = await response.arrayBuffer();
+      const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+
+      const source = audioCtx.createBufferSource();
+      source.buffer = audioBuffer;
+      source.playbackRate.value = playbackSpeed;
+
+      activeSources.push(source);
+
+      source.onended = () => {
+        activeSources =
+          activeSources.filter(s => s !== source);
+      };
+
+      // Create a Delay Node for this specific instance
+      const delayNode = audioCtx.createDelay(45); // 45s max
+      delayNode.delayTime.value = delayTime;
+
+      // ROUTING CHAIN: Source -> Delay -> Bass Filter -> Destination
+      source.connect(delayNode);
+      delayNode.connect(bassNode);
+
+      source.start();
+    } catch (err) {
+      console.error("Audio Playback Error:", err);
+    }
+  }
+</script>
+
+</body>
+</html>

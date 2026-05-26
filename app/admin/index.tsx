@@ -108,7 +108,7 @@ export default function NotFoundScreen() {
     return (
       <View style={styles.container}>
         <Text style={styles.blockText}>
-          You aint admin ✌️
+          You aint admin vro ✌️
         </Text>
       </View>
     );
@@ -126,29 +126,18 @@ export default function NotFoundScreen() {
           See the admin preview features!
         </Text>
 
-        <Pressable
-          style={({ pressed }) => [
-            styles.button,
-            pressed && { opacity: 0.8, transform: [{ scale: 0.98 }] },
-          ]}
-          onPress={() =>
-            router.replace(`/system/projects/a9f3k2x8/${uid}`)
-          }
-        >
-          <Text style={styles.buttonText}>OpenFlix</Text>
-        </Pressable>
-
         <View style={{ margin: 5 }} />
-
+        {/* BUTTON TEMPLATE
         <Pressable
           style={({ pressed }) => [
             styles.button,
             pressed && { opacity: 0.8, transform: [{ scale: 0.98 }] },
           ]}
-          onPress={() => router.replace('/openmsg')}
+          onPress={() => router.replace('/')}
         >
-          <Text style={styles.buttonText}>OpenMSG</Text>
+          <Text style={styles.buttonText}>no features</Text>
         </Pressable>
+        */}
 
         <View style={{ margin: 5 }} />
 

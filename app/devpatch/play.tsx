@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { View, Text, TouchableOpacity, TextInput, ScrollView, Linking } from 'react-native';
 import { useRouter } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { Image as TintableImage } from 'expo-image';
 import { gamesData } from '@/assets/constants/games';
 import { styles, C, GENRE_FILTERS, VIBES } from '@/assets/constants/Theme';
 import { FilterPill } from '@/assets/components/FilterPill';
@@ -10,7 +11,7 @@ import { Header } from '@/assets/components/Header';
 import * as hooks from '@/assets/hooks';
 import { StatChip, ControlIcon } from '@/assets/components/Wrappers';
 
-interface GameType { title: { en: string }; img: string; url: string; popular?: boolean; horror?: boolean; broken?: boolean; pc?: boolean; genre?: string; }
+interface GameType { title: { en: string }; img: string; url: string; popular?: boolean; horror?: boolean; broken?: boolean; pc?: boolean; genre?: string; untested?: boolean; issue?: string; }
 
 const VER_PATCHES = [
   '3xclrdun', '9xg4w9y5', '0p5ttso7', 'g16fpq2h', '1xf6zts0', 'iw74pgdl',
@@ -21,10 +22,12 @@ const VER_PATCHES = [
 ];
 
 const VER_INFO = {
-  date: '8/5/26',
-  text: '8.1.5',
-  patch: VER_PATCHES[10],
+  date: '26/5/26',
+  text: '8.4.2',
+  patch: VER_PATCHES[15],
 };
+
+const isDev = typeof window !== 'undefined' && localStorage.getItem('sparkly_branch') === 'devpatch';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -54,8 +57,9 @@ export default function HomeScreen() {
           <View style={styles.navRow}>
             <ControlIcon name="logo-youtube" onPress={() => router.push('/media/youtube')} label="Videos" />
             <ControlIcon name="logo-soundcloud" onPress={() => Linking.openURL('https://sc3.maid.zone')} label="Music" />
-            <ControlIcon name="volume-high" onPress={() => Linking.openURL('/soundboard.htm')} label="Sounds" />
-            <ControlIcon name="tv-outline" onPress={() => router.push('/system/soon/a9f3k2x8')} label="TV" />
+            <ControlIcon name="volume-high" onPress={() => Linking.openURL('/sounds/soundboard/')} label="Sounds" />
+            <ControlIcon name="newspaper-outline" onPress={() => Linking.openURL('https://sparkly.mintlify.app')} label="Docs" />
+            <ControlIcon svg={ <TintableImage source={require("@/assets/images/netflix.svg")} style={{ width: 21, height: 21 }} tintColor={C.muted} /> } onPress={() => Linking.openURL('https://example.com')} label="Openflix" />
           </View>
         </View>
         <View style={styles.statsRow}>
@@ -68,8 +72,8 @@ export default function HomeScreen() {
         <View style={[styles.sectionHeader]}>
           <Text style={styles.sectionLabel}>FILTERS</Text>
           <View style={styles.navRow}>
-            <ControlIcon name="desktop-outline" active={showPC} color="#60a5fa" onPress={() => { setShowPC(p => !p); console.log("showPC:", showPC); }} label="PC" />
-            <ControlIcon name="skull-outline" active={showHorror} color={C.hot} onPress={() => { setShowHorror(p => !p); console.log("showHorror:", showHorror); }} label="Horror" />
+            <ControlIcon name="desktop-outline" active={showPC} color="#60a5fa" onPress={() => { setShowPC((i) => !i) }} label="PC" />
+            <ControlIcon name="skull-outline" active={showHorror} color={C.hot} onPress={() => { setShowHorror((i) => !i) }} label="Horror" />
           </View>
         </View>
         <View style={[ styles.searchRow, searchFocused && styles.searchRowFocused ]} >
@@ -125,7 +129,7 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <Header {...{ vibe, gamesData, favorites, recent, showPC, showHorror, setShowPC, setShowHorror, VER_INFO }} />
-      <FilteredGamesDisplay {...{ filteredGames, columns, itemWidth , ListHeader, favorites, toggleFavorite, handleSelectGame }} />
+      <FilteredGamesDisplay {...{ filteredGames, columns, itemWidth , ListHeader, favorites, toggleFavorite, handleSelectGame, isDev }} />
       <GameModal closeGame={handleCloseGame} {...{ modalGame, favorites, iframeRef, toggleFavorite, setGameLoading, gameLoading }} />
     </View>
   );

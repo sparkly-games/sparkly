@@ -3,7 +3,6 @@ import "katex/dist/katex.min.css";
 import React from "react";
 
 export default function MathView({ latex }: { latex: string }) {
-  console.log("LATEX INPUT:", latex);
 
   if (!latex || typeof latex !== "string") return <div />;
   const match = latex.match(/\\boxed\{.*?\}/);

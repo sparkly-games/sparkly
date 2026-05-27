@@ -19,7 +19,6 @@ export default function ComingSoon() {
     const user = auth.currentUser;
 
     if (admins.includes(user?.uid)) {
-      console.log("Admin");
       setTimeout(() => {
         router.replace(`/system/projects/${projectId}/${user?.uid}`);
       }, 2000);

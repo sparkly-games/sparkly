@@ -218,7 +218,7 @@ export default function Home() {
                       }} 
                       style={styles.profilePic} 
                       // Log the error if the image fails to bind
-                      onError={(e) => console.log("Image Load Error:", e.nativeEvent.error)}
+                      onError={(e) => console.error("Image Load Error:", e.nativeEvent.error)}
                     />
                   </Pressable>
                 )

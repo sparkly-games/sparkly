@@ -354,13 +354,47 @@ const ModalBar = ({
           {modalGame?.title.en}
         </Text>
 
-        {modalGame?.popular && (
-          <View style={styles.modalTrendChip}>
-            <Text style={styles.modalTrendText}>
-              🔥 trending
-            </Text>
-          </View>
-        )}
+        <View style={{ flexDirection: 'row' }}>
+          {modalGame?.popular && (
+            <View style={styles.modalTrendChip}>
+              <Text style={styles.modalTrendText}>
+                🔥 trending
+              </Text>
+            </View>
+          )}
+
+          {modalGame?.broken && (
+            <View style={styles.modalTrendChip}>
+              <Text style={styles.modalTrendText}>
+                ❌ broken
+              </Text>
+            </View>
+          )}
+
+          {modalGame?.untested && (
+            <View style={styles.modalTrendChip}>
+              <Text style={styles.modalTrendText}>
+                🛠️ untested
+              </Text>
+            </View>
+          )}
+
+          {modalGame?.leaving && (
+            <View style={styles.modalTrendChip}>
+              <Text style={styles.modalTrendText}>
+                🚧 leaving
+              </Text>
+            </View>
+          )}
+
+          {modalGame?.fixed && (
+            <View style={styles.modalTrendChip}>
+              <Text style={styles.modalTrendText}>
+                ✔️ fixed
+              </Text>
+            </View>
+          )}
+        </View>
       </View>
 
       <View style={styles.modalActions}>

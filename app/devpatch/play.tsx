@@ -22,9 +22,9 @@ const VER_PATCHES = [
 ];
 
 const VER_INFO = {
-  date: '26/5/26',
-  text: '8.4.2',
-  patch: VER_PATCHES[15],
+  date: '28/5/26',
+  text: '8.4.4',
+  patch: VER_PATCHES[17],
 };
 
 const isDev = typeof window !== 'undefined' && localStorage.getItem('sparkly_branch') === 'devpatch';

@@ -361,7 +361,6 @@ export default function RootLayout() {
           src="https://js.stripe.com/v3/buy-button.js">
         </script>
         <meta name="description" content="With Sparkly, get ready to game into the future like never before!" />
-        <meta property="og:image" content="/og-preview.png" />
         <meta name="theme-color" content={getBranchColor()} />
       </Head>
       { /*

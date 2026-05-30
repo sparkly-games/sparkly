@@ -11,14 +11,14 @@ export function useFilteredGames({
     const q = query?.trim().toLowerCase();
 
     return games
-      .filter(g => (showHorror || !g.horror))
-      .filter(g => (showPC || !g.pc))
-      .filter(g => activeGenre === 'all' || g.genre === activeGenre)
-      .filter(g => {
+      .filter((g: { horror: any; }) => (showHorror || !g.horror))
+      .filter((g: { pc: any; }) => (showPC || !g.pc))
+      .filter((g: { genre: any; }) => activeGenre === 'all' || g.genre === activeGenre)
+      .filter((g: { title: { en: any; }; }) => {
         if (!q) return true;
         return (g.title?.en ?? '').toLowerCase().includes(q);
       })
-      .sort((a, b) =>
+      .sort((a: { title: { en: any; }; }, b: { title: { en: any; }; }) =>
         (a.title?.en ?? '').localeCompare(b.title?.en ?? '')
       );
   }, [

@@ -11,7 +11,7 @@ import { Header } from '@/assets/components/Header';
 import * as hooks from '@/assets/hooks';
 import { StatChip, ControlIcon } from '@/assets/components/Wrappers';
 
-interface GameType { title: { en: string }; img: string; url: string; popular?: boolean; horror?: boolean; broken?: boolean; pc?: boolean; genre?: string; untested?: boolean; issue?: string; }
+interface GameType { title: { en: string }; img: string; url: string; popular?: boolean; horror?: boolean; broken?: boolean; pc?: boolean; genre: string; untested?: boolean; issue?: string; }
 
 const VER_PATCHES = [
   '3xclrdun', '9xg4w9y5', '0p5ttso7', 'g16fpq2h', '1xf6zts0', 'iw74pgdl',
@@ -22,9 +22,9 @@ const VER_PATCHES = [
 ];
 
 const VER_INFO = {
-  date: '26/5/26',
-  text: '8.4.2',
-  patch: VER_PATCHES[15],
+  date: '28/5/26',
+  text: '8.4.4',
+  patch: VER_PATCHES[17],
 };
 
 const isDev = typeof window !== 'undefined' && localStorage.getItem('sparkly_branch') === 'devpatch';
@@ -72,8 +72,8 @@ export default function HomeScreen() {
         <View style={[styles.sectionHeader]}>
           <Text style={styles.sectionLabel}>FILTERS</Text>
           <View style={styles.navRow}>
-            <ControlIcon name="desktop-outline" active={showPC} color="#60a5fa" onPress={() => { setShowPC((i) => !i) }} label="PC" />
-            <ControlIcon name="skull-outline" active={showHorror} color={C.hot} onPress={() => { setShowHorror((i) => !i) }} label="Horror" />
+            <ControlIcon name="desktop-outline" active={showPC} color="#60a5fa" onPress={() => { setShowPC(!showPC) }} label="PC" />
+            <ControlIcon name="skull-outline" active={showHorror} color={C.hot} onPress={() => { setShowHorror(!showHorror) }} label="Horror" />
           </View>
         </View>
         <View style={[ styles.searchRow, searchFocused && styles.searchRowFocused ]} >

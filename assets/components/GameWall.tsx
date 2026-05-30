@@ -4,8 +4,7 @@ import { gameIcons as icons } from '@/assets/data/GameIcons';
 import ENV_VARS from '../data/env';
 
 const GameItem = memo(({ iconName }: { iconName: string }) => {
-  const source = `https://res.cloudinary.com/${ENV_VARS.CLOUDINARY_CLOUD_NAME}/image/upload/v1779133665/${iconName}`;
-  if (!source) return null;
+  const source = { uri: `https://res.cloudinary.com/${ENV_VARS.CLOUDINARY_CLOUD_NAME}/image/upload/v1779133665/${iconName}` };
   return <Image source={source} style={styles.wallGame} />;
 });
 

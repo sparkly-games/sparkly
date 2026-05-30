@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {View,Text} from "react-native"
 
-export const GlitchText = ({ children, style }) => {
+export const GlitchText = ({ children, style }: any) => {
   const [glitch, setGlitch] = useState(false);
 
   useEffect(() => {

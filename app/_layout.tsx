@@ -273,7 +273,7 @@ export default function RootLayout() {
 
         setMaintenance(isMaint);
 
-        if (isMaint) logEvent(analytics, 'maintenance_redirect');
+        if (isMaint && analytics) logEvent(analytics, 'maintenance_redirect');
 
       } catch (err) {
         console.warn('Config failed', err);
@@ -391,7 +391,7 @@ export default function RootLayout() {
           {showPicker && (
             <View style={styles.menu}>
               {Object.entries(BRANCHES).map(([key, data]) => {
-                if ( admins.includes(uid) ){
+                if ( uid && admins.includes(uid) ){
                   data.disabled = false
                 }
                 const isActive = branch === key;

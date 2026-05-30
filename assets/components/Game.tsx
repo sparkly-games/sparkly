@@ -331,8 +331,8 @@ const styles = StyleSheet.create({
 
   broken: {
     position: 'absolute',
-    top: 6,
-    left: 6,
+    bottom: 6,
+    right: 6,
     backgroundColor: 'rgba(239,68,68,0.92)',
     borderRadius: 8,
     paddingHorizontal: 8,
@@ -348,7 +348,7 @@ const styles = StyleSheet.create({
   untested: {
     position: 'absolute',
     top: 6,
-    left: 6,
+    right: 6,
     backgroundColor: 'rgba(255, 225, 0, 0.96)',
     borderRadius: 8,
     paddingHorizontal: 8,

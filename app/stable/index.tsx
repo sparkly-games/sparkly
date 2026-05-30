@@ -201,7 +201,7 @@ export default function Home() {
               ) : (
                 profilePicUrl && (
                   <Pressable 
-                    onLongPress={() => {showToast("UID copied to clipboard!", "success"); navigator.clipboard.writeText(uid)}}
+                    onLongPress={() => {showToast("UID copied to clipboard!", "success"); navigator.clipboard.writeText(uid ? uid : "")}}
                     onPress={() => {
                       signOut(auth)
                         .then(() => {showToast("Signed out successfully!", "success")})
@@ -265,14 +265,19 @@ export default function Home() {
         <Animated.View style={[styles.featuresContainer, { opacity: fadeAnim }]}>
           <View style={styles.featuresGrid}>
             {SELLING_POINTS.map((point, index) => (
-              <View key={index} style={[ styles.card, { width: isMobile ? '100%' : '30%' }, hoveredIndex === index && { transform: [{ scale: 1.04 }] }]} onMouseEnter={() => setHoveredIndex(index)} onMouseLeave={() => setHoveredIndex(null)} >
+              <Pressable
+                key={index}
+                style={[styles.card, { width: isMobile ? '100%' : '30%' }, hoveredIndex === index && { transform: [{ scale: 1.04 }] }]}
+                onHoverIn={() => setHoveredIndex(index)}
+                onHoverOut={() => setHoveredIndex(null)}
+              >
                 <View style={styles.cardGlow} />
                 <View style={styles.iconCircle}>
                   <Text style={styles.emoji}>{point.emoji}</Text>
                 </View>
                 <Text style={styles.cardTitle}>{point.title}</Text>
                 <Text style={styles.cardText}>{point.text}</Text>
-              </View>
+              </Pressable>
             ))}
           </View>
         </Animated.View>

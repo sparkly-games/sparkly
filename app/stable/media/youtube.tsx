@@ -49,9 +49,16 @@ const COBALT_INSTANCES = [
   "api.cobalt.best"
 ].filter(Boolean);
 
+interface Video {
+  id: string;
+  title: string;
+  channel: string;
+  thumb: string;
+}
+
 export default function App() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [videos, setVideos] = useState([]);
+  const [videos, setVideos] = useState<Video[]>([]);
   const [selectedStream, setSelectedStream] = useState(null);
   const [loading, setLoading] = useState(false);
   const [activeInstance, setActiveInstance] = useState(COBALT_INSTANCES[0]);

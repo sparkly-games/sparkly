@@ -273,7 +273,7 @@ export default function RootLayout() {
 
         setMaintenance(isMaint);
 
-        if (isMaint) logEvent(analytics, 'maintenance_redirect');
+        if (isMaint && analytics) logEvent(analytics, 'maintenance_redirect');
 
       } catch (err) {
         console.warn('Config failed', err);
@@ -361,7 +361,6 @@ export default function RootLayout() {
           src="https://js.stripe.com/v3/buy-button.js">
         </script>
         <meta name="description" content="With Sparkly, get ready to game into the future like never before!" />
-        <meta property="og:image" content="/og-preview.png" />
         <meta name="theme-color" content={getBranchColor()} />
       </Head>
       { /*
@@ -392,7 +391,7 @@ export default function RootLayout() {
           {showPicker && (
             <View style={styles.menu}>
               {Object.entries(BRANCHES).map(([key, data]) => {
-                if ( admins.includes(uid) ){
+                if ( uid && admins.includes(uid) ){
                   data.disabled = false
                 }
                 const isActive = branch === key;
@@ -430,8 +429,9 @@ export default function RootLayout() {
             </Pressable>
 
             <ControlIcon name="logo-octocat" onPress={() => Linking.openURL('https://github.com/sparkly-games')} style={{ marginLeft: 10 }} />
-            <ControlIcon name="game-controller-outline" onPress={() => Linking.openURL('https://github.com/sparkly-games/sparkly/issues/new?template=game-request.md')} style={{ marginLeft: 10 }} />
-            <ControlIcon name="flask-outline" onPress={() => router.push('/acc/labs')} style={{ marginLeft: 10 }} />
+            <ControlIcon name="game-controller" onPress={() => Linking.openURL('https://github.com/sparkly-games/sparkly/issues/new?template=game-request.md')} style={{ marginLeft: 10 }} />
+            <ControlIcon name="flask" onPress={() => router.push('/acc/labs')} style={{ marginLeft: 10 }} />
+            <ControlIcon name="school" onPress={() => router.push('/acc/meme/areyou')} style={{ marginLeft: 10 }} />
           </View>
 
         </View>

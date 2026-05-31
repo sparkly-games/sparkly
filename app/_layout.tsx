@@ -393,6 +393,8 @@ export default function RootLayout() {
               {Object.entries(BRANCHES).map(([key, data]) => {
                 if ( uid && admins.includes(uid) ){
                   data.disabled = false
+                } else if ( process.env.NODE_ENV == "development" ) {
+                  data.disabled = false
                 }
                 const isActive = branch === key;
 

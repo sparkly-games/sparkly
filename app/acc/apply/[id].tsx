@@ -33,7 +33,7 @@ const JOBS = [
   },
 ];
 
-const JobCard = memo(({ job, onApply }) => {
+const JobCard = memo(({ job, onApply }: any) => {
   return (
     <View style={styles.card}>
       <Text style={styles.jobTitle}>{job.title}</Text>
@@ -82,7 +82,7 @@ export default function ApplyScreen() {
     }).start();
   }, []);
 
-  const handleApply = (jobId) => {
+  const handleApply = (jobId: string) => {
     router.push(`/acc/apply/${jobId}`);
   };
 

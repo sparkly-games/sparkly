@@ -26,7 +26,7 @@ export default function MaintenanceScreen() {
 
   return (
     <View style={[styles.container, isDesktop && styles.desktopContainer]}>
-      <GameWall useAbsolute/>
+      <GameWall/>
       <Head>
         <title>Sparkly Games | Maintenance</title>
         <link rel="icon" href="/favicon.ico" />
@@ -61,7 +61,7 @@ export default function MaintenanceScreen() {
   );
 }
 
-const ControlIcon = ({ name, onPress }) => (
+const ControlIcon = ({ name, onPress }: any) => (
   <TouchableOpacity onPress={onPress} style={styles.iconBtn} activeOpacity={0.7}>
     <Ionicons name={name} size={22} color="white" />
   </TouchableOpacity>

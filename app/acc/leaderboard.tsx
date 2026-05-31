@@ -80,7 +80,7 @@ const LeaderboardGameCard = ({
       onPress={clickHandler}
     >
       <Image
-        source={gameIcons[icon] ?? { uri: 'https://via.placeholder.com/72' }}
+        source={(gameIcons[icon as keyof typeof gameIcons] as any) ?? { uri: 'https://via.placeholder.com/72' }}
         style={styles.gameImage}
       />
 

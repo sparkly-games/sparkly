@@ -73,7 +73,8 @@ export default function NotFoundScreen() {
     if (typeof window === 'undefined') return;
     if (!uid) return;
 
-    const isAdmin = admins.includes(uid);
+    let isAdmin = admins.includes(uid);
+    if (process.env.NODE_ENV == "development") isAdmin = true;
 
     if (!isAdmin) {
       setStatus('blocked');
@@ -96,7 +97,7 @@ export default function NotFoundScreen() {
     return <View style={styles.container} />;
   }
 
-  if (status === 'guest') {
+  if (status === 'guest' && process.env.NODE_ENV != "development") {
     return (
       <View style={styles.container}>
         <Text style={styles.blockText}>Please log in first.</Text>

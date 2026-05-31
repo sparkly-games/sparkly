@@ -14,6 +14,18 @@ import { router } from 'expo-router';
 import { GlitchText } from '@/assets/components/GlitchText';
 import { GameWall } from '@/assets/components/GameWall';
 
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      'stripe-buy-button': {
+        'buy-button-id': string;
+        'publishable-key': string;
+        children?: React.ReactNode;
+      };
+    }
+  }
+}
+
 export default function SparklyProScreen() {
   const { width } = useWindowDimensions();
   const isDesktop = width >= 1024;
@@ -54,16 +66,20 @@ export default function SparklyProScreen() {
           </View>
 
           <View style={styles.priceBox}>
-            <Text style={styles.price}>£4.99<span style={{ fontWeight: '400' }}>/mo</span></Text>
+            <Text style={styles.price}>
+              £4.99
+              <Text style={{ fontWeight: '400' }}>/mo</Text>
+            </Text>
             <Text style={styles.save}>£49.99/year • save 15%</Text>
             <Text style={styles.lifetime}>£499.99 lifetime unlock</Text>
           </View>
 
-          <stripe-buy-button
-            buy-button-id="buy_btn_1TRbPbCuTZizttXV5LfT2hqN"
-            publishable-key="pk_test_51TRavGCuTZizttXVV8FXSbn9oEknEa8nFL0XCdYj9aGqmXYt184as0RRFkyKw6vfxLzFF2o39PcAmC8XSgLbFSkv00WxE4ApP6"
-          >
-          </stripe-buy-button>
+          {Platform.OS === 'web' &&
+            React.createElement('stripe-buy-button', {
+              'buy-button-id': 'buy_btn_1TRbPbCuTZizttXV5LfT2hqN',
+              'publishable-key': 'pk_test_51TRavGCuTZizttXVV8FXSbn9oEknEa8nFL0XCdYj9aGqmXYt184as0RRFkyKw6vfxLzFF2o39PcAmC8XSgLbFSkv00WxE4ApP6',
+            })
+          }
 
           <TouchableOpacity
             style={styles.secondary}

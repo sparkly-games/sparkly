@@ -2,10 +2,10 @@ import { StyleSheet, Platform } from "react-native";
 
 // --- PALETTE ---
 const C = {
-  bg: '#020617',
-  surface: '#0a0f1e',
-  card: '#0d1526',
-  border: '#1a2744',
+  bg: '#04020d',        // Slightly deepened to an ultra-dark violet to blend with the rainbow
+  surface: '#0a0b1e',   // Deep space blue/indigo
+  card: '#0f112a',
+  border: '#1e224a',
   accent: '#6366f1',
   accentLt: '#818cf8',
   hot: '#f43f5e',
@@ -15,6 +15,16 @@ const C = {
   text: '#f1f5f9',
   textDim: '#94a3b8',
   green: '#34d399',
+  
+  // Subtle Pride Theme Accents (clean, intentional color flags)
+  pride: {
+    red: '#ff4757',
+    orange: '#ffa502',
+    yellow: '#ffa502',
+    green: '#2ed573',
+    blue: '#1e90ff',
+    purple: '#a55eea',
+  }
 };
 
 // 46 different "vibe" texts.
@@ -68,17 +78,17 @@ const VIBES = [
   "insert coin. wait, it's free. go wild.",
 ];
 
-// Genre Filters
+// Genre Filters with refreshed Pride-vibrant indicator colors
 const GENRE_FILTERS = [
   { id: 'all', label: '✦ All', color: '#818cf8' },
-  { id: 'action', label: '⚡ Action', color: '#f59e0b' },
-  { id: 'racing', label: '🏎 Racing', color: '#f87171' },
-  { id: 'sports', label: '🏆 Sports', color: '#fbbf24' },
-  { id: 'puzzle', label: '🧩 Puzzle', color: '#34d399' },
-  { id: 'survival', label: '💀 Survival', color: '#a78bfa' },
-  { id: 'adventure', label: '🗺 Adventure', color: '#fb923c' },
-  { id: 'clicker', label: '🖱 Clicker', color: '#e879f9' },
-  { id: 'platformer', label: '🏷️ Platformer', color: '#ef4444' },
+  { id: 'action', label: '⚡ Action', color: '#ff4757' },
+  { id: 'racing', label: '🏎 Racing', color: '#ffa502' },
+  { id: 'sports', label: '🏆 Sports', color: '#ffda79' },
+  { id: 'puzzle', label: '🧩 Puzzle', color: '#2ed573' },
+  { id: 'survival', label: '💀 Survival', color: '#1e90ff' },
+  { id: 'adventure', label: '🗺 Adventure', color: '#a55eea' },
+  { id: 'clicker', label: '🖱 Clicker', color: '#ff79cd' },
+  { id: 'platformer', label: '🏷️ Platformer', color: '#ff5252' },
 ];
 
 // --- STYLES ---
@@ -90,9 +100,10 @@ const styles = StyleSheet.create({
   // HERO
   hero: {
     padding: 28, 
-    borderTopColor: 'rgba(255,255,255,0.12)',
+    borderTopWidth: 2,
+    borderTopColor: C.accent, // Can be bound to a rainbow tint gradient in the UI layer
     borderRadius: 28,
-    position: 'sticky',
+    position: Platform.OS === 'web' ? 'sticky' : 'relative', // Fixed crash: 'sticky' is not valid native layout
     top: 16,
     backgroundColor: C.surface,
     borderWidth: 1,
@@ -119,18 +130,20 @@ const styles = StyleSheet.create({
   heroTitle: {
     fontSize: 48,
     fontWeight: '900',
-    color: C.accentLt,
+    color: C.text,
     letterSpacing: -1,
     textAlign: 'center',
   },
-  // Example: Apply random color to the text shadow for a "glow"
   heroVibe: {
     color: C.mutedLt,
     fontSize: 13,
     fontWeight: '500',
-    textShadowColor: Object.values(C)[Math.random() * Object.values(C).length >> 0],
-    textShadowOffset: { width: 5, height: 5 },
-    textShadowRadius: 10,
+    textAlign: 'center',
+    marginTop: 4,
+    // FIX: Removed dangerous runtime evaluation of Math.random inside StyleSheet.
+    textShadowColor: 'rgba(99, 102, 241, 0.4)',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 6,
   },
   statsRow: {
     flexDirection: 'row',
@@ -192,7 +205,7 @@ const styles = StyleSheet.create({
   verText: {
     color: C.muted,
     fontSize: 11,
-    fontFamily: 'monospace',
+    fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace',
     fontWeight: '500',
     marginTop: 16,
     letterSpacing: 0.5,
@@ -265,23 +278,15 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: -80,
     left: '50%',
-
     width: 320,
     height: 320,
-
     marginLeft: -160,
-
     borderRadius: 999,
-    backgroundColor: 'rgba(99,102,241,0.12)',
+    backgroundColor: 'rgba(129, 140, 248, 0.08)',
   },
-
   heroGrid: {
     position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-
+    top: 0, left: 0, right: 0, bottom: 0,
     opacity: 0.04,
   },
   sectionTitle: {
@@ -313,7 +318,7 @@ const styles = StyleSheet.create({
     borderColor: C.border,
     position: 'relative', 
     borderTopWidth: 1.5,
-    borderTopColor: 'rgba(255, 255, 255, 0.1)', // Subtle rim light
+    borderTopColor: 'rgba(255, 255, 255, 0.1)',
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.5,
@@ -411,7 +416,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 8,
   },
-
   heroGlow: {
     position: 'absolute',
     width: 220,
@@ -425,19 +429,15 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     letterSpacing: 3,
     textTransform: 'uppercase',
-
     color: '#7dd3fc',
     opacity: 0.7,
-
     marginBottom: 12,
     paddingHorizontal: 8,
     paddingVertical: 4,
-
     backgroundColor: 'rgba(125,211,252,0.08)',
     borderWidth: 1,
     borderColor: 'rgba(125,211,252,0.18)',
     borderRadius: 999,
-
     textAlign: 'center',
   },
   modalTrendText: {

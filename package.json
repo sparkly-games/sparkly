@@ -41,7 +41,6 @@
     "firebase": "^12.8.0",
     "fs": "^0.0.1-security",
     "hls.js": "^1.6.16",
-    "katex": "^0.16.45",
     "lucide-react-native": "^1.8.0",
     "octokit": "^5.0.5",
     "path": "^0.12.7",

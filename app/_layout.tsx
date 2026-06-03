@@ -231,20 +231,6 @@ export default function RootLayout() {
     return () => clearTimeout(timeoutId);
   }, [toast]);
 
-  /* ------------------ CLARITY ------------------ */
-
-  useEffect(() => {
-    if (Platform.OS === 'web') {
-      (function (c: any, l: Document, a: string, r: string, i: string) {
-        c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
-        const t = l.createElement(r) as HTMLScriptElement;
-        t.async = true; t.src = "https://www.clarity.ms/tag/" + i;
-        const y = l.getElementsByTagName(r)[0];
-        y.parentNode?.insertBefore(t, y);
-      })(window, document, "clarity", "script", "w27gct3xid");
-    }
-  }, []);
-
   /* ------------------ INIT ------------------ */
 
   useEffect(() => {
@@ -392,6 +378,8 @@ export default function RootLayout() {
             <View style={styles.menu}>
               {Object.entries(BRANCHES).map(([key, data]) => {
                 if ( uid && admins.includes(uid) ){
+                  data.disabled = false
+                } else if ( process.env.NODE_ENV == "development" ) {
                   data.disabled = false
                 }
                 const isActive = branch === key;

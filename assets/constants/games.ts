@@ -89,5 +89,7 @@ export const gamesData = [
   { title: { en: "Web Retro" }, img: "web-retro", url: "/webretro/", genre: "action" },
   { title: { en: "Wheelie Bike" }, img: "wheelie-bike", url: "/wheelie-bike/", genre: "racing" },
   { title: { en: "Jelly Mario" }, img: "jelly-mario", url: "/jellymario/", genre: "platformer", untested: true },
-  { title: { en: "Five Nights at Winston's" }, img: "fnaw", url: "/FNAW/", genre: "survival", horror: true, untested: true },
+  { title: { en: "Five Nights at Winston's" }, img: "fnaw", url: "/FNAW/", genre: "survival", horror: true },
+  { title: { en: "WebGL Fluid Simulation" }, img: "webgl-fluid-simulation", url: "/webgl/", genre: "clicker" },
+  { title: { en: "Google Games Snake" }, img: "gg-snake", url: "/fbx-snake-arcade/", genre: "puzzle" },
 ];

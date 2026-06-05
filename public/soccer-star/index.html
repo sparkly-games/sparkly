@@ -1,0 +1,317 @@
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="robots" content="noindex, nofollow">
+
+	<meta name="viewport" content="width=device-width,  initial-scale=1.0">
+	
+	
+
+<style>div.twenty{
+	background-color:#FFF;
+	border: 0px;
+	margin: 10px 0px;
+	padding: 5px 0px;
+	color:#000;	
+	width:800px;	
+}
+div.twentygame{
+	background-color:#FFF;
+	border: 0px;
+	margin: 0px;
+	padding: 0px;
+	color:#000;
+width:800px;	
+}
+@media (max-width:767px){	
+	div.twenty{
+		width:380px;
+	}
+	div.twentytext{
+		width:380px;
+	}
+	div.twentyfoot{
+		width:380px;
+	}
+	div.textBox{
+		width:370px;
+	}
+	div.twentygame{width:800px;}	
+	div.gutter{
+		display:none;
+		width:0px;
+		border:0px;
+		margin:0px;
+		padding:0px;
+	}	
+	div.maincont{
+		width:100%;
+	}	
+}
+@media (min-width:800px) and (max-width:1279px){		
+	div.twenty{
+		width:800px;
+	}
+	div.twentytext{
+		width:800px;
+	}
+	div.twentyfoot{
+		width:800px;
+	}	
+	div.textBox{
+		width:790px;
+	}	
+	div.maincont{
+		width:800px;
+		margin: 0 auto;
+	}	
+}
+@media (min-width:1280px){
+	div.twenty{
+		width:800px;
+	}
+	div.twentytext{
+		width:800px;
+	}
+	div.twentyfoot{
+		width:800px;
+	}	
+	div.textBox{
+		width:790px;
+	}	
+	div.twentygame{
+		width:800px;
+	}
+#Games{
+			margin:0px 0px;	
+		}	
+	div.maincont{
+		width:800px;
+		margin: 0 auto;
+	}				
+}
+div.twentytext{
+	background-color:#44753c;
+	color:#fff;
+}
+div.twentybox{
+	width:300px;
+	display:inline-block;
+	margin:15px;
+	padding:10px;
+}
+div.twentyfoot{
+	background-color:#44753c;
+	height:50px;
+	font-size:1.5em;
+	border: 0px;
+	margin: 10px 0px;
+	padding: 5px 0px;	
+}		
+div.left {
+	background-color:#FFF;
+	margin:10px 10px 20px;
+	padding:10px;
+	color:#000;
+}
+div.button {
+	cursor:pointer;
+	display:inline-block;
+	margin:5px;
+	padding:5px;
+	text-align:center;
+	color:#FFF;
+	background-color: #19C614;
+}
+div.footer {
+	clear:both;
+	display:inline-block;
+	background-color:#44753C;
+	padding:10px 0px;
+	margin-top:0px;
+	color:#FFF;
+	text-align:center;
+	border-color:#FFF;
+	border-style:solid;
+	border-width:2px;
+}
+a, a:link, a:hover, a:visited, a:active {
+	color: black;
+}
+.fullscreen-button {
+    display: block;
+    background-color: #19C614; /* Hooda Math Green */
+    color: white !important;
+    font-size: 1.5em;
+    text-align: center;
+    padding: 15px 0;
+    margin: 0;
+    cursor: pointer;
+    border: none;
+    font-weight: bold;
+    text-decoration: none;
+    box-shadow: 0px -4px 0px #0F9210, 0px -6px 5px rgba(0, 0, 0, 0.3); /* Green shadow */
+    transition: all 0.1s ease-in-out;
+    position: relative;
+    font-family: sans-serif;
+}
+
+.fullscreen-button:hover {
+    background-color: #0E09B7; /* Hooda Math Blue */
+    box-shadow: 0px -4px 0px #0A087A, 0px -6px 5px rgba(0, 0, 0, 0.3); /* Dark Blue shadow */
+    transform: translateY(-2px);
+}
+
+.fullscreen-button:active {
+    box-shadow: 0px -2px 0px #0A087A, 0px -4px 4px rgba(0, 0, 0, 0.3); /* Pressed effect */
+    transform: translateY(-4px);
+}
+
+body.light-mode {
+    background-color: white;
+    color: black;
+}
+body.dark-mode {
+    background-color: black;
+    color: white;
+}
+.toggle-button {
+    padding: 10px 20px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #ddd;
+    font-size: 16px;
+}
+body.dark-mode div.twenty,
+body.dark-mode div.twentygame,
+body.dark-mode div.twentytext,
+body.dark-mode div.twentyfoot,
+body.dark-mode div.left,
+body.dark-mode div.footer {
+    background-color: #000;
+    color: #FFF;
+}
+
+body.dark-mode a, 
+body.dark-mode a:link, 
+body.dark-mode a:hover, 
+body.dark-mode a:visited, 
+body.dark-mode a:active {
+    color: #FFF;
+}
+body.dark-mode .gutter {
+    background-color: #000;
+}
+body.dark-mode .maincont {
+    background-color: #000;
+}
+</style>
+
+<script src="/ruffle/ruffle.js"></script>
+
+</head>
+
+<body style="min-width:600;margin:0px;border:0;padding:0px;font-family:sans-serif;">					
+					
+					<div id="gameParent" style="display:inline;">
+						<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width=100%"" height=100%"" id="soccerstar.swf" align="middle">
+						<param name="movie" value="soccerstar.swf" />
+						<param name="quality" value="high" />
+		
+						<param name="play" value="true" />
+						<param name="loop" value="true" />
+						<param name="wmode" value="window" />
+						<param name="scale" value="showall" />
+						<param name="menu" value="true" />
+						<param name="devicefont" value="false" />
+						<param name="salign" value="" />
+						<param name="allowScriptAccess" value="sameDomain" />
+						<!--[if !IE]>-->
+						<object type="application/x-shockwave-flash" data="soccerstar.swf" width=100%"" height=100%"">
+							<param name="movie" value="soccerstar.swf" />
+							<param name="quality" value="high" />
+		
+							<param name="play" value="true" />
+							<param name="loop" value="true" />
+							<param name="wmode" value="window" />
+							<param name="scale" value="showall" />
+							<param name="menu" value="true" />
+							<param name="devicefont" value="false" />
+							<param name="salign" value="" />
+							<param name="allowScriptAccess" value="sameDomain" />
+						<!--<![endif]-->
+							<div style="margin:auto;background-color:gray;width:100%;height:100%;">
+							<br><br>
+								Click to Enable or Download Adobe Flash<br>
+							<br><br>	
+								<a href="https://www.adobe.com/go/getflash">
+									<img src="https://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player" />
+								</a><br>
+							<br><br>						
+								or Choose One of these Popular HTML5 Games to Play<br>
+							<br><br>						
+										<div style="background-color:#FFF;width:100px;display:inline-block;margin:5px;padding:3px;"><a href="https://www.hoodamath.com/games/2048.html"><img src="https://www.hoodamath.com/large/2048_300x225.jpg" style="width:100px;height:75px;" alt="2048">
+									<br><br>
+									2048
+									
+									</a>
+									</div><div style="background-color:#FFF;width:100px;display:inline-block;margin:5px;padding:3px;"><a href="https://www.hoodamath.com/games/lemonadestand.html"><img src="https://www.hoodamath.com/large/lemonadestand_300x225.jpg" style="width:100px;height:75px;" alt="Lemonade Stand">
+									<br><br>
+									Lemonade Stand
+									
+									</a>
+									</div><div style="background-color:#FFF;width:100px;display:inline-block;margin:5px;padding:3px;"><a href="https://www.hoodamath.com/games/mathtimedtests.html"><img src="https://www.hoodamath.com/large/mathtimedtests_300x225.jpg" style="width:100px;height:75px;" alt="Math Timed Tests">
+									<br><br>
+									Math Timed Tests
+									
+									</a>
+									</div><div style="background-color:#FFF;width:100px;display:inline-block;margin:5px;padding:3px;"><a href="https://www.hoodamath.com/games/minigolf.html"><img src="https://www.hoodamath.com/large/minigolf_300x225.jpg" style="width:100px;height:75px;" alt="Mini Golf">
+									<br><br>
+									Mini Golf
+									
+									</a>
+									</div><div style="background-color:#FFF;width:100px;display:inline-block;margin:5px;padding:3px;"><a href="https://www.hoodamath.com/games/oblong.html"><img src="https://www.hoodamath.com/large/oblong_300x225.jpg" style="width:100px;height:75px;" alt="Oblong">
+									<br><br>
+									Oblong
+									
+									</a>
+									</div><div style="background-color:#FFF;width:100px;display:inline-block;margin:5px;padding:3px;"><a href="https://www.hoodamath.com/games/connect4.html"><img src="https://www.hoodamath.com/large/connect4_300x225.jpg" style="width:100px;height:75px;" alt="Connect 4">
+									<br><br>
+									Connect 4
+									</a>
+									</div>
+									<div style="background-color:#FFF;width:100px;display:inline-block;margin:5px;padding:3px;"><a href="https://www.hoodamath.com/games/mousetrap.html"><img src="https://www.hoodamath.com/large/mousetrap_300x225.jpg" style="width:100px;height:75px;" alt="Mouse Trap">
+									<br><br>
+									Mouse Trap
+									
+									</a>
+									</div><div style="background-color:#FFF;width:100px;display:inline-block;margin:5px;padding:3px;"><a href="https://www.hoodamath.com/games/colorfill.html"><img src="https://www.hoodamath.com/large/colorfill_300x225.jpg" style="width:100px;height:75px;" alt="Color Fill">
+									<br><br>
+									Color Fill
+									
+									</a>
+									</div><div style="background-color:#FFF;width:100px;display:inline-block;margin:5px;padding:3px;"><a href="https://www.hoodamath.com/games/spillthesand.html"><img src="https://www.hoodamath.com/large/spillthesand_300x225.jpg" style="width:100px;height:75px;" alt="Spill The Sand">
+									<br><br>
+									Spill The Sand
+									
+									</a>
+									</div><div style="background-color:#FFF;width:100px;display:inline-block;margin:5px;padding:3px;"><a href="https://www.hoodamath.com/games/stickninja.html"><img src="https://www.hoodamath.com/large/stickninja_300x225.jpg" style="width:100px;height:75px;" alt="Stick Ninja">
+									<br><br>
+									Stick Ninja
+									
+									</a>
+									</div>														
+							</div>
+						<!--[if !IE]>-->
+						</object>
+						<!--<![endif]-->
+					</object>	
+		    </div>
+							
+											
+
+</body>
+
+</html>

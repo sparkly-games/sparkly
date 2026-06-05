@@ -92,4 +92,5 @@ export const gamesData = [
   { title: { en: "Five Nights at Winston's" }, img: "fnaw", url: "/FNAW/", genre: "survival", horror: true },
   { title: { en: "WebGL Fluid Simulation" }, img: "webgl-fluid-simulation", url: "/webgl/", genre: "clicker" },
   { title: { en: "Google Games Snake" }, img: "gg-snake", url: "/fbx-snake-arcade/", genre: "puzzle" },
+  { title: { en: "Soccer Star" }, img: "soccer-star", url: "/soccer-star/", genre: "action" },
 ];

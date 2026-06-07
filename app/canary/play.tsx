@@ -22,9 +22,9 @@ const VER_PATCHES = [
 ];
 
 const VER_INFO = {
-  date: '28/5/26',
-  text: '8.4.4',
-  patch: VER_PATCHES[17],
+  date: '07/06/26',
+  text: '8.4.8',
+  patch: VER_PATCHES[23],
 };
 
 const isDev = typeof window !== 'undefined' && localStorage.getItem('sparkly_branch') === 'devpatch';
@@ -58,7 +58,8 @@ export default function HomeScreen() {
             <ControlIcon name="logo-youtube" onPress={() => router.push('/media/youtube')} label="Videos" />
             <ControlIcon name="logo-soundcloud" onPress={() => Linking.openURL('https://sc3.maid.zone')} label="Music" />
             <ControlIcon name="volume-high" onPress={() => Linking.openURL('/sounds/soundboard/')} label="Sounds" />
-            <ControlIcon name="newspaper-outline" onPress={() => Linking.openURL('https://sparkly.mintlify.app')} label="Docs" />
+            <ControlIcon name="newspaper" onPress={() => Linking.openURL('https://sparkly.mintlify.app')} label="Docs" />
+            <ControlIcon name="flame" onPress={() => router.push('/games/ridesims')} label="Ride Sims" />
             <ControlIcon svg={ <TintableImage source={require("@/assets/images/netflix.svg")} style={{ width: 21, height: 21 }} tintColor={C.muted} /> } onPress={() => Linking.openURL('https://example.com')} label="Openflix" />
           </View>
         </View>

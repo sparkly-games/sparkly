@@ -51,6 +51,7 @@ export default function MaintenanceScreen() {
             <strong>{"\n\n"}What can you do?</strong>
             {"\n\n"}• Wait for the maintenance to be completed (soon!)
             {"\n\n"}• Check out the GitHub below for updates and news.
+            {"\n\n"}• Continue with BitLife while you wait!
           </Text>
 
           <View style={styles.iconRow}>

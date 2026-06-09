@@ -31,6 +31,8 @@ const CLOUD_SYNC_INTERVAL_MS = 60 * 60 * 1000;
 
 type BranchKey = 'stable' | 'canary' | 'devpatch' | 'admin';
 
+const isInIframe = typeof window !== 'undefined' && window.self !== window.top;
+
 const BRANCHES: Record<BranchKey, {
   label: string;
   disabled?: boolean;
@@ -354,7 +356,7 @@ export default function RootLayout() {
           <RecruitBanner text={"Looking for UI designers!"} onPress={() => {router.push("/acc/apply/jobs")}} />
         </View>
       */ }
-      {Platform.OS === 'web' && !isShutdown && !maintenance && (
+      {Platform.OS === 'web' && !isShutdown && !maintenance && !isInIframe && (
         <View style={styles.floatingContainer}>
 
           {/* TOAST ABOVE PICKER */}

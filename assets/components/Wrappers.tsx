@@ -15,6 +15,13 @@ import { Game } from './Game';
 import { WithLocalSvg } from 'react-native-svg/css';
 import { GameWall } from './GameWall';
 
+const refreshIframe = (iframeRef: React.RefObject<HTMLIFrameElement>, setGameLoading: (loading: boolean) => void) => {
+  if (iframeRef.current) {
+    setGameLoading(true);
+    iframeRef.current.src = iframeRef.current.src;
+  }
+};
+
 type GameType = {
   title: { en: string };
   img: string;
@@ -426,7 +433,7 @@ const ModalBar = ({
 
         <TouchableOpacity
           style={styles.modalIconBtn}
-          onPress={() => setGameLoading(true)}
+          onPress={() => refreshIframe(iframeRef, setGameLoading)}
           activeOpacity={0.7}
         >
           <Ionicons

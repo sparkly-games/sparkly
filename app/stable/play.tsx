@@ -22,9 +22,9 @@ const VER_PATCHES = [
 ];
 
 const VER_INFO = {
-  date: '09/06/26',
-  text: '8.5.1',
-  patch: VER_PATCHES[4],
+  date: '10/06/26',
+  text: '8.5.2',
+  patch: VER_PATCHES[6],
 };
 
 const isDev = typeof window !== 'undefined' && localStorage.getItem('sparkly_branch') === 'devpatch';
@@ -58,11 +58,14 @@ export default function HomeScreen() {
             RideSims has been moved to the game list below.
             <br></br>
             YouTube does not work.
+            <br></br>
+            For Element, you cannot create an account on MDM. Use your phone to sign up then log in here.
           </Text>
           <View style={styles.navRow}>
             <ControlIcon name="logo-youtube" onPress={() => router.push('/media/youtube')} label="Videos" />
             <ControlIcon name="volume-high" onPress={() => Linking.openURL('/sounds/soundboard/')} label="Sounds" />
             <ControlIcon name="newspaper" onPress={() => Linking.openURL('https://sparkly.mintlify.app')} label="Docs" />
+            <ControlIcon name="flame" onPress={() => Linking.openURL('https://element.4d2.org')} label="Element" />
             <ControlIcon name="logo-soundcloud" onPress={() => Linking.openURL('https://soundcloak.tijn.dev')} label="Music" />
             <ControlIcon svg={ <TintableImage source={require("@/assets/images/netflix.svg")} style={{ width: 21, height: 21 }} tintColor={C.muted} /> } onPress={() => Linking.openURL('https://example.com')} label="Openflix" />
           </View>

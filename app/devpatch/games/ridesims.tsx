@@ -35,13 +35,12 @@ const games = [
   { name: "rita", difficulty: "Easy" },
   { name: "oblivion", difficulty: "Moderate" },
   { name: "nemesis", difficulty: "Easy" },
-// ADDING TOMORROW (9th June):
-//{ name: "thirteen", difficulty: "Easy", display: "Th13teen" },
-//{ name: "spinball-whizzer", difficulty: "Moderate", display: "Spinball Whizzer" },
-//{ name: "saw", difficulty: "Moderate", display: "SAW: The Ride" },
-//{ name: "hex", difficulty: "Easy", display: "Hex: The Legend of the Towers" },
-//{ name: "icon", difficulty: "Moderate" },
-//{ name: "wickerman", difficulty: "Easy" },
+  { name: "thirteen", difficulty: "Easy", display: "Th13teen" },
+  { name: "spinball-whizzer", difficulty: "Moderate", display: "Spinball Whizzer" },
+  { name: "saw", difficulty: "Moderate", display: "SAW: The Ride" },
+  { name: "hex", difficulty: "Easy", display: "Hex: The Legend of the Towers" },
+  { name: "icon", difficulty: "Moderate" },
+  { name: "wickerman", difficulty: "Easy" },
 ];
 
 const sortedGames = games.sort((a, b) => a.name.localeCompare(b.name));

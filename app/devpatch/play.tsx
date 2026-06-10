@@ -22,9 +22,9 @@ const VER_PATCHES = [
 ];
 
 const VER_INFO = {
-  date: '08/06/26',
-  text: '8.5.0',
-  patch: VER_PATCHES[2],
+  date: '09/06/26',
+  text: '8.5.1',
+  patch: VER_PATCHES[4],
 };
 
 const isDev = typeof window !== 'undefined' && localStorage.getItem('sparkly_branch') === 'devpatch';
@@ -54,12 +54,16 @@ export default function HomeScreen() {
       <View style={styles.headerContainer}>
         <View style={[styles.sectionHeader]}>
           <Text style={styles.sectionLabel}>MEDIA</Text>
+          <Text style={{ fontSize: 12, fontWeight: "bold", color: "#ff3c3c", marginBottom: 20, backgroundColor: "#751616", padding: 10, borderRadius: 10, textAlign: 'center' }}>
+            RideSims has been moved to the game list below.
+            <br></br>
+            YouTube does not work.
+          </Text>
           <View style={styles.navRow}>
             <ControlIcon name="logo-youtube" onPress={() => router.push('/media/youtube')} label="Videos" />
-            <ControlIcon name="logo-soundcloud" onPress={() => Linking.openURL('https://sc3.maid.zone')} label="Music" />
             <ControlIcon name="volume-high" onPress={() => Linking.openURL('/sounds/soundboard/')} label="Sounds" />
             <ControlIcon name="newspaper" onPress={() => Linking.openURL('https://sparkly.mintlify.app')} label="Docs" />
-            <ControlIcon name="flame" onPress={() => router.push('/games/ridesims')} label="Ride Sims" />
+            <ControlIcon name="logo-soundcloud" onPress={() => Linking.openURL('https://soundcloak.tijn.dev')} label="Music" />
             <ControlIcon svg={ <TintableImage source={require("@/assets/images/netflix.svg")} style={{ width: 21, height: 21 }} tintColor={C.muted} /> } onPress={() => Linking.openURL('https://example.com')} label="Openflix" />
           </View>
         </View>

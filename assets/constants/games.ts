@@ -65,7 +65,7 @@ export const gamesData = [
   { title: { en: "Roll" }, img: "roll", url: "/roll/", genre: "puzzle" },
   { title: { en: "Roper" }, img: "roper", url: "/roper/", genre: "action" },
   { title: { en: "Sky Race 3D" }, img: "sky-race-3d", url: "/skyrace3d/", genre: "racing" },
-  { title: { en: "Slice Master" }, img: "slice-master", url: "/slice-master/", genre: "puzzle", fixed: true, untested: true },
+  { title: { en: "Slice Master" }, img: "slice-master", url: "/slice-master/", genre: "puzzle", fixed: true },
   { title: { en: "Small World Cup" }, img: "small-world-cup", url: "/small-world-cup/", genre: "sports" },
   { title: { en: "Soccer Random" }, img: "soccer-random", url: "/randoms/soccer/", genre: "sports" },
   { title: { en: "Spiral Roll" }, img: "slice-roll", url: "/slice-roll/", genre: "action" },

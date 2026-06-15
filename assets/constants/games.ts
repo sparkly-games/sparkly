@@ -1,6 +1,5 @@
 export const gamesData = [
   { title: { en: "99 Balls" }, img: "ninety-nine-balls", url: "/ninety-nine-balls/", genre: "puzzle" },
-  { title: { en: "Angry Birds" }, img: "angry-birds", url: "/angrybirds/", genre: "action" },
   { title: { en: "Basket Random" }, img: "basket-random", url: "/randoms/basket/", genre: "sports" },
   { title: { en: "BitLife" }, img: "bitlife", url: "/bitlife/", genre: "adventure", popular: true },
   { title: { en: "Block Blast" }, img: "block-blast", url: "/block-blast/", genre: "puzzle" },
@@ -14,7 +13,6 @@ export const gamesData = [
   { title: { en: "Cut the Rope" }, img: "ctr", url: "/ctr/", genre: "puzzle" },
   { title: { en: "Cut The Rope: Time Travel" }, img: "ctr-time-travel", url: "/time-travel/", genre: "puzzle" },
   { title: { en: "Darts Pro" }, img: "darts-pro", url: "/dartspro/", genre: "sports" },
-  { title: { en: "Doge Miner" }, img: "doge-miner", url: "/DogeMiner/", genre: "clicker" },
   { title: { en: "Doge Miner 2" }, img: "doge-miner-2", url: "/doge-miner-2/", genre: "clicker" },
   { title: { en: "Draw Climber" }, img: "draw-climber", url: "/draw-climber/", genre: "puzzle" },
   { title: { en: "Draw the Hill" }, img: "draw-the-hill", url: "/draw-the-hill/", genre: "puzzle" },
@@ -78,11 +76,9 @@ export const gamesData = [
   { title: { en: "Tap Goal" }, img: "tap-goal", url: "/tap-goal/", genre: "sports" },
   { title: { en: "There Is No Game" }, img: "there-is-no-game", url: "/there-is-no-game/", genre: "puzzle" },
   { title: { en: "Thorns and Balloons" }, img: "thorns-and-balloons", url: "/thorns-and-balloons/", genre: "puzzle" },
-  { title: { en: "Tiny Fishing" }, img: "tiny-fishing", url: "/tiny-fishing/", genre: "clicker" },
-  { title: { en: "Tiny Fishing | Update" }, img: "tiny-fishing-update", url: "/tiny-fishing/update/", genre: "clicker" },
+  { title: { en: "Tiny Fishing" }, img: "tiny-fishing-update", url: "/tiny-fishing/update/", genre: "clicker" },
   { title: { en: "Tomb of the Mask" }, img: "tomb-of-the-mask", url: "/totm/", genre: "action" },
   { title: { en: "Volley Random" }, img: "volley-random", url: "/randoms/volley/", genre: "sports" },
-  { title: { en: "Web Retro" }, img: "web-retro", url: "/webretro/", genre: "action" },
   { title: { en: "Wheelie Bike" }, img: "wheelie-bike", url: "/wheelie-bike/", genre: "racing" },
   { title: { en: "Jelly Mario" }, img: "jelly-mario", url: "/jellymario/", genre: "platformer", untested: true },
   { title: { en: "Five Nights at Winston's" }, img: "fnaw", url: "/FNAW/", genre: "survival", horror: true },
@@ -91,5 +87,4 @@ export const gamesData = [
   { title: { en: "Soccer Star" }, img: "soccer-star", url: "/soccer-star/", genre: "action" },
   { title: { en: "Ride Sims" }, img: "ridesimsicon", url: "/games/ridesims/", genre: "puzzle", popular: true },
   { title: { en: "Papa's Pizzeria" }, img: "papaspizzeria", url: "/papas-pizzeria/", genre: "puzzle" },
-  { title: { en: "Mr Flip" }, img: "mrflip", url: "/mrflip/", genre: "platformer" },
 ];

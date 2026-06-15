@@ -27,12 +27,13 @@ const VER_PATCHES = [
 ];
 
 const VER_INFO = {
-  date: '14/06/26',
-  text: '8.5.3',
-  patch: VER_PATCHES[12],
+  date: '15/06/26',
+  text: '8.5.31',
+  patch: VER_PATCHES[16],
 };
 
 const isDev = typeof window !== 'undefined' && localStorage.getItem('sparkly_branch') === 'devpatch';
+const isNodeDev = process.env.NODE_ENV === 'development';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -40,6 +41,10 @@ export default function HomeScreen() {
   const [query, setQuery] = useState('');
   const [searchFocused, setSearchFocused] = useState(false);
   const [vibe] = useState(() => VIBES[ Math.floor( Math.random() * VIBES.length ) ]);
+  let showOverridedToast = false;
+  if (!isNodeDev && showOverridedToast){
+    showOverridedToast = false;
+  }
   
   // Dynamic toast state object
   const [toast, setToast] = useState<{ message: string; type: 'warn' | 'info' | string } | null>(null);
@@ -69,6 +74,17 @@ export default function HomeScreen() {
               message: parsedConfig.message,
               type: parsedConfig.type || 'info'
             });
+          }
+          const overrideData = {
+            "showToast": "true",
+            "message": "Your Tiny Fishing progress has been moved to the updated version!\nClick on \"Tiny Fishing\" to play the updated version with the original progress.\n\nPlanned removals (night of 16/06/26):\n• Soccer Star",
+            "type": "info"
+          }
+          if (showOverridedToast || false){
+            setToast({
+              message: overrideData.message,
+              type: overrideData.type || 'info'
+            })
           }
         }
       } catch (error) {

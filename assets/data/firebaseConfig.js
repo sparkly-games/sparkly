@@ -6,7 +6,7 @@ import { getDatabase } from 'firebase/database';
 
 const firebaseConfig = {
   apiKey: ENV_VARS.FIREBASE_API_KEY,
-  authDomain: "auth.sparxmaths.lgbt.sh",
+  authDomain: "auth.sparxlearning.lgbt.sh",
   projectId: "sparxapi",
   storageBucket: "sparxapi.firebasestorage.app",
   messagingSenderId: "291924279653",

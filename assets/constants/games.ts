@@ -24,7 +24,7 @@ export const gamesData = [
   { title: { en: "Duck Duck Clicker" }, img: "duck-duck-clicker", url: "/duck-duck-clicker/", genre: "clicker" },
   { title: { en: "Escaping the Prison" }, img: "escaping-the-prison", url: "/stickmin/escapingtheprison/", genre: "puzzle" },
   { title: { en: "Fast Runner" }, img: "fast-runner", url: "/fast-runner/", genre: "racing" },
-  { title: { en: "Five Nights at Epstein's" }, img: "fnae", url: "/fnae/", genre: "survival", horror: true },
+  { title: { en: "Five Nights at the Island" }, img: "fnati", url: "/fnae/", genre: "survival", horror: true },
   { title: { en: "Five Nights at Freddy's 1" }, img: "fnaf-1", url: "/fnaf/FNAF1/", genre: "survival", horror: true },
   { title: { en: "Five Nights at Freddy's 2" }, img: "fnaf-2", url: "/fnaf/FNAF2/", genre: "survival", horror: true, broken: true },
   { title: { en: "Five Nights at Freddy's 3" }, img: "fnaf-3", url: "/fnaf/FNAF3/", genre: "survival", horror: true },
@@ -89,5 +89,7 @@ export const gamesData = [
   { title: { en: "WebGL Fluid Simulation" }, img: "webgl-fluid-simulation", url: "/webgl/", genre: "clicker" },
   { title: { en: "Google Games Snake" }, img: "gg-snake", url: "/fbx-snake-arcade/", genre: "puzzle" },
   { title: { en: "Soccer Star" }, img: "soccer-star", url: "/soccer-star/", genre: "action" },
-  { title: { en: "Ride Sims" }, img: "ridesims", url: "/games/ridesims/", genre: "puzzle", popular: true },
+  { title: { en: "Ride Sims" }, img: "ridesimsicon", url: "/games/ridesims/", genre: "puzzle", popular: true },
+  { title: { en: "Papa's Pizzeria" }, img: "papaspizzeria", url: "/papas-pizzeria/", genre: "puzzle" },
+  { title: { en: "Mr Flip" }, img: "mrflip", url: "/mrflip/", genre: "platformer" },
 ];

@@ -1,8 +1,13 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, TextInput, ScrollView, Linking } from 'react-native';
 import { useRouter } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Image as TintableImage } from 'expo-image';
+
+// ── IMPORT FIREBASE CORE & WEB SDK REMOTE CONFIG ────────────────────────────
+import { app } from '@/assets/data/firebaseConfig'; 
+import { getRemoteConfig, fetchAndActivate, getValue } from 'firebase/remote-config';
+
 import { gamesData } from '@/assets/constants/games';
 import { styles, C, GENRE_FILTERS, VIBES } from '@/assets/constants/Theme';
 import { FilterPill } from '@/assets/components/FilterPill';
@@ -22,9 +27,9 @@ const VER_PATCHES = [
 ];
 
 const VER_INFO = {
-  date: '10/06/26',
-  text: '8.5.2',
-  patch: VER_PATCHES[6],
+  date: '14/06/26',
+  text: '8.5.3',
+  patch: VER_PATCHES[12],
 };
 
 const isDev = typeof window !== 'undefined' && localStorage.getItem('sparkly_branch') === 'devpatch';
@@ -35,6 +40,46 @@ export default function HomeScreen() {
   const [query, setQuery] = useState('');
   const [searchFocused, setSearchFocused] = useState(false);
   const [vibe] = useState(() => VIBES[ Math.floor( Math.random() * VIBES.length ) ]);
+  
+  // Dynamic toast state object
+  const [toast, setToast] = useState<{ message: string; type: 'warn' | 'info' | string } | null>(null);
+
+  // ── FIREBASE WEB SDK REMOTE CONFIG INSTANTIATION ────────────────────────────
+  useEffect(() => {
+    const fetchRemoteToast = async () => {
+      try {
+        // Initialize the Web SDK remote config client module using your provided app reference
+        const config = getRemoteConfig(app);
+
+        // Adjust synchronization throttle timing configurations for faster local development cycles
+        config.settings.minimumFetchIntervalMillis = __DEV__ ? 0 : 3600000;
+
+        // Pull network parameter data updates and force validation activation
+        await fetchAndActivate(config);
+
+        // Extract raw text parameter payload values mapped to your custom 'toast' schema key
+        const rawToastJson = getValue(config, 'toast').asString();
+
+        if (rawToastJson) {
+          const parsedConfig = JSON.parse(rawToastJson);
+
+          // Evaluate object keys matching your configuration pattern
+          if (parsedConfig.showToast && parsedConfig.message) {
+            setToast({
+              message: parsedConfig.message,
+              type: parsedConfig.type || 'info'
+            });
+          }
+        }
+      } catch (error) {
+        console.warn("Could not retrieve Remote Config variables securely:", error);
+      }
+    };
+
+    fetchRemoteToast();
+  }, []);
+  // ────────────────────────────────────────────────────────────────────────────
+
   const { favorites, toggleFavorite } = hooks.useFavorites();
   const { recent, addRecentGame } = hooks.useRecentGames();
   const { showPC, showHorror, activeGenre, setShowPC, setShowHorror, setActiveGenre } = hooks.useGameFilters();
@@ -54,20 +99,16 @@ export default function HomeScreen() {
       <View style={styles.headerContainer}>
         <View style={[styles.sectionHeader]}>
           <Text style={styles.sectionLabel}>MEDIA</Text>
-          <Text style={{ fontSize: 12, fontWeight: "bold", color: "#ff3c3c", marginBottom: 20, backgroundColor: "#751616", padding: 10, borderRadius: 10, textAlign: 'center' }}>
-            RideSims has been moved to the game list below.
-            <br></br>
-            YouTube does not work.
-            <br></br>
-            For Element, you cannot create an account on MDM. Use your phone to sign up then log in here.
-          </Text>
           <View style={styles.navRow}>
             <ControlIcon name="logo-youtube" onPress={() => router.push('/media/youtube')} label="Videos" />
             <ControlIcon name="volume-high" onPress={() => Linking.openURL('/sounds/soundboard/')} label="Sounds" />
             <ControlIcon name="newspaper" onPress={() => Linking.openURL('https://sparkly.mintlify.app')} label="Docs" />
-            <ControlIcon name="flame" onPress={() => Linking.openURL('https://element.4d2.org')} label="Element" />
-            <ControlIcon name="logo-soundcloud" onPress={() => Linking.openURL('https://soundcloak.tijn.dev')} label="Music" />
-            <ControlIcon svg={ <TintableImage source={require("@/assets/images/netflix.svg")} style={{ width: 21, height: 21 }} tintColor={C.muted} /> } onPress={() => Linking.openURL('https://example.com')} label="Openflix" />
+            <ControlIcon name="flask" onPress={() => router.push('/acc/labs')} label="Labs" />
+            <ControlIcon svg={ <TintableImage source={require("@/assets/images/jellyfin.svg")} style={{ width: 21, height: 21 }} tintColor={C.muted} /> } onPress={() => router.push('/system/soon/jellyfin')} label="JellyFin" />
+          {
+          //<ControlIcon name="logo-soundcloud" onPress={() => Linking.openURL('https://soundcloak.tijn.dev')} label="Music" />
+          //<ControlIcon svg={ <TintableImage source={require("@/assets/images/netflix.svg")} style={{ width: 21, height: 21 }} tintColor={C.muted} /> } onPress={() => Linking.openURL('https://example.com')} label="Openflix" />
+          }
           </View>
         </View>
         <View style={styles.statsRow}>
@@ -80,7 +121,7 @@ export default function HomeScreen() {
         <View style={[styles.sectionHeader]}>
           <Text style={styles.sectionLabel}>FILTERS</Text>
           <View style={styles.navRow}>
-            <ControlIcon name="desktop-outline" active={showPC} color="#60a5fa" onPress={() => { setShowPC(!showPC) }} label="PC" />
+            <ControlIcon name="laptop-outline" active={showPC} color="#60a5fa" onPress={() => { setShowPC(!showPC) }} label="PC" />
             <ControlIcon name="skull-outline" active={showHorror} color={C.hot} onPress={() => { setShowHorror(!showHorror) }} label="Horror" />
           </View>
         </View>
@@ -132,10 +173,50 @@ export default function HomeScreen() {
         <SectionHeader title="🎮 Library" count={filteredGames.length} titleStyle={{ color: C.gold }} />
       </View>
     </>
-  ), [ vibe, favorites, recent, showPC, showHorror, query, searchFocused, activeGenre, filteredGames, favGamesData, recentGamesData, trendingGames, favsCollapsed, recentCollapsed, trendingCollapsed, handleSelectGame, toggleFavorite ] );
+  ), [ vibe, favorites, recent, showPC, showHorror, query, searchFocused, activeGenre, filteredGames, favGamesData, recentGamesData, trendingGames, favsCollapsed, recentCollapsed, trendingCollapsed, handleSelectGame, toggleFavorite, toast ] );
 
   return (
     <View style={styles.container}>
+      {/* ── TOAST DISPLAY PANEL ────────────────────────────────────────────── */}
+      {toast && (
+        <View style={{ 
+          flexDirection: 'row',
+          position: 'absolute',
+          top: 50, 
+          right: 20,
+          zIndex: 9999,
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          backgroundColor: toast.type === 'warn' ? "#751616" : "#1e293b", 
+          paddingVertical: 12, 
+          paddingHorizontal: 16,
+          borderRadius: 10, 
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 4 },
+          shadowOpacity: 0.3,
+          shadowRadius: 4,
+          elevation: 5,
+        }}>
+          <Text style={{ 
+            flex: 1,
+            fontSize: 12, 
+            fontWeight: "bold", 
+            color: toast.type === 'warn' ? "#ffebeb" : C.text, 
+            textAlign: 'left',
+            lineHeight: 16,
+          }}>
+            {toast.message}
+          </Text>
+          <TouchableOpacity 
+            onPress={() => setToast(null)} 
+            style={{ marginLeft: 12, padding: 4 }}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          >
+            <Ionicons name="close" size={16} color={toast.type === 'warn' ? "#ffebeb" : C.muted} />
+          </TouchableOpacity>
+        </View>
+      )}
+
       <Header {...{ vibe, gamesData, favorites, recent, showPC, showHorror, setShowPC, setShowHorror, VER_INFO }} />
       <FilteredGamesDisplay {...{ filteredGames, columns, itemWidth , ListHeader, favorites, toggleFavorite, handleSelectGame, isDev }} />
       <GameModal closeGame={handleCloseGame} {...{ modalGame, favorites, iframeRef, toggleFavorite, setGameLoading, gameLoading }} />

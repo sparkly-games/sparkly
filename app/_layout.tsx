@@ -419,8 +419,6 @@ export default function RootLayout() {
             </Pressable>
 
             <ControlIcon name="logo-octocat" onPress={() => Linking.openURL('https://github.com/sparkly-games')} style={{ marginLeft: 10 }} />
-            <ControlIcon name="game-controller" onPress={() => Linking.openURL('https://github.com/sparkly-games/sparkly/issues/new?template=game-request.md')} style={{ marginLeft: 10 }} />
-            <ControlIcon name="flask" onPress={() => router.push('/acc/labs')} style={{ marginLeft: 10 }} />
           </View>
 
         </View>

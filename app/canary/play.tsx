@@ -27,9 +27,9 @@ const VER_PATCHES = [
 ];
 
 const VER_INFO = {
-  date: '15/06/26',
-  text: '8.5.31',
-  patch: VER_PATCHES[16],
+  date: '16/06/26',
+  text: '8.5.32',
+  patch: VER_PATCHES[17],
 };
 
 const isDev = typeof window !== 'undefined' && localStorage.getItem('sparkly_branch') === 'devpatch';
@@ -77,7 +77,7 @@ export default function HomeScreen() {
           }
           const overrideData = {
             "showToast": "true",
-            "message": "Your Tiny Fishing progress has been moved to the updated version!\nClick on \"Tiny Fishing\" to play the updated version with the original progress.\n\nPlanned removals (night of 16/06/26):\n• Soccer Star",
+            "message": "Your Tiny Fishing progress has been moved to the updated version!\nClick on \"Tiny Fishing\" to play the updated version with the original progress.\n\nPlanned removals (night of 17/06/26):\n• None!",
             "type": "info"
           }
           if (showOverridedToast || false){

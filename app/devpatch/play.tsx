@@ -27,9 +27,9 @@ const VER_PATCHES = [
 ];
 
 const VER_INFO = {
-  date: '16/06/26',
-  text: '8.5.32',
-  patch: VER_PATCHES[17],
+  date: '18/06/26',
+  text: '8.5.34',
+  patch: VER_PATCHES[0],
 };
 
 const isDev = typeof window !== 'undefined' && localStorage.getItem('sparkly_branch') === 'devpatch';

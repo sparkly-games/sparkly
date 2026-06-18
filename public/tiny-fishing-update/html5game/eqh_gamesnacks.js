@@ -1,3 +1,19 @@
+var js_GS_gameIsReady = false;
+function js_GS_gameReady()
+{
+    if (js_GS_gameIsReady) return 0; else
+        js_GS_gameIsReady = true;
+	GAMESNACKS.gameReady();
+	console.log("GAMESNACKS : game ready!");
+}
+
+function js_GS_levelCompleted(level)
+{
+	GAMESNACKS.levelComplete(level);
+	console.log("GAMESNACKS : level complete " + level.toString());
+}
+
+
 
 function js_GS_sendScore(score)
 {
@@ -20,7 +36,8 @@ function js_GS_isAudioEnabled()
 {
 
 	//return GAMESNACKS.isAudioEnabled();
-	return audioEnabled;
+	//return audioEnabled;
+	return GAMESNACKS.isAudioEnabled();
 
 }
 

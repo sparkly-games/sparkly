@@ -7,6 +7,7 @@ export default function NotFoundScreen() {
   const router = useRouter();
   const { width } = useWindowDimensions();
   const isDesktop = width >= 1024;
+  const isInIframe = window.top !== window.self; // Check if the app is running inside an iframe
   
   // Animation Values
   const scrollAnim = useRef(new Animated.Value(0)).current;
@@ -35,12 +36,14 @@ export default function NotFoundScreen() {
           The coordinates you entered do not exist in this sector.
         </Text>
 
-        <Pressable 
-          style={({ pressed }) => [styles.button, pressed && { opacity: 0.8, transform: [{ scale: 0.98 }] }]} 
-          onPress={() => router.replace('/play')}
-        >
-          <Text style={styles.buttonText}>RETURN TO BASE</Text>
-        </Pressable>
+        {!isInIframe && (
+          <Pressable 
+            style={({ pressed }) => [styles.button, pressed && { opacity: 0.8, transform: [{ scale: 0.98 }] }]} 
+            onPress={() => router.replace('/play')}
+          >
+            <Text style={styles.buttonText}>RETURN TO BASE</Text>
+          </Pressable>
+        )}
       </View>
 
       {/* --- GAME WALL SECTION --- */}

@@ -24,7 +24,7 @@ export const gamesData = [
   { title: { en: "Fast Runner" }, img: "fast-runner", url: "/fast-runner/", genre: "racing" },
   { title: { en: "Five Nights at the Island" }, img: "fnati", url: "/fnae/", genre: "survival", horror: true },
   { title: { en: "Five Nights at Freddy's 1" }, img: "fnaf-1", url: "/fnaf/FNAF1/", genre: "survival", horror: true },
-  { title: { en: "Five Nights at Freddy's 2" }, img: "fnaf-2", url: "/fnaf/FNAF2/", genre: "survival", horror: true, broken: true },
+  { title: { en: "Five Nights at Freddy's 2" }, img: "fnaf-2", url: "/fnaf/FNAF2/", genre: "survival", horror: true },
   { title: { en: "Five Nights at Freddy's 3" }, img: "fnaf-3", url: "/fnaf/FNAF3/", genre: "survival", horror: true },
   { title: { en: "Flappy Bird" }, img: "flappy-bird", url: "/flappy-bird/", genre: "survival" },
   { title: { en: "Fleeing the Complex" }, img: "fleeing-the-complex", url: "/stickmin/fleeingthecomplex/", genre: "puzzle" },

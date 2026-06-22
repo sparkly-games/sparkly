@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <a href="https://sparxlearning.lgbt.sh/stable">
+  <a href="https://sparxscience.lgbt.sh/stable">
     <img src="https://img.shields.io/badge/Live%20Demo-Visit%20Site-ff69b4?style=for-the-badge">
   </a>
 </p>

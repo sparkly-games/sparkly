@@ -14,6 +14,17 @@ import { styles, C } from '@/assets/constants/Theme';
 import { Game } from './Game';
 import { WithLocalSvg } from 'react-native-svg/css';
 import { GameWall } from './GameWall';
+import { analytics } from '../data/firebaseConfig';
+import { logEvent } from 'firebase/analytics';
+
+const reportGamePress = (game: GameType) => {
+  if (ENV_VARS.USE_ANALYTICS && analytics) {
+    logEvent(analytics, 'game', {
+      game: game.title.en,
+      genre: game.genre,
+    });
+  }
+};
 
 const refreshIframe = (iframeRef: React.RefObject<HTMLIFrameElement>, setGameLoading: (loading: boolean) => void) => {
   if (iframeRef.current) {
@@ -120,6 +131,7 @@ const GameWrapper = memo(
 
 import { ReactNode } from 'react';
 import { StyleSheet, GestureResponderEvent } from 'react-native';
+import ENV_VARS from '../data/env';
 
 interface ControlIconProps {
   name?: keyof typeof Ionicons.glyphMap; // Provides autocomplete for your icon names

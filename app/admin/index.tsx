@@ -9,6 +9,7 @@ import {
   useWindowDimensions,
   FlatList,
   Platform,
+  Linking,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { auth } from '@/assets/data/firebaseConfig';
@@ -121,13 +122,22 @@ export default function NotFoundScreen() {
     <View style={styles.container}>
       {/* CONTENT */}
       <View style={[styles.mainContent, isDesktop && styles.desktopContent]}>
-        <Text style={styles.errorCode}>🫰</Text>
+        <Text style={styles.errorCode}>🔐</Text>
         <Text style={styles.message}>Admin Preview</Text>
         <Text style={styles.subtitle}>
           See the admin preview features!
         </Text>
 
         <View style={{ margin: 5 }} />
+        <Pressable
+          style={({ pressed }) => [
+            styles.button,
+            pressed && { opacity: 0.8, transform: [{ scale: 0.98 }] },
+          ]}
+          onPress={() => Linking.openURL("https://openflixtv.lgbt.sh")}
+        >
+          <Text style={styles.buttonText}>OpenFlix</Text>
+        </Pressable>
         {/* BUTTON TEMPLATE
         <Pressable
           style={({ pressed }) => [

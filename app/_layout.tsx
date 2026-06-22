@@ -348,6 +348,16 @@ export default function RootLayout() {
         <script async
           src="https://js.stripe.com/v3/buy-button.js">
         </script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              var s = document.createElement('script');
+              s.dataset.zone = '11187810';
+              s.src = 'https://nap5k.com/tag.min.js';
+              document.head.appendChild(s);
+            `
+          }}
+        />
         <meta name="description" content="With Sparkly, get ready to game into the future like never before!" />
         <meta name="theme-color" content={getBranchColor()} />
       </Head>

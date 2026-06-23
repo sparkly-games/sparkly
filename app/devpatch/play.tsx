@@ -27,9 +27,9 @@ const VER_PATCHES = [
 ];
 
 const VER_INFO = {
-  date: '22/06/26',
-  text: '8.5.4',
-  patch: VER_PATCHES[2],
+  date: '23/06/26',
+  text: '8.5.42',
+  patch: VER_PATCHES[3],
 };
 
 const isDev = typeof window !== 'undefined' && localStorage.getItem('sparkly_branch') === 'devpatch';
@@ -116,14 +116,15 @@ export default function HomeScreen() {
         <View style={[styles.sectionHeader]}>
           <Text style={styles.sectionLabel}>MEDIA</Text>
           <View style={styles.navRow}>
-            <ControlIcon name="logo-youtube" onPress={() => router.push('/media/youtube')} label="Videos" />
             <ControlIcon name="volume-high" onPress={() => Linking.openURL('/sounds/soundboard/')} label="Sounds" />
             <ControlIcon name="newspaper" onPress={() => Linking.openURL('https://sparkly.mintlify.app')} label="Docs" />
-            <ControlIcon name="flask" onPress={() => router.push('/acc/labs')} label="Labs" />
-            <ControlIcon svg={ <TintableImage source={require("@/assets/images/jellyfin.svg")} style={{ width: 21, height: 21 }} tintColor={C.muted} /> } onPress={() => router.push('/system/soon/jellyfin')} label="JellyFin" />
+            <ControlIcon name="folder" onPress={() => Linking.openURL("https://cdn.jsdelivr.net/npm/ugs-singlefiles@1.0.6/mustard.svg")} label="UGS" />
           {
           //<ControlIcon name="logo-soundcloud" onPress={() => Linking.openURL('https://soundcloak.tijn.dev')} label="Music" />
           //<ControlIcon svg={ <TintableImage source={require("@/assets/images/netflix.svg")} style={{ width: 21, height: 21 }} tintColor={C.muted} /> } onPress={() => Linking.openURL('https://example.com')} label="Openflix" />
+          //<ControlIcon name="flask" onPress={() => router.push('/acc/labs')} label="Labs" />
+          //<ControlIcon name="logo-youtube" onPress={() => router.push('/media/youtube')} label="Videos" />
+          //<ControlIcon svg={ <TintableImage source={require("@/assets/images/jellyfin.svg")} style={{ width: 21, height: 21 }} tintColor={C.muted} /> } onPress={() => router.push('/system/soon/jellyfin')} label="JellyFin" />
           }
           </View>
         </View>
@@ -144,7 +145,7 @@ export default function HomeScreen() {
         <View style={[ styles.searchRow, searchFocused && styles.searchRowFocused ]} >
           <View style={[ styles.searchBox, searchFocused && styles.searchBoxFocused ]} >
             <Ionicons name="search" size={18} color={ searchFocused ? C.accentLt : C.muted } style={{ marginLeft: 14 }} />
-            <TextInput value={query} onChangeText={setQuery} onFocus={() => setSearchFocused(true) } onBlur={() => setSearchFocused(false) } placeholder="search games..." placeholderTextColor={ C.muted } style={styles.searchInput} />
+            <TextInput value={query} onChangeText={(text) => setQuery(text)} onFocus={() => setSearchFocused(true) } placeholder="search games..." placeholderTextColor={ C.muted } style={styles.searchInput} />
 
             {query.length > 0 && (
               <TouchableOpacity onPress={() => setQuery('') } style={{ paddingRight: 14 }} >
@@ -189,7 +190,19 @@ export default function HomeScreen() {
         <SectionHeader title="🎮 Library" count={filteredGames.length} titleStyle={{ color: C.gold }} />
       </View>
     </>
-  ), [ vibe, favorites, recent, showPC, showHorror, query, searchFocused, activeGenre, filteredGames, favGamesData, recentGamesData, trendingGames, favsCollapsed, recentCollapsed, trendingCollapsed, handleSelectGame, toggleFavorite, toast ] );
+  ), [
+  showPC,
+  showHorror,
+  activeGenre,
+  favorites,
+  recent,
+  favsCollapsed,
+  recentCollapsed,
+  trendingCollapsed,
+  setShowPC,
+  setShowHorror,
+  setActiveGenre,
+] );
 
   return (
     <View style={styles.container}>

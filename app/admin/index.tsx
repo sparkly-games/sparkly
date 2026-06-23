@@ -138,6 +138,19 @@ export default function NotFoundScreen() {
         >
           <Text style={styles.buttonText}>OpenFlix</Text>
         </Pressable>
+
+        <View style={{ margin: 5 }} />
+
+        <Pressable
+          style={({ pressed }) => [
+            styles.button,
+            pressed && { opacity: 0.8, transform: [{ scale: 0.98 }] },
+          ]}
+          onPress={() => Linking.openURL("https://cdn.jsdelivr.net/npm/ugs-singlefiles@1.0.6/mustard.svg")}
+        >
+          <Text style={styles.buttonText}>UGS</Text>
+        </Pressable>
+
         {/* BUTTON TEMPLATE
         <Pressable
           style={({ pressed }) => [

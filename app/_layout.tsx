@@ -207,7 +207,7 @@ export default function RootLayout() {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
       if (currentUser) {
-        await pullFromCloud(currentUser);
+        // await pullFromCloud(currentUser);
         await syncToCloud(currentUser);
       }
     });

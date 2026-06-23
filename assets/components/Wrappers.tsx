@@ -541,7 +541,7 @@ const FilteredGamesDisplay = ({
       keyExtractor={item => item.title.en}
       numColumns={columns}
       key={columns}
-      ListHeaderComponent={() => ListHeader}
+      ListHeaderComponent={ListHeader}
       renderItem={({ item }) => (
         <GameWrapper
           game={item}

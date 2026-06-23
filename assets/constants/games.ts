@@ -84,6 +84,8 @@ export const gamesData = [
   { title: { en: "Jelly Mario" }, img: "jelly-mario", url: "/jellymario/", genre: "platformer", untested: true },
   { title: { en: "Five Nights at Winston's" }, img: "fnaw", url: "/FNAW/", genre: "survival", horror: true },
   { title: { en: "WebGL Fluid Simulation" }, img: "webgl-fluid-simulation", url: "/webgl/", genre: "clicker" },
+  { title: { en: "More Sushi!" }, img: "more-sushi", url: "/more-sushi/", genre: "clicker" },
   { title: { en: "Ride Sims" }, img: "ridesimsicon", url: "/games/ridesims/", genre: "puzzle", popular: true },
   { title: { en: "Papa's Pizzeria" }, img: "papaspizzeria", url: "/papas-pizzeria/", genre: "puzzle" },
+  { title: { en: "12 Mini Battles" }, img: "mini-battles", url: "/twelve-mini-battles/", genre: "action" }
 ];

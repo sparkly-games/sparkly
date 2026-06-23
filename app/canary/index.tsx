@@ -24,15 +24,6 @@ import { GameWall } from '@/assets/components/GameWall';
 
 export default function Home() {
   const { width } = useWindowDimensions();
-  const LOGOS = [
-    "https://web.dev/static/how-to-use-baseline/image/newly_480.png",
-    "/favicon.ico",
-    "https://firebase.google.com/favicon.ico"
-  ];
-  const LOGO_WIDTH = 80;
-  const LOGO_GAP = 20;
-  const TOTAL_WIDTH = (LOGO_WIDTH + LOGO_GAP) * LOGOS.length;
-  const LOOP_LOGOS = [...LOGOS, ...LOGOS, ...LOGOS, ...LOGOS, ...LOGOS];
 
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -69,14 +60,6 @@ export default function Home() {
       })
     ).start();
 
-    Animated.loop(
-      Animated.timing(logoScroll, {
-        toValue: -TOTAL_WIDTH,
-        duration: 20000,
-        useNativeDriver: true,
-      })
-    ).start();
-
     Animated.timing(fadeAnim, { toValue: 1, duration: 800, useNativeDriver: true }).start();
 
     // AUTH LISTENER
@@ -96,8 +79,6 @@ export default function Home() {
 
     return () => unsubscribe();
   }, []);
-
-  const openLink = (url: string) => Linking.openURL(url);
 
   const heroFloat = useRef(new Animated.Value(0)).current;
 
@@ -193,7 +174,7 @@ export default function Home() {
                 <ActivityIndicator size="small" color="#3b82f6" />
               ) : !loggedIn ? (
                 <Pressable 
-                  onPress={() => openLink('/acc/login')} 
+                  onPress={() => router.push('/acc/login')} 
                   style={({ pressed }) => [styles.loginBtn, pressed && { opacity: 0.7 }]}
                 >
                   <Text style={styles.loginText}>LOGIN</Text>

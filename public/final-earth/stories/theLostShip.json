@@ -1,0 +1,407 @@
+{
+    "goals": [
+        {
+            "name": "Start",
+            "nextGoal": "BuildStoneMine",
+            "subGoals": [
+                {
+                    "type": "BuildPermanents",
+                    "permanentToBuildClass": "WoodcuttingCentre",
+                    "amount": 1
+                }
+            ],
+            "unlocks": [
+                "WoodcuttingCentre"
+            ],
+            "flags": {
+                "disableDying": true,
+                "disableDestroy": true,
+                "hiddenBoost": true,
+                "disableRewardedAd": true
+            },
+            "showTutorial": 1
+        },
+        {
+            "name": "BuildStoneMine",
+            "nextGoal": "GatherWoodAndStone",
+            "subGoals": [
+                {
+                    "type": "BuildPermanents",
+                    "permanentToBuildClass": "StoneMine",
+                    "amount": 1
+                }
+            ],
+            "unlocks": [
+                "StoneMine"
+            ],
+            "showTutorial": 101
+        },
+        {
+            "name": "GatherWoodAndStone",
+            "nextGoal": "BuildIndoorFarmAndHouse",
+            "subGoals": [
+                {
+                    "type": "GatherMaterials",
+                    "materials": {
+                        "wood": 6,
+                        "stone": 4
+                    }
+                }
+            ],
+            "showTutorial": 2
+        },
+        {
+            "name": "BuildIndoorFarmAndHouse",
+            "nextGoal": "SpawnMorePeople",
+            "flags": {
+                "hiddenBoost": false
+            },
+            "subGoals": [
+                {
+                    "type": "BuildPermanents",
+                    "permanentToBuildClass": "NormalHouse",
+                    "amount": 1
+                },
+                {
+                    "type": "BuildPermanents",
+                    "permanentToBuildClass": "IndoorFarm",
+                    "amount": 1
+                }
+            ],
+            "unlocks": [
+                "NormalHouse",
+                "IndoorFarm"
+            ],
+            "showTutorial": 3
+        },
+        {
+            "name": "SpawnMorePeople",
+            "nextGoal": "NowArrivingRegularly",
+            "subGoals": [
+                {
+                    "type": "BuildPermanents",
+                    "permanentToBuildClass": "ExplorationCentre",
+                    "amount": 1
+                }
+            ],
+            "planning": [
+                {
+                    "type": "SpawnCitizensFlyingSaucer",
+                    "time": 1,
+                    "amount": 4,
+                    "ageRangeMin": 60,
+                    "ageRangeMax": 64,
+                    "world": 0
+                }
+            ],
+            "unlocks": [
+                "ExplorationCentre"
+            ],
+            "showTutorial": 4
+        },
+        {
+            "name": "NowArrivingRegularly",
+            "nextGoal": "StoneMineUpgrade",
+            "subGoals": [
+                {
+                    "type": "BuildPermanents",
+                    "permanentToBuildClass": "StoneMine",
+                    "amount": 2
+                }
+            ],
+            "planning": [
+                {
+                    "type": "ScriptedStoryPart",
+                    "className": "SpawnCitizensRegularly",
+                    "spawnNumber": 60,
+                    "time": 0,
+                    "groupSizeMin": 2,
+                    "groupSizeMax": 3,
+                    "ageRangeMin": 18,
+                    "ageRangeMax": 40,
+                    "world": 0,
+                    "timeBetweenMin": 36,
+                    "timeBetweenMax": 40,
+                    "afterDoneMessage": "All the people from your ship have now arrived. Of course, your population can still grow through their offspring."
+                },
+                {
+                    "type": "SpawnCitizensFlyingSaucer",
+                    "time": 360,
+                    "amount": 2,
+                    "ageRangeMin": 18,
+                    "ageRangeMax": 24,
+                    "world": 0
+                }
+            ],
+            "unlocks": [
+                "School"
+            ],
+            "flags": {
+                "disableRewardedAd": false
+            }
+        },
+        {
+            "name": "StoneMineUpgrade",
+            "nextGoal": "Happiness",
+            "subGoals": [
+                {
+                    "type": "PerformBuildingUpgrades",
+                    "upgradeClass": "BetterPickaxes",
+                    "amount": 1
+                }
+            ]
+        },
+        {
+            "name": "Happiness",
+            "nextGoal": "BuildMachinePartsFactory",
+            "subGoals": [
+                {
+                    "type": "GatherMaterials",
+                    "materials": {
+                        "food": 10
+                    }
+                },
+                {
+                    "type": "BuildPermanents",
+                    "permanentToBuildClass": "Pub",
+                    "amount": 1
+                }
+            ],
+            "unlocks": [
+                "buildingModes",
+                "managementOptions",
+                "Pub",
+                "Park"
+            ]
+        },
+        {
+            "name": "BuildMachinePartsFactory",
+            "nextGoal": "GetMinHappiness",
+            "flags": {
+                "disableDying": false,
+                "disableDestroy": false
+            },
+            "subGoals": [
+                {
+                    "type": "BuildPermanents",
+                    "permanentToBuildClass": "MachinePartsFactory",
+                    "amount": 1
+                }
+            ],
+            "unlocks": [
+                "MachinePartsFactory"
+            ]
+        },
+        {
+            "name": "GetMinHappiness",
+            "nextGoal": "BuildStoneTeleporter",
+            "subGoals": [
+                {
+                    "type": "MinimumHappiness",
+                    "happiness": 52
+                }
+            ],
+            "unlocks": [
+                "Workshop",
+                "ExperimentalFarm",
+                "NightClub",
+                "ModernRusticHome"
+            ],
+            "showTutorial": 4002
+        },
+        {
+            "name": "BuildStoneTeleporter",
+            "nextGoal": "BuildObservatory",
+            "subGoals": [
+                {
+                    "type": "BuildPermanents",
+                    "permanentToBuildClass": "StoneTeleporter",
+                    "amount": 1
+                }
+            ],
+            "unlocks": [
+                "StoneTeleporter",
+                "Laboratory"
+            ]
+        },
+        {
+            "name": "BuildObservatory",
+            "nextGoal": "Win",
+            "subGoals": [
+                {
+                    "type": "BuildPermanents",
+                    "permanentToBuildClass": "Observatory",
+                    "amount": 1
+                }
+            ],
+            "unlocks": [
+                "Observatory"
+            ]
+        },
+        {
+            "name": "Win",
+            "nextGoal": "",
+            "nextStory": "multipleWorlds",
+            "subGoals": [],
+            "unlocks": [
+                "LandingSite",
+                "Arcade",
+                "TreePlantation",
+                "RefinedMetalFactory",
+                "decorations",
+                "MedicalClinic",
+                "ModernArtMuseum",
+                "ComfortableHouse",
+                "ColoredBlock",
+                "RooftopDecoration",
+                "RooftopDecoration2",
+                "RooftopDecoration3",
+                "RooftopDecoration4"
+            ],
+            "flags": {
+                "demoText": "\n\nAlso, if you like this demo of The Final Earth 2, please wishlist the full version so you'll be notified when it's released!",
+                "unlockAchievementWithStoryPrefix": "THE_LOST_SHIP_WIN"
+            }
+        }
+    ],
+    "startGoal": "Start",
+    "lockAllPermanents": true,
+    "worlds": [
+        {
+            "rect": {
+                "x": 0,
+                "y": 160,
+                "width": 440,
+                "height": 100
+            },
+            "seed": 1000,
+            "worldResources": [
+                {
+                    "position": 0,
+                    "className": "Forest"
+                },
+                {
+                    "position": 6,
+                    "className": "Rock"
+                },
+                {
+                    "position": 7,
+                    "className": "Forest"
+                },
+                {
+                    "position": 9,
+                    "className": "Rock"
+                },
+                {
+                    "position": 12,
+                    "className": "AlienRuins"
+                },
+                {
+                    "position": 14,
+                    "className": "Forest"
+                },
+                {
+                    "position": 17,
+                    "className": "AlienRuins"
+                },
+                {
+                    "position": 18,
+                    "className": "Rock"
+                },
+                {
+                    "position": 19,
+                    "className": "Forest"
+                },
+                {
+                    "position": 21,
+                    "className": "Forest"
+                }
+            ],
+            "buildingStacks": [
+                {
+                    "position": 3,
+                    "classNames": [
+                        "LandedExplorationShip"
+                    ]
+                }
+            ],
+            "citizens": [
+                {
+                    "amount": 3,
+                    "ageRangeMin": 60,
+                    "ageRangeMax": 64,
+                    "minX": 60,
+                    "maxX": 80
+                }
+            ]
+        }
+    ],
+    "initialMaterials": {
+        "food": 50,
+        "stone": 7,
+        "wood": 0.95,
+        "knowledge": 0,
+        "machineParts": 0,
+        "refinedMetal": 0,
+        "computerChips": 0
+    },
+    "viewYFromBottom": 270,
+    "viewYMobi": 220,
+    "mobileViewStartX": 50,
+    "speedUpStartNights": true,
+    "backgroundSprites": [
+        {
+            "sprite": "spr_planets_small",
+            "width": 40,
+            "image": 2,
+            "x": 120,
+            "y": -80,
+            "velocity": 0.5
+        },
+        
+        {
+            "sprite": "spr_planets_medium",
+            "width": 80,
+            "image": 1,
+            "x": 300,
+            "y": -200,
+            "velocity": 1
+        },
+        
+        {
+            "sprite": "spr_planets_small",
+            "width": 40,
+            "image": 0,
+            "x": 40,
+            "y": -500,
+            "velocity": 0.2
+        },
+        
+        {
+            "sprite": "spr_planets_big",
+            "width": 100,
+            "image": 1,
+            "x": 900,
+            "y": 0,
+            "velocity": 1.3
+        },
+        
+        {
+            "sprite": "spr_planets_big",
+            "width": 100,
+            "image": 3,
+            "x": -900,
+            "y": 400,
+            "velocity": 1.5
+        },
+        
+        {
+            "sprite": "spr_planets_medium",
+            "width": 80,
+            "image": 3,
+            "x": -400,
+            "y": 100,
+            "velocity": 0.1
+        }
+    ]
+}

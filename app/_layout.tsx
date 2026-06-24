@@ -348,6 +348,7 @@ export default function RootLayout() {
         <script async
           src="https://js.stripe.com/v3/buy-button.js">
         </script>
+        <script src="https://uptime.betterstack.com/widgets/announcement.js" data-id="252057" async={true} type="text/javascript"></script>
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -429,6 +430,7 @@ export default function RootLayout() {
             </Pressable>
 
             <ControlIcon name="logo-octocat" onPress={() => Linking.openURL('https://github.com/sparkly-games')} style={{ marginLeft: 10 }} />
+            <iframe src="https://status.sparxscience.lgbt.sh/badge?theme=dark" width="25" height="30" frameborder="0" scrolling="no"></iframe>
           </View>
 
         </View>

@@ -1,0 +1,120 @@
+{
+"frames": {
+	"achieve1.png": {
+		"frame": {"x":0, "y":134, "w":562, "h":94},
+		"spriteSourceSize": {"x":0,"y":0,"w":562,"h":94},
+		"sourceSize": {"w":562,"h":94}
+	},
+	"achieve10.png": {
+		"frame": {"x":1128, "y":192, "w":562, "h":94},
+		"spriteSourceSize": {"x":0,"y":0,"w":562,"h":94},
+		"sourceSize": {"w":562,"h":94}
+	},
+	"achieve2.png": {
+		"frame": {"x":0, "y":230, "w":562, "h":94},
+		"spriteSourceSize": {"x":0,"y":0,"w":562,"h":94},
+		"sourceSize": {"w":562,"h":94}
+	},
+	"achieve3.png": {
+		"frame": {"x":564, "y":326, "w":562, "h":94},
+		"spriteSourceSize": {"x":0,"y":0,"w":562,"h":94},
+		"sourceSize": {"w":562,"h":94}
+	},
+	"achieve4.png": {
+		"frame": {"x":0, "y":326, "w":562, "h":94},
+		"spriteSourceSize": {"x":0,"y":0,"w":562,"h":94},
+		"sourceSize": {"w":562,"h":94}
+	},
+	"achieve5.png": {
+		"frame": {"x":564, "y":134, "w":562, "h":94},
+		"spriteSourceSize": {"x":0,"y":0,"w":562,"h":94},
+		"sourceSize": {"w":562,"h":94}
+	},
+	"achieve6.png": {
+		"frame": {"x":564, "y":230, "w":562, "h":94},
+		"spriteSourceSize": {"x":0,"y":0,"w":562,"h":94},
+		"sourceSize": {"w":562,"h":94}
+	},
+	"achieve7.png": {
+		"frame": {"x":1128, "y":288, "w":562, "h":94},
+		"spriteSourceSize": {"x":0,"y":0,"w":562,"h":94},
+		"sourceSize": {"w":562,"h":94}
+	},
+	"achieve8.png": {
+		"frame": {"x":710, "y":0, "w":562, "h":94},
+		"spriteSourceSize": {"x":0,"y":0,"w":562,"h":94},
+		"sourceSize": {"w":562,"h":94}
+	},
+	"achieve9.png": {
+		"frame": {"x":1128, "y":96, "w":562, "h":94},
+		"spriteSourceSize": {"x":0,"y":0,"w":562,"h":94},
+		"sourceSize": {"w":562,"h":94}
+	},
+	"icon1.png": {
+		"frame": {"x":670, "y":422, "w":71, "h":69},
+		"spriteSourceSize": {"x":0,"y":0,"w":71,"h":69},
+		"sourceSize": {"w":71,"h":69}
+	},
+	"icon10.png": {
+		"frame": {"x":305, "y":422, "w":71, "h":69},
+		"spriteSourceSize": {"x":0,"y":0,"w":71,"h":69},
+		"sourceSize": {"w":71,"h":69}
+	},
+	"icon2.png": {
+		"frame": {"x":743, "y":422, "w":71, "h":69},
+		"spriteSourceSize": {"x":0,"y":0,"w":71,"h":69},
+		"sourceSize": {"w":71,"h":69}
+	},
+	"icon3.png": {
+		"frame": {"x":86, "y":422, "w":71, "h":69},
+		"spriteSourceSize": {"x":0,"y":0,"w":71,"h":69},
+		"sourceSize": {"w":71,"h":69}
+	},
+	"icon4.png": {
+		"frame": {"x":159, "y":422, "w":71, "h":69},
+		"spriteSourceSize": {"x":0,"y":0,"w":71,"h":69},
+		"sourceSize": {"w":71,"h":69}
+	},
+	"icon5.png": {
+		"frame": {"x":232, "y":422, "w":71, "h":69},
+		"spriteSourceSize": {"x":0,"y":0,"w":71,"h":69},
+		"sourceSize": {"w":71,"h":69}
+	},
+	"icon6.png": {
+		"frame": {"x":597, "y":422, "w":71, "h":69},
+		"spriteSourceSize": {"x":0,"y":0,"w":71,"h":69},
+		"sourceSize": {"w":71,"h":69}
+	},
+	"icon7.png": {
+		"frame": {"x":378, "y":422, "w":71, "h":69},
+		"spriteSourceSize": {"x":0,"y":0,"w":71,"h":69},
+		"sourceSize": {"w":71,"h":69}
+	},
+	"icon8.png": {
+		"frame": {"x":451, "y":422, "w":71, "h":69},
+		"spriteSourceSize": {"x":0,"y":0,"w":71,"h":69},
+		"sourceSize": {"w":71,"h":69}
+	},
+	"icon9.png": {
+		"frame": {"x":524, "y":422, "w":71, "h":69},
+		"spriteSourceSize": {"x":0,"y":0,"w":71,"h":69},
+		"sourceSize": {"w":71,"h":69}
+	},
+	"lock.png": {
+		"frame": {"x":0, "y":422, "w":84, "h":69},
+		"spriteSourceSize": {"x":0,"y":0,"w":84,"h":69},
+		"sourceSize": {"w":84,"h":69}
+	},
+	"title.png": {
+		"frame": {"x":0, "y":0, "w":708, "h":132},
+		"spriteSourceSize": {"x":0,"y":0,"w":708,"h":132},
+		"sourceSize": {"w":708,"h":132}
+	}
+
+},
+"meta": {
+	"image": "achievement.png",
+	"size": {"w": 2048, "h": 512},
+	"scale": "1"
+}
+}

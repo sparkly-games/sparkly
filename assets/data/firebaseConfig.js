@@ -4,9 +4,20 @@ import { getAnalytics, logEvent } from 'firebase/analytics'; // JS SDK, not nati
 import { getAuth } from 'firebase/auth';
 import { getDatabase } from 'firebase/database';
 
+const hostname =
+  typeof window !== "undefined"
+    ? window.location.hostname
+    : "localhost";
+
+const authDomain =
+  hostname === "localhost" ||
+  hostname === "127.0.0.1"
+    ? "sparxapi.firebaseapp.com"
+    : `auth.${hostname}`;
+
 const firebaseConfig = {
   apiKey: ENV_VARS.FIREBASE_API_KEY,
-  authDomain: "auth.sparxscience.lgbt.sh",
+  authDomain,
   projectId: "sparxapi",
   storageBucket: "sparxapi.firebasestorage.app",
   messagingSenderId: "291924279653",

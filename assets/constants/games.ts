@@ -87,5 +87,6 @@ export const gamesData = [
   { title: { en: "More Sushi!" }, img: "more-sushi", url: "/more-sushi/", genre: "clicker" },
   { title: { en: "Ride Sims" }, img: "ridesimsicon", url: "/games/ridesims/", genre: "puzzle", popular: true },
   { title: { en: "Papa's Pizzeria" }, img: "papaspizzeria", url: "/papas-pizzeria/", genre: "puzzle" },
-  { title: { en: "12 Mini Battles" }, img: "mini-battles", url: "/twelve-mini-battles/", genre: "action" }
+  { title: { en: "12 Mini Battles" }, img: "mini-battles", url: "/twelve-mini-battles/", genre: "action" },
+  { title: { en: "Cut the Rope: Holiday" }, img: "ctr-holiday", url: "/holiday/", genre: "puzzle" }
 ];

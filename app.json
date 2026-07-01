@@ -4,7 +4,7 @@
     "slug": "sparklygames",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/pride_month_favicon.png",
+    "icon": "./assets/images/favicon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "ios": {
@@ -13,7 +13,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/pride_month_favicon.png",
+        "foregroundImage": "./assets/images/favicon.png",
         "backgroundColor": "#818181"
       },
       "edgeToEdgeEnabled": true,
@@ -22,7 +22,7 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/pride_month_favicon.png"
+      "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
       [
@@ -34,7 +34,7 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/pride_month_favicon.png",
+          "image": "./assets/images/favicon.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#818181"

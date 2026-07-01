@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="robots" content="noindex,nofollow">
+    <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
+    <script src="lib/howler.min.js"></script>
+    <script src="lib/pako.min.js"></script>
+    <script src="lib/FileSaver.min.js"></script>
+    <script src="lib/jquery-3.6.5.min.js"></script>
+    <script src="crazy_candy_creator.js"></script>
+
+    <script>
+        const spoofOldiPad = false;
+
+        if (spoofOldiPad && navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 0) {
+            Object.defineProperty(navigator, 'userAgent', {
+                get: function() {
+                    return 'Mozilla/5.0 (iPad; CPU OS 12_5_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1.2 Mobile/15E148 Safari/604.1 ***SPOOFED***'; //typical of older iPad
+                }
+            });
+        }
+
+    </script>
+
+    <script>
+        window.addEventListener("touchmove", function(event) {
+            event.preventDefault();
+        }, {
+            capture: false,
+            passive: false
+        });
+        if (typeof window.devicePixelRatio != 'undefined' && window.devicePixelRatio > 2) {
+            var meta = document.getElementById("viewport");
+            meta.setAttribute('content', 'width=device-width, initial-scale=' + (2 / window.devicePixelRatio) + ', user-scalable=no');
+        }
+
+    </script>
+
+    <style>
+        * {
+            -webkit-touch-callout: none;
+            -webkit-tap-highlight-color: transparent;
+            -moz-user-select: -moz-none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background: indigo;
+        }
+
+        #content {
+            position: relative;
+            margin: auto;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        #openfl-content {
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            height: 100vh;
+            width: 100vw;
+            max-width: 215vh;
+            max-height: 70vw;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 5vmin 1vmin black;
+        }
+
+        @font-face {
+            font-family: 'Bombardier';
+            src: url('fonts/bombardier.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div id="openfl-content"></div> <!-- new openfl implementation -->
+
+    <script>
+        lime.embed("crazy_candy_creator", "openfl-content", 0, 0, {
+            parameters: {}
+        });
+
+
+
+       //////////////////////////////////////////GPI-v1.00//
+        /////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////
+        // *** IMPORTANT NOTICE! SITELOCK! DO NOT REMOVE! ***
+        // This game may only be made available on the unmodified list of hosts specified below. It is UNLAWFUL for legal entities which have not licensed this game to publicly host it.
+        // Circumventing technological protection measures (TPMs) https://en.wikipedia.org/wiki/Digital_Millennium_Copyright_Act#Anti-circumvention will result in legal action to recover
+        // damages, and DMCA requests to hosts and search engines.
+        // We additionally inform our representative at Google AdSense to request demonetization of offending accounts. This has proved very effective.
+        /////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////
+
+        //gpi1//
+        //gpi2//
+
+        function siteLockGPI() {
+
+            let legalSites = ["friv.com", "friv.co.uk", "friv4school.com", "frivmath.com", "funo.com", "funomath.com", "yurk.com", "femo.com", "fabo.com"];
+
+            let currentLocation = window.location.hostname;
+
+            const sitelockTimeout = setTimeout(disableGame, 999);
+            let canPlay = legalSites.some(site => !currentLocation.includes(site));
+
+            if (canPlay) {
+                clearTimeout(sitelockTimeout);
+            }
+
+            function disableGame() {
+                setInterval(function() {
+                    document.write("<div style='position:relative;display:inline-block;padding:0.5vw;margin:0.5vw;border:0.3vw solid red;border-radius:1vw;background:indigo;font-family:sans-serif;font-size:3vw;font-weight:700;'><a style='color:yellow;text-decoration:none;' href='https://" + legalSites[0] + "/'>Play&nbsp;this&nbsp;game&nbsp;at&nbsp;" + legalSites[0] + "!</a></div>     ");
+                }, 500);
+            }
+
+        }
+        
+        siteLockGPI();
+        
+        //gpi3//
+        //gpi4//
+
+        /////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////
+
+        const doResize = true;
+        const focusWindow = true;
+		const timedReloadEnabled = false;
+		const auxSetting = false;
+
+        
+        function resizeGameCanvas() {
+            const canvas = document.querySelector("canvas");
+
+            if (canvas) {
+                canvas.style.maxWidth = "100vw";
+                canvas.style.maxHeight = "100vh";
+            }
+        }
+
+        if (doResize) {
+            const canvasInterval = setInterval(resizeGameCanvas, 1500);
+        }
+
+        if (focusWindow) {
+            window.addEventListener('blur', () => {
+                window.focus();
+            });
+        }
+        
+        //gpi5//
+        //gpi6//
+        
+        /////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////
+
+    </script>
+
+</body>
+
+</html>

@@ -225,6 +225,18 @@ export default function RootLayout() {
     return () => clearInterval(intervalId);
   }, [user, branch]);
 
+  const [statuspageUrl, setStatuspageUrl] = useState("sparkly.betteruptime.com");
+
+  useEffect(() => {
+    const hostname = window.location.hostname;
+
+    setStatuspageUrl(
+      hostname !== "localhost" && hostname !== "127.0.0.1"
+        ? `status.${hostname}`
+        : "sparkly.betteruptime.com"
+    );
+  }, []);
+
   /* ------------------ TOAST TIMER ------------------ */
 
   useEffect(() => {
@@ -430,7 +442,7 @@ export default function RootLayout() {
             </Pressable>
 
             <ControlIcon name="logo-octocat" onPress={() => Linking.openURL('https://github.com/sparkly-games')} style={{ marginLeft: 10 }} />
-            <iframe src="https://status.sparxscience.lgbt.sh/badge?theme=dark" width="25" height="30" frameborder="0" scrolling="no"></iframe>
+            <iframe src={`https://${statuspageUrl}/badge?theme=dark`} width="25" height="30" frameborder="0" scrolling="no"></iframe>
           </View>
 
         </View>

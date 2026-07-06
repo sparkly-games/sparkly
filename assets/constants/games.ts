@@ -89,5 +89,5 @@ export const gamesData = [
   { title: { en: "Papa's Pizzeria" }, img: "papaspizzeria", url: "/papas-pizzeria/", genre: "puzzle" },
   { title: { en: "12 Mini Battles" }, img: "mini-battles", url: "/twelve-mini-battles/", genre: "action" },
   { title: { en: "Cut the Rope: Holiday Gift" }, img: "ctr-holiday", url: "/holiday/", genre: "puzzle" },
-  { title: { en: "Bowmasters" }, img: "bowmasters", url: "/bowmasters/", genre: "action" },
+  { title: { en: "Bowmasters" }, img: "bow-masters", url: "/bowmasters/", genre: "action" },
 ];

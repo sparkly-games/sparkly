@@ -104,6 +104,9 @@ export default function RootLayout() {
     color: string;
   } | null>(null);
 
+  // Global remote config toast state moved from play.tsx
+  const [remoteToast, setRemoteToast] = useState<{ message: string; type: 'warn' | 'info' | string } | null>(null);
+
   const pathname = usePathname();
 
   const showToast = (message: string, color: string) => {
@@ -245,6 +248,32 @@ export default function RootLayout() {
     return () => clearTimeout(timeoutId);
   }, [toast]);
 
+  /* ------------------ REMOTE TOAST LOGIC (FROM PLAY) ------------------ */
+  useEffect(() => {
+    const fetchRemoteToast = async () => {
+      try {
+        const config = getRemoteConfig(app);
+        config.settings.minimumFetchIntervalMillis = process.env.NODE_ENV === 'development' ? 0 : 3600000;
+        await fetchAndActivate(config);
+        const rawToastJson = getValue(config, 'toast').asString();
+
+        if (rawToastJson) {
+          const parsedConfig = JSON.parse(rawToastJson);
+          if (parsedConfig.showToast && parsedConfig.message) {
+            setRemoteToast({
+              message: parsedConfig.message,
+              type: parsedConfig.type || 'info'
+            });
+          }
+        }
+      } catch (error) {
+        console.warn("Could not retrieve Remote Config variables securely:", error);
+      }
+    };
+
+    fetchRemoteToast();
+  }, []);
+
   /* ------------------ INIT ------------------ */
 
   useEffect(() => {
@@ -349,6 +378,45 @@ export default function RootLayout() {
 
   return (
     <BazingaProvider>
+      {/* ── GLOBAL TOAST DISPLAY PANEL (MOVED FROM PLAY.TSX) ────────────────────────────────────────────── */}
+      {remoteToast && (
+        <View style={{ 
+          flexDirection: 'row',
+          position: 'absolute',
+          top: 50, 
+          right: 20,
+          zIndex: 9999,
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          backgroundColor: remoteToast.type === 'warn' ? "#751616" : "#1e293b", 
+          paddingVertical: 12, 
+          paddingHorizontal: 16,
+          borderRadius: 10, 
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 4 },
+          shadowOpacity: 0.3,
+          shadowRadius: 4,
+          elevation: 5,
+        }}>
+          <Text style={{ 
+            flex: 1,
+            fontSize: 12, 
+            fontWeight: "bold", 
+            color: remoteToast.type === 'warn' ? "#ffebeb" : "#ffffff", 
+            textAlign: 'left',
+            lineHeight: 16,
+          }}>
+            {remoteToast.message}
+          </Text>
+          <TouchableOpacity 
+            onPress={() => setRemoteToast(null)} 
+            style={{ marginLeft: 12, padding: 4 }}
+          >
+            <Ionicons name="close" size={16} color={remoteToast.type === 'warn' ? "#ffebeb" : "#94a3b8"} />
+          </TouchableOpacity>
+        </View>
+      )}
+
       <Stack screenOptions={{ headerShown: false }} />
 
       <Head>
@@ -374,11 +442,7 @@ export default function RootLayout() {
         <meta name="description" content="With Sparkly, get ready to game into the future like never before!" />
         <meta name="theme-color" content={getBranchColor()} />
       </Head>
-      { /*
-        <View style={styles.banner}>
-          <RecruitBanner text={"Looking for UI designers!"} onPress={() => {router.push("/acc/apply/jobs")}} />
-        </View>
-      */ }
+
       {Platform.OS === 'web' && !isShutdown && !maintenance && !isInIframe && (
         <View style={styles.floatingContainer}>
 
@@ -442,6 +506,7 @@ export default function RootLayout() {
             </Pressable>
 
             <ControlIcon name="logo-octocat" onPress={() => Linking.openURL('https://github.com/sparkly-games')} style={{ marginLeft: 10 }} />
+            <ControlIcon name="volume-high" onPress={() => Linking.openURL('/sounds/soundboard/')} style={{ marginLeft: 10 }} />
             <iframe src={`https://${statuspageUrl}/badge?theme=dark`} width="25" height="30" frameborder="0" scrolling="no"></iframe>
           </View>
 

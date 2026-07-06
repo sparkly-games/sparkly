@@ -170,6 +170,7 @@ export default function Home() {
 
           {!isMobile && (
             <View style={styles.nav}>
+              <Text style={{ color: '#94a3b8', fontSize: 12, marginRight: 12, fontWeight: 'bold', opacity: 0.6 }} onPress={() => Linking.openURL('https://sparkly.mintlify.app')}>DOCS</Text>
               {authLoading ? (
                 <ActivityIndicator size="small" color="#3b82f6" />
               ) : !loggedIn ? (

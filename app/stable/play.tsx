@@ -18,19 +18,7 @@ import { StatChip, ControlIcon } from '@/assets/components/Wrappers';
 
 interface GameType { title: { en: string }; img: string; url: string; popular?: boolean; horror?: boolean; broken?: boolean; pc?: boolean; genre: string; untested?: boolean; issue?: string; }
 
-const VER_PATCHES = [
-  '3xclrdun', '9xg4w9y5', '0p5ttso7', 'g16fpq2h', '1xf6zts0', 'iw74pgdl',
-  'uq8xvm3i', 'lkqiftyy', 'rr8ihcet', 'jl9q9q04', 'pebrgtjq', 'wpvym99n', 
-  '30flq6w1', 'sbte79gq', 'ss1ksqlb', 'o00wep4v', 'pb6cv93n', 'o1p01qc1', 
-  'tqop6gez', 'wfbgx7ez', 'nkmptxv0', 'z6k98i0w', 'xjwj48ud', '53qx9jfl', 
-  'g213gtyp', 'exrkqldd', '5gc3ymeh', 'oumntxws', '5rs46hkv', 'otg548fh'
-];
-
-const VER_INFO = {
-  date: '2/07/26',
-  text: '8.5.64',
-  patch: VER_PATCHES[18],
-};
+const verDisplay = `v8.8.0 · 2026`;
 
 const isDev = typeof window !== 'undefined' && localStorage.getItem('sparkly_branch') === 'devpatch';
 const isNodeDev = process.env.NODE_ENV === 'development';
@@ -246,7 +234,7 @@ export default function HomeScreen() {
         </View>
       )}
 
-      <Header {...{ vibe, gamesData, favorites, recent, showPC, showHorror, setShowPC, setShowHorror, VER_INFO }} />
+      <Header {...{ vibe, gamesData, favorites, recent, showPC, showHorror, setShowPC, setShowHorror, verDisplay }} />
       <FilteredGamesDisplay {...{ filteredGames, columns, itemWidth , ListHeader, favorites, toggleFavorite, handleSelectGame, isDev }} />
       <GameModal closeGame={handleCloseGame} {...{ modalGame, favorites, iframeRef, toggleFavorite, setGameLoading, gameLoading }} />
     </View>

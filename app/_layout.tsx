@@ -513,7 +513,7 @@ export default function RootLayout() {
 
         </View>
       )}
-      <RecruitBanner onPress={() => {navigate("/acc/sunset")}} text={"Sparkly Games (sparxapi19) is officially being sunset on 1st January, 2026. Support for the site has ended. We recommend switching over to our new project. Click 'Learn More' when ready."} />
+      <RecruitBanner onPress={() => {navigate("/acc/sunset")}} text={"Sparkly Games (sparxapi19) is officially being sunset on 1st January, 2027. Support for the site has ended. We recommend switching over to our new project. Click 'Learn More' when ready."} />
     </BazingaProvider>
   );
 }

@@ -22,6 +22,7 @@ import { getDatabase, ref, set, get, child } from 'firebase/database';
 import { admins } from '@/assets/data/admins';
 import { Crown } from 'lucide-react-native';
 import RecruitBanner from '@/assets/components/RecruitBanner';
+import { navigate } from 'expo-router/build/global-state/routing';
 
 const auth = getAuth(app);
 const rtdb = getDatabase(app);
@@ -512,6 +513,7 @@ export default function RootLayout() {
 
         </View>
       )}
+      <RecruitBanner onPress={() => {navigate("/acc/sunset")}} text={"Sparkly Games (sparxapi19) is officially being sunset on 1st January, 2026. Support for the site has ended. We recommend switching over to our new project. Click 'Learn More' when ready."} />
     </BazingaProvider>
   );
 }

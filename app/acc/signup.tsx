@@ -23,6 +23,10 @@ import { getAuth, signInWithPopup, GoogleAuthProvider, GithubAuthProvider, creat
 import { Ionicons } from '@expo/vector-icons';
 
 export default function Login() {
+
+  // Since sunset, remove logic and replace with a "no sign ups" screen.
+  const sunset = true;
+
   const { width } = useWindowDimensions();
   const isMobile = width < 768;
   const isDesktop = width >= 1024;
@@ -117,6 +121,50 @@ export default function Login() {
       setIsLoading(false);
     }
   };
+
+  if(sunset) {
+    return (
+      <View style={[styles.root, isDesktop && styles.desktopContainer]}>
+      <Head>
+        <title>Login | Sparkly Games</title>
+      </Head>
+
+      <StatusBar style="light" />
+
+      {/* --- BACKGROUND VISUALS --- */}
+      <View style={styles.backgroundGlow1} />
+      <View style={styles.backgroundGlow2} />
+
+      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
+        <Animated.View style={[styles.container, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
+          
+          {/* --- BRANDING --- */}
+          <View style={styles.brandHeader}>
+             <Image source={{ uri: '/favicon.ico' }} style={styles.logo} />
+             <Text style={styles.brandText}>Sparkly <Text style={styles.gradientText}>Games</Text></Text>
+          </View>
+
+          {/* --- LOGIN CARD --- */}
+          <View style={styles.loginCard}>
+            <Text style={styles.title}>Sunset Notice</Text>
+            <Text style={styles.subtitle}>We are no longer accepting new accounts for <code>sparxapi19</code></Text>
+            <Text style={styles.subtitle}>Support has officially ended, and ALL non-local data will be unavailable from 1st January, 2027.</Text>
+            <Text style={styles.subtitle}>If you already have an account, feel free to login. <Text style={styles.linkText} onPress={() => router.push('/acc/login')}>Log in</Text></Text>
+            <Text style={styles.subtitle}>You can learn more about our switch-over by pressing "Learn More" at the bottom of your screen.</Text>
+            <Text style={styles.subtitle}>Thank you for this lovely journey, but unfortunately, all good things must come to an end.</Text>
+            <Text style={styles.subtitle}>Yours Faithfully,</Text>
+            <Text style={styles.subtitle}>The Sparkly Team</Text>
+          </View>
+
+          <Pressable onPress={() => router.push('/')}>
+            <Text style={styles.backLink}>← Back to Home</Text>
+          </Pressable>
+        </Animated.View>
+      </ScrollView>
+      <GameWall />
+    </View>
+    )
+  }
 
   return (
     <View style={[styles.root, isDesktop && styles.desktopContainer]}>

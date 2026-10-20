@@ -11,14 +11,14 @@ export default function RecruitBanner({ onPress, onClose, text }: Props) {
   return (
     <View style={styles.container}>
       <View style={styles.content}>
-        <Text style={styles.badge}>🎨 OPEN</Text>
+        <Text style={styles.badge}>⚠️ IMPORTANT</Text>
 
         <Text style={styles.text}>
           {text}
         </Text>
 
         <Pressable onPress={onPress} style={styles.button}>
-          <Text style={styles.buttonText} onPress={onPress}>Apply</Text>
+          <Text style={styles.buttonText} onPress={onPress}>Learn More</Text>
         </Pressable>
       </View>
 
@@ -68,11 +68,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 8,
+    cursor: "pointer"
   },
   buttonText: {
     color: "#FFD84D",
     fontSize: 12,
     fontWeight: "700",
+    cursor: "pointer"
   },
   close: {
     position: "absolute",
